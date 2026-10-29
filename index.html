@@ -288,21 +288,21 @@ footer{color:var(--muted);font-size:11px;text-align:center;padding:18px}
 </div>
 </main><footer>Gestão de Rede · Protótipo demonstrativo. Não insira dados pessoais de pacientes.</footer>
 <div class="modal" id="modal"><div class="dialog"><h2 id="formTitle">Nova demanda</h2><form id="taskForm" onsubmit="saveTask(event)"><input type="hidden" id="editId"><div class="formgrid">
-<div><label>Prestador *</label><input id="provider" required placeholder="Nome do hospital"></div>
+<div><label>Prestador *</label><input id="provider" placeholder="Nome do hospital"></div>
 <div><label>Número da O.S.</label><input id="osNumber" placeholder="Ex.: 623401" inputmode="numeric"></div>
-<div class="wide"><label>Assunto *</label><input id="subject" required placeholder="Resumo objetivo da demanda"></div>
-<div><label>Tipo de prestador *</label><select id="providerType" required><option>Hospitais</option><option>Honorários cirúrgicos</option><option>Banco de sangue</option><option>Home care</option><option>Hemodiálise</option><option>Laboratórios</option><option>Clínicas de imagem</option><option>Clínicas com exames associados</option><option>Outros / revisar classificação</option></select></div>
+<div class="wide"><label>Assunto *</label><input id="subject" placeholder="Resumo objetivo da demanda"></div>
+<div><label>Tipo de prestador *</label><select id="providerType"><option>Hospitais</option><option>Honorários cirúrgicos</option><option>Banco de sangue</option><option>Home care</option><option>Hemodiálise</option><option>Laboratórios</option><option>Clínicas de imagem</option><option>Clínicas com exames associados</option><option>Outros / revisar classificação</option></select></div>
 <div><label>Categoria</label><select id="category"><option>Credenciamentos</option><option>Descredenciamentos</option><option>Contratos</option><option>Extensões</option><option>Reajuste</option><option>Honorário cirúrgico</option><option>Parametrização</option><option>Revisão de travas</option><option>Visitas</option><option>Outros</option></select></div>
 <div><label>Impacto</label><select id="impact"><option>Risco assistencial / judicial</option><option>Financeiro / contratual</option><option>Continuidade de atendimento</option><option>Regulatório / reputacional</option><option>Operacional</option></select></div>
 <div><label>Prioridade *</label><select id="priority"><option>Crítica</option><option>Alta</option><option selected>Normal</option><option>Baixa</option></select></div>
-<div><label>Responsável principal *</label><select id="owner" required><option>Larissa</option><option>Diego</option></select></div>
+<div><label>Responsável principal *</label><select id="owner"><option>Larissa</option><option>Diego</option></select></div>
 <div><label>Apoio</label><select id="support"><option>Nenhum</option><option>Larissa</option><option>Diego</option></select></div>
 <div><label>Status</label><select id="status"><option>Nova</option><option>Em andamento</option><option>Aguardando terceiros</option><option>Concluída</option><option>Suspensa</option></select></div>
 <div><label>Prazo da demanda</label><input id="due" type="date"></div>
 <div><label>Aniversário contratual</label><input id="contractAnniversary" type="date"><small class="hint">Data-base para controle de reajustes.</small></div>
 <div><label>Impacto financeiro estimado (R$)</label><input id="money" type="number" min="0" step=".01" placeholder="0,00"></div>
 <div class="full"><label>Descrição / contexto</label><textarea id="description" rows="2"></textarea></div>
-<div class="full"><label>Próxima ação *</label><input id="next" required placeholder="Qual é o próximo passo concreto?"></div>
+<div class="full"><label>Próxima ação *</label><input id="next" placeholder="Qual é o próximo passo concreto?"></div>
 <div><label>Dependência / aguardando</label><input id="dependency" placeholder="Prestador, Diretoria, área interna..."></div>
 <div class="wide"><label>Observações</label><input id="notes" placeholder="Protocolo interno, histórico resumido (sem dados pessoais)"></div>
 </div><div class="formactions"><button type="button" class="secondary" onclick="closeForm()">Cancelar</button><button type="submit">Salvar demanda</button></div></form></div></div>
@@ -379,10 +379,14 @@ function portfolioType(t){
 }
 function showPortfolio(owner){
  selectedPortfolio=owner;
- document.getElementById('tabLarissa').className=owner==='Larissa'?'active':'secondary';
- document.getElementById('tabDiego').className=owner==='Diego'?'active':'secondary';
+ const tabLarissa=document.getElementById('tabLarissa');
+ if(tabLarissa) tabLarissa.className=owner==='Larissa'?'active':'secondary';
+ const tabDiego=document.getElementById('tabDiego');
+ if(tabDiego) tabDiego.className=owner==='Diego'?'active':'secondary';
  const assigned=tasks.filter(t=>t.owner===owner);
- document.getElementById('portfolioDetails').innerHTML='<div class="portfolio-types">'+portfolioTypes[owner].map(type=>{
+ const portfolioDetails=document.getElementById('portfolioDetails');
+ if(!portfolioDetails || !portfolioTypes[owner]) return;
+ portfolioDetails.innerHTML='<div class="portfolio-types">'+portfolioTypes[owner].map(type=>{
  const list=assigned.filter(t=>portfolioType(t)===type);
  const active=list.filter(t=>!['Concluída','Suspensa'].includes(t.status)).length;
  return `<div class="portfolio-type"><b>${type}</b><span>${list.length} demanda(s) · ${active} aberta(s)</span></div>`;
@@ -434,8 +438,10 @@ function render(){
   card.querySelector('.exec-explain').textContent=message;
  });
 
- document.getElementById('larissaPortfolioCount').textContent=tasks.filter(t=>t.owner==='Larissa').length+' demanda(s) registradas';
- document.getElementById('diegoPortfolioCount').textContent=tasks.filter(t=>t.owner==='Diego').length+' demanda(s) registradas';
+ const larissaCountEl=document.getElementById('larissaPortfolioCount');
+ if(larissaCountEl) larissaCountEl.textContent=tasks.filter(t=>t.owner==='Larissa').length+' demanda(s) registradas';
+ const diegoCountEl=document.getElementById('diegoPortfolioCount');
+ if(diegoCountEl) diegoCountEl.textContent=tasks.filter(t=>t.owner==='Diego').length+' demanda(s) registradas';
  showPortfolio(selectedPortfolio);
  const owners=['Larissa','Diego'].map(name=>{
    const all=tasks.filter(t=>t.owner===name);
@@ -472,7 +478,31 @@ function render(){
 function rank(t){return ({'Crítica':0,'Alta':1,'Normal':2,'Baixa':3}[t.priority]??4)}
 function openForm(t=null){document.getElementById('taskForm').reset();document.getElementById('editId').value=t?.id||'';document.getElementById('formTitle').textContent=t?'Editar demanda':'Nova demanda';const map={provider:'provider',osNumber:'osNumber',providerType:'providerType',subject:'subject',category:'category',impact:'impact',priority:'priority',owner:'owner',support:'support',status:'status',due:'due',contractAnniversary:'contractAnniversary',money:'money',description:'description',next:'next',dependency:'dependency',notes:'notes'};for(const [k,id] of Object.entries(map))document.getElementById(id).value=t?.[k]??(k==='support'?'Nenhum':k==='priority'?'Normal':k==='status'?'Nova':'');document.getElementById('modal').classList.add('open')}
 function closeForm(){document.getElementById('modal').classList.remove('open')}
-function saveTask(e){e.preventDefault();let id=document.getElementById('editId').value;let t={};for(const k of ['provider','osNumber','providerType','subject','category','impact','priority','owner','support','status','due','contractAnniversary','money','description','next','dependency','notes'])t[k]=document.getElementById(k).value;t.money=Number(t.money||0);t.last=today();if(id){let old=tasks.find(x=>x.id===id);Object.assign(old,t)}else{t.id='H-'+String(Date.now()).slice(-6);t.created=today();tasks.push(t)}persist();closeForm();render();renderRecords();switchPanelTab('registros',document.querySelector('[data-tab-target="registros"]'))}
+async function saveTask(e){
+ e.preventDefault();
+ const form=document.getElementById('taskForm');
+ const saveButton=form.querySelector('button[type="submit"]');
+ // Validação obrigatória dos campos desativada a pedido do usuário.
+ if(saveButton){saveButton.disabled=true;saveButton.dataset.originalText=saveButton.textContent;saveButton.textContent='Salvando…';}
+ try {
+  const id=document.getElementById('editId').value;
+  const t={};
+  for(const k of ['provider','osNumber','providerType','subject','category','impact','priority','owner','support','status','due','contractAnniversary','money','description','next','dependency','notes']) t[k]=document.getElementById(k).value;
+  t.money=Number(t.money||0);t.last=today();
+  if(id){const old=tasks.find(x=>x.id===id);if(!old)throw new Error('A demanda não foi encontrada. Atualize a página e tente novamente.');Object.assign(old,t);}
+  else {t.id='H-'+String(Date.now()).slice(-6);t.created=today();tasks.push(t);}
+  persist();
+  render();renderRecords();
+  const tab=document.querySelector('[data-tab-target="registros"]');
+  if(tab)switchPanelTab('registros',tab);
+  closeForm();
+ } catch(err){
+  console.error('Erro ao salvar demanda:',err);
+  alert('Não foi possível salvar a demanda. Confira os campos e tente novamente.');
+ } finally {
+  if(saveButton){saveButton.disabled=false;saveButton.textContent=saveButton.dataset.originalText||'Salvar demanda';}
+ }
+}
 function editTask(id){let t=tasks.find(x=>x.id===id);if(t)openForm(t)}
 function finishTask(id){let t=tasks.find(x=>x.id===id);if(t){t.status=t.status==='Concluída'?'Em andamento':'Concluída';if(t.status==='Concluída')t.completed=today();t.last=today();persist();render();renderRecords()}}
 function deleteTask(id){const item=tasks.find(t=>t.id===id);if(!item)return;if(confirm('Excluir definitivamente a demanda '+id+' — '+(item.subject||item.provider||'sem assunto')+'? Esta ação não pode ser desfeita.')){tasks=tasks.filter(t=>t.id!==id);persist();render();renderRecords()}}
