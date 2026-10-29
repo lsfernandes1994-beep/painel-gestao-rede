@@ -9,6 +9,7 @@
 header{background:linear-gradient(115deg,#082f55,#06416d);color:white;padding:24px clamp(16px,4vw,44px);display:flex;justify-content:space-between;gap:20px;align-items:center;flex-wrap:wrap}
 h1{font-size:clamp(23px,3vw,34px);margin:0 0 5px}header p{margin:0;color:#d4e8f6}.eyebrow{text-transform:uppercase;letter-spacing:1.5px;font-weight:bold;font-size:11px;color:#9ed5f4}
 main{max-width:1500px;margin:auto;padding:22px clamp(12px,3vw,32px) 40px}.toolbar{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:18px}
+.action-cell{white-space:nowrap;display:flex;gap:6px;align-items:center}.icon-action{width:36px;height:36px;padding:0;display:inline-flex;align-items:center;justify-content:center;font-size:16px;border-radius:8px}.delete-action{background:#fbe8ea;color:#a52332;border:0;cursor:pointer}.icon-action:focus-visible{outline:3px solid #6ba7d8;outline-offset:2px}
 button,.button{border:0;border-radius:9px;padding:10px 14px;font-weight:700;cursor:pointer;background:var(--navy);color:#fff}.secondary{background:#e4edf5;color:var(--navy)}.light{background:white;color:var(--navy);border:1px solid var(--line)}
 .cards{display:grid;grid-template-columns:repeat(5,minmax(145px,1fr));gap:12px;margin:14px 0 20px}
 .card,.panel{background:white;border:1px solid var(--line);border-radius:14px;padding:16px;box-shadow:0 3px 12px #12324b08}
@@ -272,11 +273,11 @@ footer{color:var(--muted);font-size:11px;text-align:center;padding:18px}
 <div class="sectionhead"><h2>Registro e acompanhamento</h2><span class="muted" id="resultCount"></span></div>
 <div class="panel">
 <div class="filters">
-<div><label>Buscar</label><input id="search" placeholder="Prestador, assunto, ID..." oninput="render()"></div>
-<div><label>Responsável</label><select id="ownerFilter" onchange="render()"><option value="">Todos</option><option>Larissa</option><option>Diego</option></select></div>
-<div><label>Prioridade</label><select id="priorityFilter" onchange="render()"><option value="">Todas</option><option>Crítica</option><option>Alta</option><option>Normal</option><option>Baixa</option></select></div>
-<div><label>Status</label><select id="statusFilter" onchange="render()"><option value="">Todos</option><option>Nova</option><option>Em andamento</option><option>Aguardando terceiros</option><option>Concluída</option><option>Suspensa</option></select></div>
-<div><label>Categoria</label><select id="categoryFilter" onchange="render()"><option value="">Todas</option><option>Credenciamentos</option><option>Descredenciamentos</option><option>Contratos</option><option>Extensões</option><option>Reajuste</option><option>Honorário cirúrgico</option><option>Parametrização</option><option>Revisão de travas</option><option>Visitas</option><option>Outros</option></select></div>
+<div><label>Buscar</label><input id="search" placeholder="Prestador, assunto, ID..." oninput="renderRecords()"></div>
+<div><label>Responsável</label><select id="ownerFilter" onchange="renderRecords()"><option value="">Todos</option><option>Larissa</option><option>Diego</option></select></div>
+<div><label>Prioridade</label><select id="priorityFilter" onchange="renderRecords()"><option value="">Todas</option><option>Crítica</option><option>Alta</option><option>Normal</option><option>Baixa</option></select></div>
+<div><label>Status</label><select id="statusFilter" onchange="renderRecords()"><option value="">Todos</option><option>Nova</option><option>Em andamento</option><option>Aguardando terceiros</option><option>Concluída</option><option>Suspensa</option></select></div>
+<div><label>Categoria</label><select id="categoryFilter" onchange="renderRecords()"><option value="">Todas</option><option>Credenciamentos</option><option>Descredenciamentos</option><option>Contratos</option><option>Extensões</option><option>Reajuste</option><option>Honorário cirúrgico</option><option>Parametrização</option><option>Revisão de travas</option><option>Visitas</option><option>Outros</option></select></div>
 </div>
 <div class="tablewrap"><table><thead><tr><th>ID / Prazo</th><th>Nº da O.S.</th><th>Prestador / Assunto</th><th>Tipo de prestador</th><th>Prioridade</th><th>Responsável / Apoio</th><th>Status</th><th>Próxima ação</th><th>Ações</th></tr></thead><tbody id="tbody"></tbody></table></div>
 </div>
@@ -331,18 +332,27 @@ function load(){
   } catch(e) { console.warn('Não foi possível recuperar registros locais anteriores.',e); }
   return sample.map(x=>({...x}));
 }
+let panelSaveQueue = Promise.resolve();
+let panelLocalRevision = 0;
 function persist(){
-  try { localStorage.setItem(KEY,JSON.stringify(tasks)); }
+  const snapshot = JSON.parse(JSON.stringify(tasks));
+  const revision = ++panelLocalRevision;
+  try { localStorage.setItem(KEY,JSON.stringify(snapshot)); }
   catch(e) { console.warn('Não foi possível salvar cópia local.',e); }
+  if (typeof renderRecords === 'function') renderRecords();
+  if (typeof render === 'function') render();
   if (window.panelCloudReady && window.panelCloudClient) {
     window.panelLastLocalWrite = Date.now();
-    document.getElementById('syncStatus').textContent = 'Salvando na nuvem…';
-    window.panelCloudClient.from('panel_state').upsert({id:'main', payload:tasks, updated_at:new Date().toISOString()})
-      .then(({error})=>{
-        const el=document.getElementById('syncStatus');
-        if(error){el.textContent='Falha na sincronização';console.error(error);alert('A alteração ficou salva apenas neste navegador. Falha ao sincronizar com a nuvem: '+error.message);}
-        else el.textContent='Sincronizado na nuvem';
-      });
+    const statusEl=document.getElementById('syncStatus');
+    if(statusEl) statusEl.textContent = 'Salvando na nuvem…';
+    // Serializa gravações para que ações rápidas não se sobrescrevam entre si.
+    panelSaveQueue = panelSaveQueue.then(async()=>{
+      const {error}=await window.panelCloudClient.from('panel_state').upsert({id:'main', payload:snapshot, updated_at:new Date().toISOString()});
+      const el=document.getElementById('syncStatus');
+      if(error){if(el)el.textContent='Falha na sincronização';console.error(error);alert('Não foi possível sincronizar a alteração com a nuvem: '+error.message);return;}
+      if(revision===panelLocalRevision && el)el.textContent='Sincronizado na nuvem';
+      window.panelLastCloudWrite=Date.now();
+    }).catch(error=>{console.error(error);const el=document.getElementById('syncStatus');if(el)el.textContent='Falha na sincronização';});
   }
 }
 function today(){let d=new Date();return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`}
@@ -380,6 +390,17 @@ function showPortfolio(owner){
 }
 
 function datePlus(days){let d=new Date();d.setDate(d.getDate()+days);return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`}
+function renderRecords(){
+ const searchEl=document.getElementById('search');
+ const tbody=document.getElementById('tbody');
+ if(!searchEl || !tbody) return;
+ const q=searchEl.value.toLowerCase(),own=document.getElementById('ownerFilter').value,pri=document.getElementById('priorityFilter').value,st=document.getElementById('statusFilter').value,cat=document.getElementById('categoryFilter').value;
+ const filtered=tasks.filter(t=>(!q||[t.id,t.osNumber,t.provider,t.subject,t.description,t.next,t.contractAnniversary].join(' ').toLowerCase().includes(q))&&(!own||t.owner===own)&&(!pri||t.priority===pri)&&(!st||t.status===st)&&(!cat||t.category===cat)).sort((a,b)=>rank(a)-rank(b)||(a.due||'9999').localeCompare(b.due||'9999'));
+ document.getElementById('resultCount').textContent=`${filtered.length} registro(s)`;
+ tbody.innerHTML=filtered.length?filtered.map(t=>`<tr><td><b>${esc(t.id)}</b><br><span class="muted">${t.due?'Prazo: '+esc(t.due):'Sem prazo'}</span>${t.due&&t.due<today()&&!['Concluída','Suspensa'].includes(t.status)?'<br><span style="color:#c73e4d;font-weight:bold">VENCIDA</span>':''}</td><td><b>${esc(t.osNumber||'—')}</b></td><td><b>${esc(t.provider)}</b><br>${esc(t.subject)}<br><span class="muted">${esc(t.category)}</span>${t.contractAnniversary?'<br><span class="muted">Aniversário contratual: '+esc(t.contractAnniversary)+'</span>':''}</td><td>${esc(t.providerType||portfolioType(t))}</td><td><span class="pill ${esc(t.priority)}">${esc(t.priority)}</span><br><span class="muted">${esc(t.impact||'')}</span></td><td><b>${esc(t.owner)}</b><br><span class="muted">Apoio: ${esc(t.support||'Nenhum')}</span></td><td><span class="pill status" data-s="${esc(t.status)}">${esc(t.status)}</span></td><td>${esc(t.next||'—')}<br><span class="muted">${t.dependency?'Aguardando: '+esc(t.dependency):''}</span></td><td class="action-cell"><button class="secondary icon-action" type="button" title="Editar demanda" aria-label="Editar demanda" onclick="editTask('${esc(t.id)}')">✏️</button><button class="secondary icon-action" type="button" title="${t.status==='Concluída'?'Reabrir demanda':'Concluir demanda'}" aria-label="${t.status==='Concluída'?'Reabrir demanda':'Concluir demanda'}" onclick="finishTask('${esc(t.id)}')">${t.status==='Concluída'?'↩️':'✓'}</button><button class="icon-action delete-action" type="button" title="Excluir demanda" aria-label="Excluir demanda" onclick="deleteTask('${esc(t.id)}')">🗑️</button></td></tr>`).join(''):'<tr><td colspan="9" class="empty">Nenhuma demanda corresponde aos filtros.</td></tr>';
+
+}
+
 function render(){
  const open=openTasks(), overdue=open.filter(t=>t.due&&t.due<today()), done=tasks.filter(t=>t.status==='Concluída');
  document.getElementById('openCount').textContent=open.length;
@@ -447,18 +468,14 @@ function render(){
  </article>`).join('');
  document.getElementById('ownerChart').innerHTML=['Larissa','Diego'].map(n=>{let c=open.filter(t=>t.owner===n).length,p=open.length?Math.round(c/open.length*100):0;return `<div class="barline"><div class="barhead"><b>${n}</b><span>${c} demanda(s) · ${p}%</span></div><div class="bar"><span style="width:${p}%"></span></div></div>`}).join('');
  const order=['Crítica','Alta','Normal','Baixa'];document.getElementById('priorityChart').innerHTML=order.map(n=>{let c=open.filter(t=>t.priority===n).length,p=open.length?Math.round(c/open.length*100):0;return `<div class="barline"><div class="barhead"><b>${n}</b><span>${c}</span></div><div class="bar"><span style="width:${p}%;background:${n==='Crítica'?'#c73e4d':n==='Alta'?'#c88716':n==='Normal'?'#1686c9':'#25845c'}"></span></div></div>`}).join('');
- const q=document.getElementById('search').value.toLowerCase(),own=document.getElementById('ownerFilter').value,pri=document.getElementById('priorityFilter').value,st=document.getElementById('statusFilter').value,cat=document.getElementById('categoryFilter').value;
- const filtered=tasks.filter(t=>(!q||[t.id,t.osNumber,t.provider,t.subject,t.description,t.next,t.contractAnniversary].join(' ').toLowerCase().includes(q))&&(!own||t.owner===own)&&(!pri||t.priority===pri)&&(!st||t.status===st)&&(!cat||t.category===cat)).sort((a,b)=>rank(a)-rank(b)||(a.due||'9999').localeCompare(b.due||'9999'));
- document.getElementById('resultCount').textContent=`${filtered.length} registro(s)`;
- document.getElementById('tbody').innerHTML=filtered.length?filtered.map(t=>`<tr><td><b>${esc(t.id)}</b><br><span class="muted">${t.due?'Prazo: '+esc(t.due):'Sem prazo'}</span>${t.due&&t.due<today()&&!['Concluída','Suspensa'].includes(t.status)?'<br><span style="color:#c73e4d;font-weight:bold">VENCIDA</span>':''}</td><td><b>${esc(t.osNumber||'—')}</b></td><td><b>${esc(t.provider)}</b><br>${esc(t.subject)}<br><span class="muted">${esc(t.category)}</span>${t.contractAnniversary?'<br><span class="muted">Aniversário contratual: '+esc(t.contractAnniversary)+'</span>':''}</td><td>${esc(t.providerType||portfolioType(t))}</td><td><span class="pill ${esc(t.priority)}">${esc(t.priority)}</span><br><span class="muted">${esc(t.impact||'')}</span></td><td><b>${esc(t.owner)}</b><br><span class="muted">Apoio: ${esc(t.support||'Nenhum')}</span></td><td><span class="pill status" data-s="${esc(t.status)}">${esc(t.status)}</span></td><td>${esc(t.next||'—')}<br><span class="muted">${t.dependency?'Aguardando: '+esc(t.dependency):''}</span></td><td><button class="secondary" onclick="editTask('${esc(t.id)}')">Editar</button><br><br><button class="secondary" onclick="finishTask('${esc(t.id)}')">${t.status==='Concluída'?'Reabrir':'Concluir'}</button><br><br><button style="background:#fbe8ea;color:#a52332" onclick="deleteTask('${esc(t.id)}')">Excluir</button></td></tr>`).join(''):'<tr><td colspan="9" class="empty">Nenhuma demanda corresponde aos filtros.</td></tr>';
-}
+ renderRecords();}
 function rank(t){return ({'Crítica':0,'Alta':1,'Normal':2,'Baixa':3}[t.priority]??4)}
 function openForm(t=null){document.getElementById('taskForm').reset();document.getElementById('editId').value=t?.id||'';document.getElementById('formTitle').textContent=t?'Editar demanda':'Nova demanda';const map={provider:'provider',osNumber:'osNumber',providerType:'providerType',subject:'subject',category:'category',impact:'impact',priority:'priority',owner:'owner',support:'support',status:'status',due:'due',contractAnniversary:'contractAnniversary',money:'money',description:'description',next:'next',dependency:'dependency',notes:'notes'};for(const [k,id] of Object.entries(map))document.getElementById(id).value=t?.[k]??(k==='support'?'Nenhum':k==='priority'?'Normal':k==='status'?'Nova':'');document.getElementById('modal').classList.add('open')}
 function closeForm(){document.getElementById('modal').classList.remove('open')}
-function saveTask(e){e.preventDefault();let id=document.getElementById('editId').value;let t={};for(const k of ['provider','osNumber','providerType','subject','category','impact','priority','owner','support','status','due','contractAnniversary','money','description','next','dependency','notes'])t[k]=document.getElementById(k).value;t.money=Number(t.money||0);t.last=today();if(id){let old=tasks.find(x=>x.id===id);Object.assign(old,t)}else{t.id='H-'+String(Date.now()).slice(-6);t.created=today();tasks.push(t)}persist();closeForm();render();switchPanelTab('registros',document.querySelector('[data-tab-target="registros"]'))}
+function saveTask(e){e.preventDefault();let id=document.getElementById('editId').value;let t={};for(const k of ['provider','osNumber','providerType','subject','category','impact','priority','owner','support','status','due','contractAnniversary','money','description','next','dependency','notes'])t[k]=document.getElementById(k).value;t.money=Number(t.money||0);t.last=today();if(id){let old=tasks.find(x=>x.id===id);Object.assign(old,t)}else{t.id='H-'+String(Date.now()).slice(-6);t.created=today();tasks.push(t)}persist();closeForm();render();renderRecords();switchPanelTab('registros',document.querySelector('[data-tab-target="registros"]'))}
 function editTask(id){let t=tasks.find(x=>x.id===id);if(t)openForm(t)}
-function finishTask(id){let t=tasks.find(x=>x.id===id);if(t){t.status=t.status==='Concluída'?'Em andamento':'Concluída';if(t.status==='Concluída')t.completed=today();t.last=today();persist();render()}}
-function deleteTask(id){const item=tasks.find(t=>t.id===id);if(!item)return;if(confirm('Excluir definitivamente a demanda '+id+' — '+(item.subject||item.provider||'sem assunto')+'? Esta ação não pode ser desfeita.')){tasks=tasks.filter(t=>t.id!==id);persist();render()}}
+function finishTask(id){let t=tasks.find(x=>x.id===id);if(t){t.status=t.status==='Concluída'?'Em andamento':'Concluída';if(t.status==='Concluída')t.completed=today();t.last=today();persist();render();renderRecords()}}
+function deleteTask(id){const item=tasks.find(t=>t.id===id);if(!item)return;if(confirm('Excluir definitivamente a demanda '+id+' — '+(item.subject||item.provider||'sem assunto')+'? Esta ação não pode ser desfeita.')){tasks=tasks.filter(t=>t.id!==id);persist();render();renderRecords()}}
 function csvCell(v){return '"'+String(v??'').replace(/"/g,'""')+'"'}
 const cols=['id','created','osNumber','provider','providerType','subject','category','description','impact','priority','owner','support','status','due','contractAnniversary','next','last','dependency','money','completed','notes'];
 const labels=['ID','Data de registro','Número da O.S.','Prestador','Tipo de prestador','Assunto','Categoria','Descrição / contexto','Impacto','Prioridade','Responsável principal','Apoio','Status','Prazo da demanda','Aniversário contratual','Próxima ação','Data do último acompanhamento','Dependência / aguardando','Impacto financeiro estimado (R$)','Data de conclusão','Observações'];
@@ -530,6 +547,7 @@ function switchPanelTab(tab, button){
     btn.setAttribute('aria-selected', active ? 'true' : 'false');
   });
   if(button) button.focus({preventScroll:true});
+  if(tab === 'registros' && typeof renderRecords === 'function') renderRecords();
   window.scrollTo({top:0, behavior:'smooth'});
 }
 </script>
@@ -572,13 +590,13 @@ async function initializePanelForUser(user){
   status.textContent='Sincronizado na nuvem';
   if(panelPoll)clearInterval(panelPoll);
   panelPoll=setInterval(async()=>{
-    if(!window.panelCloudReady || Date.now()-(window.panelLastLocalWrite||0)<5000)return;
+    if(!window.panelCloudReady || Date.now()-(window.panelLastLocalWrite||0)<2500 || Date.now()-(window.panelLastCloudWrite||0)<1500)return;
     const result=await panelSupabase.from('panel_state').select('payload,updated_at').eq('id','main').maybeSingle();
     if(!result.error && result.data && Array.isArray(result.data.payload)){
       const incoming=JSON.stringify(result.data.payload);
-      if(incoming!==JSON.stringify(tasks)){tasks=result.data.payload;try{localStorage.setItem(KEY,incoming)}catch(e){}render();status.textContent='Atualizado com alterações da equipe';}
+      if(incoming!==JSON.stringify(tasks)){tasks=result.data.payload;try{localStorage.setItem(KEY,incoming)}catch(e){}render();renderRecords();status.textContent='Atualizado com alterações da equipe';}
     }
-  },8000);
+  },2000);
 }
 async function signOutPanel(){
   window.panelCloudReady=false;
