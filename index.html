@@ -221,6 +221,7 @@ footer{color:var(--muted);font-size:11px;text-align:center;padding:18px}
 .kpi-click:hover,.kpi-click:focus-visible{transform:translateY(-2px);border-color:#8db9da;box-shadow:0 7px 20px #12324b16;outline:2px solid #9bc8e8;outline-offset:2px}
 .kpi-click::after{content:'Clique para detalhar';display:block;margin-top:7px;font-size:10px;color:var(--muted)}
 .quick-filter-note{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;background:#eaf3fa;border:1px solid #d5e6f3;border-radius:10px;padding:10px 13px;margin:0 0 16px;font-size:12px;color:var(--navy)}
+.descred-queue{margin-top:12px;padding:10px;border:1px solid #efb7ac;background:#fff4f1;border-radius:10px}.descred-queue-title{font-size:12px;font-weight:800;color:#963f32;margin-bottom:7px}.descred-queue-item{padding:8px 0;border-top:1px solid #f0d2cc;display:flex;flex-direction:column;gap:3px;font-size:11px;color:#73443d}.descred-queue-item strong{font-size:12px;color:#7e2e25}.descred-queue-item b{color:#963f32}
 </style><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
@@ -576,7 +577,8 @@ function render(){
    const due=active.filter(t=>t.due&&t.due<today());
    const dueSoon=active.filter(t=>t.due&&t.due>=today()&&t.due<=datePlus(3));
    const critical=active.filter(t=>t.priority==='Crítica');
-   return {name,all,active,inProgress,waiting,newItems,completed,due,dueSoon,critical};
+   const descredActive=active.filter(t=>t.category==='Descredenciamentos');
+   return {name,all,active,inProgress,waiting,newItems,completed,due,dueSoon,critical,descredActive};
  }).sort((a,b)=>b.active.length-a.active.length||b.critical.length-a.critical.length||a.name.localeCompare(b.name));
  document.getElementById('ownerQueues').innerHTML=owners.map((o,i)=>`<article class="owner-card">
    <div class="owner-top"><div><div class="muted" style="font-size:11px;text-transform:uppercase;letter-spacing:.8px">Ranking de demandas abertas #${i+1}</div><div class="owner-name">${o.name}</div></div><div class="rank">${i+1}</div></div>
@@ -591,6 +593,7 @@ function render(){
    <div class="queue-row"><span>Críticas em aberto</span><span class="queue-count">${o.critical.length}</span></div>
    <div class="queue-row"><span>Com prazo vencido</span><span class="queue-count" style="color:${o.due.length?'#c73e4d':'inherit'}">${o.due.length}</span></div>
    <div class="queue-row"><span>Vencem nos próximos 3 dias</span><span class="queue-count">${o.dueSoon.length}</span></div>
+   ${o.descredActive.length ? `<div class="descred-queue"><div class="descred-queue-title">Descredenciamentos em andamento (${o.descredActive.length})</div>${o.descredActive.map(t=>`<div class="descred-queue-item"><strong>${escapeHtml(t.provider||'Prestador não informado')}</strong><span>Em processo de descredenciamento</span><b>Encerramento previsto: ${t.contractEndDate?formatDateBR(t.contractEndDate):'data não informada'}</b></div>`).join('')}</div>` : ''}
    <div class="queue-title">Carga aberta vs. total em aberto</div>
    <div class="bar"><span style="width:${open.length?Math.round(o.active.length/open.length*100):0}%"></span></div>
    <div class="hint" style="margin-top:6px">${open.length?Math.round(o.active.length/open.length*100):0}% das demandas abertas atribuídas a ${o.name}. Total histórico: ${o.all.length} demanda(s).</div>
@@ -641,9 +644,23 @@ async function loadMonthlyMetrics(){if(!window.panelCloudReady||!window.panelClo
 function refreshDashboard(){renderDashboard();if(window.panelCloudReady)loadMonthlyMetrics();}
 
 function rank(t){return ({'Crítica':0,'Alta':1,'Normal':2,'Baixa':3}[t.priority]??4)}
+function escapeHtml(value){return String(value??'').replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));}
+function formatDateBR(value){if(!value)return '';const parts=String(value).split('-');return parts.length===3?`${parts[2]}/${parts[1]}/${parts[0]}`:String(value);}
 function updateCategoryFields(){
  const cat=String(document.getElementById('category').value||'').trim();
- const descred=document.getElementById('descredFields'); if(descred){ const showDescred = cat === 'Descredenciamentos'; descred.style.display = showDescred ? 'block' : 'none'; descred.hidden = !showDescred; }
+ const isDescredOnly = cat === 'Descredenciamentos';
+ const descred=document.getElementById('descredFields'); if(descred){ descred.style.display = isDescredOnly ? 'block' : 'none'; descred.hidden = !isDescredOnly; }
+ // For descredenciamento, keep only essential identification/ownership fields plus the dedicated termination fields.
+ const baseGrid=document.querySelector('#taskForm > .formgrid');
+ if(baseGrid){
+   const keepIds=new Set(['provider','osNumber','subject','providerType','category','priority','owner','status']);
+   Array.from(baseGrid.children).forEach(wrap=>{
+     const input=wrap.querySelector('input,select,textarea');
+     const keep=!isDescredOnly || (input && keepIds.has(input.id));
+     wrap.hidden=!keep;
+     wrap.style.display=keep?'':'none';
+   });
+ }
  calculateContractEndDate();
  const allowedNext=['Reajuste','Credenciamentos','Extensões'];
  const nextButton=document.getElementById('nextStepButton');
