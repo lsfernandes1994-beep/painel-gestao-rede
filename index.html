@@ -984,8 +984,6 @@ document.addEventListener('DOMContentLoaded',async()=>{
   }
   if(!window.supabase || !window.supabase.createClient){showLoginError('Não foi possível carregar o serviço de autenticação. Verifique a conexão com a internet.');return;}
   panelSupabase=window.supabase.createClient(SUPABASE_URL,SUPABASE_ANON_KEY);
-  const {data:{session}}=await panelSupabase.auth.getSession();
-  if(session) await initializePanelForUser(session.user);
   document.getElementById('loginForm').addEventListener('submit',async e=>{
     e.preventDefault();showLoginError('');setLoginBusy(true);
     const email=document.getElementById('loginEmail').value.trim();
@@ -1016,6 +1014,20 @@ document.addEventListener('DOMContentLoaded',async()=>{
       console.error('Falha no login do painel:',err);
     }
   });
+  // O formulário de login fica ativo antes de consultar a sessão salva,
+  // para que uma falha ou demora do getSession não bloqueie o botão.
+  try {
+    const sessionResult = await Promise.race([
+      panelSupabase.auth.getSession(),
+      new Promise((_, reject) => setTimeout(() => reject(new Error('SESSION_TIMEOUT')), 8000))
+    ]);
+    if(sessionResult.data && sessionResult.data.session) {
+      await initializePanelForUser(sessionResult.data.session.user);
+    }
+  } catch(err) {
+    console.error('Não foi possível recuperar a sessão existente:', err);
+    showLoginError('A verificação da sessão demorou. Você ainda pode tentar entrar novamente.');
+  }
   panelSupabase.auth.onAuthStateChange(async(event,session)=>{
     if(event==='SIGNED_OUT'){
       window.panelCloudReady=false;
