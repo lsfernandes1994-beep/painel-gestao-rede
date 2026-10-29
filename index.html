@@ -9,9 +9,25 @@
 header{background:linear-gradient(115deg,#082f55,#06416d);color:white;padding:24px clamp(16px,4vw,44px);display:flex;justify-content:space-between;gap:20px;align-items:center;flex-wrap:wrap}
 h1{font-size:clamp(23px,3vw,34px);margin:0 0 5px}header p{margin:0;color:#d4e8f6}.eyebrow{text-transform:uppercase;letter-spacing:1.5px;font-weight:bold;font-size:11px;color:#9ed5f4}
 main{max-width:1500px;margin:auto;padding:22px clamp(12px,3vw,32px) 40px}.toolbar{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:18px}
+.action-cell{white-space:nowrap;display:flex;gap:6px;align-items:center}.icon-action{width:36px;height:36px;padding:0;display:inline-flex;align-items:center;justify-content:center;font-size:16px;border-radius:8px}.delete-action{background:#fbe8ea;color:#a52332;border:0;cursor:pointer}.icon-action:focus-visible{outline:3px solid #6ba7d8;outline-offset:2px}
 button,.button{border:0;border-radius:9px;padding:10px 14px;font-weight:700;cursor:pointer;background:var(--navy);color:#fff}.secondary{background:#e4edf5;color:var(--navy)}.light{background:white;color:var(--navy);border:1px solid var(--line)}
 .cards{display:grid;grid-template-columns:repeat(5,minmax(145px,1fr));gap:12px;margin:14px 0 20px}
 .card,.panel{background:white;border:1px solid var(--line);border-radius:14px;padding:16px;box-shadow:0 3px 12px #12324b08}
+/* Cores suaves dos indicadores solicitadas */
+.cards .card:has(#openCount), .cards .card:has(#doneCount){background:#DDF3E4;border-color:#B7E2C4}
+.cards .card:has(#openCount) .label,.cards .card:has(#openCount) .metric,.cards .card:has(#doneCount) .label,.cards .card:has(#doneCount) .metric{color:#237A45}
+.cards .card:has(#criticalCount){background:#FCE1E1;border-color:#F2B8B8}
+.cards .card:has(#criticalCount) .label,.cards .card:has(#criticalCount) .metric{color:#B42318}
+.cards .card:has(#overdueCount){background:#FECACA;border:2px solid #DC2626;box-shadow:0 4px 16px #DC262633}
+.cards .card:has(#overdueCount) .label,.cards .card:has(#overdueCount) .metric{color:#991B1B}
+.cards .card:has(#overdueCount) .hint{color:#7F1D1D;font-weight:600}
+.cards .card:has(#waitingCount){background:#FFF3C4;border-color:#F1D879}
+.cards .card:has(#waitingCount) .label,.cards .card:has(#waitingCount) .metric{color:#856404}
+.cards .card:has(#providersReajustedCount){background:#EDE3FA;border-color:#D1B9F0}
+.cards .card:has(#providersReajustedCount) .label,.cards .card:has(#providersReajustedCount) .metric{color:#6941A5}
+.cards .card:has(#providersWithoutReajuste){background:#F9D9D3;border-color:#EAB3A8}
+.cards .card:has(#providersWithoutReajuste) .label,.cards .card:has(#providersWithoutReajuste) .metric{color:#963F32}
+
 .card .label{color:var(--muted);font-size:12px;font-weight:700}.metric{font-size:30px;font-weight:800;color:var(--navy);margin-top:6px}.hint{font-size:11px;color:var(--muted)}
 .owner-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin-bottom:16px}
 .owner-card{background:white;border:1px solid var(--line);border-radius:14px;padding:16px;box-shadow:0 3px 12px #12324b08}
@@ -194,6 +210,20 @@ footer{color:var(--muted);font-size:11px;text-align:center;padding:18px}
 .auth-brand{font-size:11px;font-weight:800;letter-spacing:1.8px;text-transform:uppercase;color:#1686c9}
 .auth-card h2{margin:8px 0;color:#082f55;font-size:25px}.auth-card p{color:#61758a;margin:0 0 22px}.auth-card label{display:block;font-weight:700;margin:14px 0 6px}.auth-card input{width:100%;border:1px solid #cbd9e5;border-radius:9px;padding:12px;font:inherit}.auth-card button{width:100%;margin-top:18px;padding:13px}.auth-error{color:#b42332;font-size:13px;margin-top:12px;white-space:pre-wrap}.auth-note{font-size:11px!important;margin-top:18px!important}.user-strip{background:#e6eff7;color:#17324d;padding:9px clamp(12px,3vw,32px);display:flex;gap:12px;align-items:center;justify-content:flex-end;font-size:12px;flex-wrap:wrap}.user-strip button{padding:6px 10px;font-size:12px}
 
+
+/* Dashboard analítico integrado */
+.dash-shell{display:grid;gap:18px}.dash-toolbar{display:flex;gap:12px;align-items:end;flex-wrap:wrap}.dash-toolbar>div{min-width:160px}.dash-kpis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}.dash-kpi{background:#fff;border:1px solid #dbe5ef;border-radius:14px;padding:16px;box-shadow:0 4px 14px #0b25400b;min-width:0}.dash-kpi .k-label{font-size:12px;color:#61758a;font-weight:700}.dash-kpi .k-value{font-size:27px;font-weight:800;color:#082f55;margin-top:8px;overflow-wrap:anywhere}.dash-kpi .k-foot{font-size:11px;color:#61758a;margin-top:5px}.dash-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}.dash-card{background:#fff;border:1px solid #dbe5ef;border-radius:14px;padding:18px;min-width:0;box-shadow:0 4px 14px #0b25400b}.dash-card h3{font-size:15px;margin:0 0 4px;color:#12305a}.dash-card p{font-size:12px;color:#61758a;margin:0 0 14px}.dash-chart{width:100%;height:auto;display:block;min-height:180px}.dash-form-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}.dash-form-grid label{display:block;font-size:12px;color:#61758a;font-weight:700;margin-bottom:5px}.dash-form-grid input,.dash-toolbar select{width:100%;padding:10px;border:1px solid #cbd7e4;border-radius:8px;background:#fff;color:#17324d}.dash-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:14px;flex-wrap:wrap}.dash-status{font-size:12px;color:#61758a;align-self:center;margin-right:auto}.dash-table{width:100%;border-collapse:collapse;font-size:12px}.dash-table th,.dash-table td{padding:9px;border-bottom:1px solid #e5ebf2;text-align:left}.dash-table th{color:#61758a;background:#f5f8fb}.dash-table td:last-child,.dash-table th:last-child{text-align:right}.dash-owner-bars{display:grid;gap:12px}.dash-owner-row{display:grid;grid-template-columns:90px 1fr 34px;gap:10px;align-items:center;font-size:12px}.dash-owner-track{height:10px;background:#e7eef6;border-radius:99px;overflow:hidden}.dash-owner-fill{height:100%;border-radius:99px;background:linear-gradient(90deg,#1686c9,#159d9a)}.dash-footnote{font-size:11px;color:#61758a;line-height:1.5}.dash-pill{display:inline-flex;padding:4px 8px;border-radius:99px;background:#e9f4fb;color:#0b5a87;font-size:11px;font-weight:700}
+@media(max-width:900px){.dash-kpis{grid-template-columns:repeat(2,minmax(0,1fr))}.dash-grid{grid-template-columns:1fr}.dash-form-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:520px){.dash-form-grid{grid-template-columns:1fr}.dash-kpi .k-value{font-size:22px}}
+
+/* Dashboard otimizado: KPIs clicáveis e leitura rápida */
+.kpi-click{cursor:pointer;transition:transform .15s ease,box-shadow .15s ease,border-color .15s ease}
+.kpi-click:hover,.kpi-click:focus-visible{transform:translateY(-2px);border-color:#8db9da;box-shadow:0 7px 20px #12324b16;outline:2px solid #9bc8e8;outline-offset:2px}
+.kpi-click::after{content:'Clique para detalhar';display:block;margin-top:7px;font-size:10px;color:var(--muted)}
+.quick-filter-note{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;background:#eaf3fa;border:1px solid #d5e6f3;border-radius:10px;padding:10px 13px;margin:0 0 16px;font-size:12px;color:var(--navy)}
+.descred-queue{margin-top:12px;padding:10px;border:1px solid #efb7ac;background:#fff4f1;border-radius:10px}.descred-queue-title{font-size:12px;font-weight:800;color:#963f32;margin-bottom:7px}.descred-queue-item{padding:8px 0;border-top:1px solid #f0d2cc;display:flex;flex-direction:column;gap:3px;font-size:11px;color:#73443d}.descred-queue-item strong{font-size:12px;color:#7e2e25}.descred-queue-item b{color:#963f32}
+[hidden]{display:none!important}
+.network-badge{width:100%;min-height:42px;text-align:left;border:1px solid #c7d9ea;border-radius:9px;background:#edf4fb;color:#0b2d5b;padding:10px 12px;font-weight:800;opacity:1;cursor:default}.network-badge[data-network="EXTERNA"]{background:#fff0d5;border-color:#efc46b;color:#805300}.network-badge[data-network="VERTICALIZADA"]{background:#dff5eb;border-color:#8dd3b3;color:#146746}.network-badge:disabled{opacity:1} 
 </style><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
@@ -217,20 +247,66 @@ footer{color:var(--muted);font-size:11px;text-align:center;padding:18px}
 <button type="button" class="tab-button active" role="tab" aria-selected="true" data-tab-target="demandas" onclick="switchPanelTab('demandas', this)">Demandas e acompanhamento</button>
 <button type="button" class="tab-button" role="tab" aria-selected="false" data-tab-target="registros" onclick="switchPanelTab('registros', this)">Consultar / editar demandas</button>
 <button type="button" class="tab-button" role="tab" aria-selected="false" data-tab-target="executivo" onclick="switchPanelTab('executivo', this)">Resumo executivo por responsável</button>
+<button type="button" class="tab-button" role="tab" aria-selected="false" data-tab-target="dashboard" onclick="switchPanelTab('dashboard', this)">Dashboard de Gestão</button>
+<button type="button" class="tab-button" role="tab" aria-selected="false" data-tab-target="visitas-ano" onclick="switchPanelTab('visitas-ano', this)">Cronograma anual de visitas</button>
 </nav>
 
 <div class="tab-panel" data-tab-panel="demandas">
 <div class="toolbar"><button onclick="openForm()">+ Registrar demanda</button><button class="secondary" onclick="document.getElementById('importFile').click()">Importar CSV</button><input id="importFile" type="file" accept=".csv,text/csv" hidden onchange="importCSV(event)"><button class="secondary" onclick="downloadTemplate()">Baixar modelo CSV</button><button class="secondary" onclick="resetDemo()">Restaurar exemplos</button><span class="hint" style="align-self:center">As demandas registradas entram na fila e atualizam os indicadores. Registros sincronizados na nuvem para usuários autenticados.</span></div>
 <section class="cards">
-<div class="card"><div class="label">Demandas abertas</div><div class="metric" id="openCount">0</div><div class="hint">Não concluídas ou suspensas</div></div>
-<div class="card"><div class="label">Prioridade crítica</div><div class="metric" id="criticalCount">0</div><div class="hint">Exigem avaliação imediata</div></div>
-<div class="card"><div class="label">Prazos vencidos</div><div class="metric" id="overdueCount">0</div><div class="hint">Demandas abertas fora do prazo</div></div>
-<div class="card"><div class="label">Aguardando terceiros</div><div class="metric" id="waitingCount">0</div><div class="hint">Cobrar e registrar retorno</div></div>
-<div class="card"><div class="label">Concluídas</div><div class="metric" id="doneCount">0</div><div class="hint">Demandas finalizadas</div></div>
+<div class="card kpi-click" role="button" tabindex="0" title="Ver demandas abertas" onclick="quickFilter('open')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();quickFilter('open')}"><div class="label">Demandas abertas</div><div class="metric" id="openCount">0</div><div class="hint">Não concluídas ou suspensas</div></div>
+<div class="card kpi-click" role="button" tabindex="0" title="Ver demandas críticas" onclick="quickFilter('critical')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();quickFilter('critical')}"><div class="label">Prioridade crítica</div><div class="metric" id="criticalCount">0</div><div class="hint">Exigem avaliação imediata</div></div>
+<div class="card kpi-click" role="button" tabindex="0" title="Ver demandas vencidas" onclick="quickFilter('overdue')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();quickFilter('overdue')}"><div class="label">Prazos vencidos</div><div class="metric" id="overdueCount">0</div><div class="hint">Demandas abertas fora do prazo</div></div>
+<div class="card kpi-click" role="button" tabindex="0" title="Ver demandas aguardando terceiros" onclick="quickFilter('waiting')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();quickFilter('waiting')}"><div class="label">Aguardando terceiros</div><div class="metric" id="waitingCount">0</div><div class="hint">Cobrar e registrar retorno</div></div>
+<div class="card kpi-click" role="button" tabindex="0" title="Ver demandas concluídas" onclick="quickFilter('done')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();quickFilter('done')}"><div class="label">Concluídas</div><div class="metric" id="doneCount">0</div><div class="hint">Demandas finalizadas</div></div>
+<div class="card kpi-click" role="button" tabindex="0" title="Ver reajustes concluídos" onclick="quickFilter('reajuste')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();quickFilter('reajuste')}"><div class="label">Prestadores com reajuste aplicado</div><div class="metric"><span id="providersReajustedCount">0</span><small style="font-size:14px;color:var(--muted)"> / 102</small></div><div class="hint"><span id="providersReajustedPercent">0%</span> da carteira de Larissa e Diego</div></div>
+<div class="card kpi-click" role="button" tabindex="0" title="Ver base de reajustes" onclick="quickFilter('reajusteAll')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();quickFilter('reajusteAll')}"><div class="label">Prestadores sem reajuste registrado</div><div class="metric" id="providersWithoutReajuste">102</div><div class="hint">Com base nos 102 prestadores da carteira</div></div>
 </section>
-
+<div class="quick-filter-note"><span><strong>Visão rápida:</strong> selecione qualquer indicador para abrir os registros correspondentes. Use o Dashboard para acompanhar tendências mensais.</span><button type="button" class="secondary" onclick="clearQuickFilter()">Limpar filtros</button></div>
 
 </div>
+
+<div class="tab-panel" data-tab-panel="dashboard" hidden>
+ <div class="dash-shell">
+  <div class="sectionhead"><div><h2>Dashboard de Gestão de Rede Hospitalar</h2><span class="muted">Visão mensal de produção, negociações e atividade da equipe</span></div><span class="dash-pill" id="dashCloudBadge">Base compartilhada</span></div>
+  <div class="dash-toolbar">
+   <div><label for="dashYear">Ano de referência</label><select id="dashYear" onchange="renderDashboard()"></select></div>
+   <div><label for="dashMonth">Mês para lançamento</label><select id="dashMonth" onchange="loadMetricForm()"></select></div>
+   <button type="button" onclick="refreshDashboard()" class="secondary">↻ Atualizar indicadores</button>
+  </div>
+  <section class="dash-kpis" id="dashKpis"></section>
+  <div class="dash-grid">
+   <section class="dash-card"><h3>Produção mensal</h3><p>Demandas registradas e concluídas por mês, conforme as datas existentes nos registros.</p><div id="dashProductionChart"></div></section>
+   <section class="dash-card"><h3>Economia em negociações</h3><p>Valores lançados manualmente por mês (R$).</p><div id="dashSavingsChart"></div></section>
+   <section class="dash-card"><h3>Visitas realizadas</h3><p>Quantidade de visitas técnicas ou comerciais lançadas por mês.</p><div id="dashVisitsChart"></div></section>
+   <section class="dash-card"><h3>Atuação por responsável</h3><p>Demandas atualmente atribuídas a cada responsável.</p><div id="dashOwnerChart" class="dash-owner-bars"></div></section>
+   <section class="dash-card"><h3>Reajustes negociados</h3><p>Quantidade informada mensalmente.</p><div id="dashAdjustmentsChart"></div></section>
+   <section class="dash-card"><h3>Credenciamentos e extensões</h3><p>Novos prestadores e extensões de serviços informados por mês.</p><div id="dashNetworkChart"></div></section>
+  </div>
+  <section class="dash-card">
+   <div class="sectionhead"><div><h3>Lançamento mensal de resultados</h3><p>Preencha os indicadores complementares. Ao salvar, os dados ficam compartilhados com os usuários autenticados do painel.</p></div></div>
+   <div class="dash-form-grid">
+    <div><label for="metricSavings">Economia em negociações (R$)</label><input id="metricSavings" type="number" min="0" step="0.01" placeholder="0,00"></div>
+    <div><label for="metricVisits">Quantidade de visitas</label><input id="metricVisits" type="number" min="0" step="1" placeholder="0"></div>
+    <div><label for="metricAdjustments">Reajustes negociados</label><input id="metricAdjustments" type="number" min="0" step="1" placeholder="0"></div>
+    <div><label for="metricProviders">Novos prestadores credenciados</label><input id="metricProviders" type="number" min="0" step="1" placeholder="0"></div>
+    <div><label for="metricExtensions">Extensões de serviços</label><input id="metricExtensions" type="number" min="0" step="1" placeholder="0"></div>
+    <div><label for="metricNotes">Observações do mês</label><input id="metricNotes" type="text" maxlength="300" placeholder="Ex.: visitas em hospitais prioritários"></div>
+   </div>
+   <div class="dash-actions"><span id="metricSaveStatus" class="dash-status">Selecione o mês e preencha os indicadores.</span><button type="button" class="secondary" onclick="loadMetricForm()">Desfazer alterações</button><button type="button" onclick="saveMonthlyMetrics()">Salvar indicadores do mês</button></div>
+  </section>
+  <section class="dash-card"><h3>Resumo mensal</h3><p>Produção derivada das demandas e lançamentos complementares.</p><div style="overflow:auto"><table class="dash-table"><thead><tr><th>Mês</th><th>Registradas</th><th>Concluídas</th><th>Economia</th><th>Visitas</th><th>Reajustes</th><th>Novos prestadores</th><th>Extensões</th></tr></thead><tbody id="dashMonthlyTable"></tbody></table></div></section>
+  <p class="dash-footnote">Nota: produção e conclusão são calculadas a partir dos campos de data das demandas existentes. A economia combina lançamentos mensais com a economia calculada nas demandas de reajuste. O quantitativo de prestadores reajustados conta nomes únicos em demandas de reajuste concluídas com proposta inicial preenchida, sobre a referência de 102 prestadores. A economia deve refletir o valor efetivamente negociado segundo o critério interno da equipe. Os indicadores compartilhados usam a tabela panel_state já configurada no Supabase; caso as políticas atuais não permitam gravar a linha de métricas, será necessário ajustar a política de acesso.</p>
+ </div>
+</div>
+
+<div class="tab-panel" data-tab-panel="visitas-ano" hidden>
+ <div class="sectionhead"><div><h2>Cronograma anual de visitas</h2><span class="muted">As visitas aparecem automaticamente conforme você cadastrar a categoria “Visitas” e preencher a data da visita.</span></div>
+ <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap"><label for="visitScheduleYear">Ano:</label><select id="visitScheduleYear" onchange="renderAnnualVisits()" style="padding:9px;border:1px solid #cbd7e4;border-radius:8px;background:white"></select><button type="button" class="secondary" onclick="openFormForVisit()">+ Agendar visita</button></div></div>
+ <section class="cards" style="margin-bottom:16px"><div class="card"><div class="label">Visitas no ano</div><div class="metric" id="annualVisitTotal">0</div></div><div class="card"><div class="label">Agendadas</div><div class="metric" id="annualVisitScheduled">0</div></div><div class="card"><div class="label">Concluídas</div><div class="metric" id="annualVisitCompleted">0</div></div></section>
+ <div class="panel"><div class="tablewrap"><table><thead><tr><th>Data</th><th>Mês</th><th>Código / Prestador</th><th>Responsável</th><th>Status</th><th>Objetivo / próxima ação</th><th>Ação</th></tr></thead><tbody id="annualVisitsBody"></tbody></table></div><p class="hint" style="margin-top:12px">Para incluir uma visita: clique em “Agendar visita”, escolha a categoria “Visitas”, preencha a data da visita e selecione o status “Agendado”. A lista é montada a partir das demandas salvas e acompanha alterações e exclusões.</p></div>
+</div>
+
 <div class="tab-panel" data-tab-panel="executivo" hidden>
 <div class="sectionhead"><h2>Painel executivo por responsável</h2><span class="muted">As cores mudam automaticamente conforme os prazos</span></div>
 <section class="exec-grid">
@@ -272,13 +348,13 @@ footer{color:var(--muted);font-size:11px;text-align:center;padding:18px}
 <div class="sectionhead"><h2>Registro e acompanhamento</h2><span class="muted" id="resultCount"></span></div>
 <div class="panel">
 <div class="filters">
-<div><label>Buscar</label><input id="search" placeholder="Prestador, assunto, ID..." oninput="render()"></div>
-<div><label>Responsável</label><select id="ownerFilter" onchange="render()"><option value="">Todos</option><option>Larissa</option><option>Diego</option></select></div>
-<div><label>Prioridade</label><select id="priorityFilter" onchange="render()"><option value="">Todas</option><option>Crítica</option><option>Alta</option><option>Normal</option><option>Baixa</option></select></div>
-<div><label>Status</label><select id="statusFilter" onchange="render()"><option value="">Todos</option><option>Processo de assinatura</option><option>Nova</option><option>Em andamento</option><option>Aguardando terceiros</option><option>Concluída</option><option>Suspensa</option></select></div>
-<div><label>Categoria</label><select id="categoryFilter" onchange="render()"><option value="">Todas</option><option>Credenciamentos</option><option>Descredenciamentos</option><option>Contratos</option><option>Extensões</option><option>Reajuste</option><option>Honorário cirúrgico</option><option>Parametrização</option><option>Revisão de travas</option><option>Visitas</option><option>Outros</option></select></div>
+<div><label>Buscar</label><input id="search" placeholder="Prestador, assunto, ID..." oninput="renderRecords()"></div>
+<div><label>Responsável</label><select id="ownerFilter" onchange="renderRecords()"><option value="">Todos</option><option>Larissa</option><option>Diego</option></select></div>
+<div><label>Prioridade</label><select id="priorityFilter" onchange="renderRecords()"><option value="">Todas</option><option>Crítica</option><option>Alta</option><option>Normal</option><option>Baixa</option></select></div>
+<div><label>Status</label><select id="statusFilter" onchange="renderRecords()"><option value="">Todos</option><option>Nova</option><option>Agendado</option><option>Em andamento</option><option>Aguardando terceiros</option><option>Concluída</option><option>Suspensa</option></select></div>
+<div><label>Categoria</label><select id="categoryFilter" onchange="renderRecords()"><option value="">Todas</option><option>Credenciamentos</option><option>Descredenciamentos</option><option>Contratos</option><option>Extensões</option><option>Reajuste</option><option>Honorário cirúrgico</option><option>Parametrização</option><option>Revisão de travas</option><option>Visitas</option><option>Outros</option></select></div>
 </div>
-<div class="tablewrap"><table><thead><tr><th>ID / Prazo</th><th>Nº da O.S.</th><th>Prestador / Assunto</th><th>Tipo de prestador</th><th>Prioridade</th><th>Responsável / Apoio</th><th>Status</th><th>Próxima ação</th><th>Ações</th></tr></thead><tbody id="tbody"></tbody></table></div>
+<div class="tablewrap"><table><thead><tr><th>ID / Prazo</th><th>Nº da O.S.</th><th>Prestador / Assunto</th><th>Tipo de prestador</th><th>Rede</th><th>Prioridade</th><th>Responsável / Apoio</th><th>Status</th><th>Próxima ação</th><th>Ações</th></tr></thead><tbody id="tbody"></tbody></table></div>
 </div>
 <div class="sectionhead"><h2>Critérios de responsabilidade</h2></div>
 <div class="twocol">
@@ -290,24 +366,83 @@ footer{color:var(--muted);font-size:11px;text-align:center;padding:18px}
 <div><label>Código do prestador *</label><input id="providerCode" required inputmode="numeric" autocomplete="off" placeholder="Digite o código" oninput="lookupProviderDebounced()"><small id="providerLookupStatus" class="hint">Digite o código para localizar o prestador na planilha Rede.</small></div>
 <div><label>Prestador / nome do prestador *</label><input id="provider" required placeholder="Preenchido automaticamente pela base" autocomplete="off"></div>
 <div><label>Número da O.S.</label><input id="osNumber" placeholder="Ex.: 623401" inputmode="numeric"></div>
-<div class="wide"><label>Assunto *</label><input id="subject" required placeholder="Resumo objetivo da demanda"></div>
-<div><label>Tipo de prestador *</label><select id="providerType" required><option>Hospitais</option><option>Honorários cirúrgicos</option><option>Banco de sangue</option><option>Home care</option><option>Hemodiálise</option><option>Laboratórios</option><option>Clínicas de imagem</option><option>Clínicas com exames associados</option><option>Outros / revisar classificação</option></select></div>
-<div><label>Categoria</label><select id="category"><option>Credenciamentos</option><option>Descredenciamentos</option><option>Contratos</option><option>Extensões</option><option>Reajuste</option><option>Honorário cirúrgico</option><option>Parametrização</option><option>Revisão de travas</option><option>Visitas</option><option>Outros</option></select></div>
+<div class="wide"><label>Assunto *</label><input id="subject" placeholder="Resumo objetivo da demanda"></div>
+<div><label>Tipo de prestador *</label><input id="providerType" required readonly placeholder="Preenchido pela planilha Rede"></div>
+<div><label>Rede do prestador</label><button type="button" id="providerNetworkBadge" class="network-badge" disabled>Informe o código do prestador</button><input type="hidden" id="providerNetwork" value=""></div>
+<div><label>Categoria</label><select id="category" onchange="updateCategoryFields()"><option>Credenciamentos</option><option>Descredenciamentos</option><option>Contratos</option><option>Extensões</option><option>Reajuste</option><option>Honorário cirúrgico</option><option>Parametrização</option><option>Revisão de travas</option><option>Visitas</option><option>Outros</option></select></div>
+<div style="display:none"><label>Transação (TR) *</label><input id="transaction" placeholder="Informe a transação"></div>
+<div style="display:none"><label>Data da demanda *</label><input id="requestDate" type="date"></div>
+<div style="display:none" id="visitDateField"><label>Data da visita *</label><input id="visitDate" type="date"></div>
 <div><label>Impacto</label><select id="impact"><option>Risco assistencial / judicial</option><option>Financeiro / contratual</option><option>Continuidade de atendimento</option><option>Regulatório / reputacional</option><option>Operacional</option></select></div>
 <div><label>Prioridade *</label><select id="priority"><option>Crítica</option><option>Alta</option><option selected>Normal</option><option>Baixa</option></select></div>
-<div><label>Responsável principal *</label><select id="owner" required><option>Larissa</option><option>Diego</option></select></div>
+<div><label>Responsável principal *</label><select id="owner"><option>Larissa</option><option>Diego</option></select></div>
 <div><label>Apoio</label><select id="support"><option>Nenhum</option><option>Larissa</option><option>Diego</option></select></div>
-<div><label>Status</label><select id="status" required><option>Processo de assinatura</option><option>Em andamento</option><option>Aguardando terceiros</option><option>Concluída</option><option>Suspensa</option></select></div>
+<div><label>Status *</label><select id="status" required><option>Processo de assinatura</option><option>Agendado</option><option>Em andamento</option><option>Aguardando terceiros</option><option>Concluída</option><option>Suspensa</option></select></div>
 <div><label>Prazo da demanda</label><input id="due" type="date"></div>
 <div><label>Aniversário contratual</label><input id="contractAnniversary" type="date"><small class="hint">Data-base para controle de reajustes.</small></div>
 <div><label>Impacto financeiro estimado (R$)</label><input id="money" type="number" min="0" step=".01" placeholder="0,00"></div>
 <div class="full"><label>Descrição / contexto</label><textarea id="description" rows="2"></textarea></div>
-<div class="full"><label>Próxima ação *</label><input id="next" required placeholder="Qual é o próximo passo concreto?"></div>
+<div class="full"><label>Próxima ação *</label><input id="next" placeholder="Qual é o próximo passo concreto?"></div>
 <div><label>Dependência / aguardando</label><input id="dependency" placeholder="Prestador, Diretoria, área interna..."></div>
 <div class="wide"><label>Observações</label><input id="notes" placeholder="Protocolo interno, histórico resumido (sem dados pessoais)"></div>
-</div><div class="formactions"><button type="button" class="secondary" onclick="closeForm()">Cancelar</button><button type="submit">Salvar demanda</button></div></form></div></div>
+</div>
+<section id="descredFields" class="panel" style="display:none;margin-top:14px;padding:16px;background:#fff8f6;border:1px solid #efc0b7">
+<h3 style="margin-top:0">Dados do descredenciamento</h3>
+<div class="formgrid">
+<div><label>Data do descredenciamento *</label><input id="descredDate" type="date" onchange="calculateContractEndDate()"></div>
+<div><label>Motivo da rescisão *</label><select id="descredReason"><option value="">Selecione o motivo</option><option>Solicitação do prestador</option><option>Decisão da operadora</option><option>Descumprimento contratual</option><option>Baixa demanda / estratégia de rede</option><option>Encerramento das atividades</option><option>Irregularidade documental ou regulatória</option><option>Outro</option></select></div>
+<div><label>Prazo de cumprimento</label><select id="descredDays" onchange="calculateContractEndDate()"><option value="">Selecione</option><option value="30">30 dias</option><option value="60">60 dias</option></select></div>
+<div><label>Data de término do contrato (calculada)</label><input id="contractEndDate" type="date" readonly><small class="hint">Calculada a partir da data do descredenciamento e do prazo selecionado.</small></div>
+</div></section>
+<div class="formactions" id="baseFormActions"><button type="button" class="secondary" onclick="closeForm()">Cancelar</button><button type="button" class="secondary" onclick="clearTaskForm()">Limpar formulário</button><button type="submit" id="saveDirectButton">Salvar demanda</button><button type="button" id="nextStepButton" onclick="showProgressFields()" style="display:none">Próximo: negociação / detalhes →</button></div>
+<section id="progressFields" class="panel" style="display:none;margin-top:18px;padding:16px">
+<div id="progressCategoryHint" class="muted" style="margin:0 0 12px"></div>
+<h3 id="progressTitle">Evolução da demanda</h3>
+<p class="hint">Para reajustes, preencha a proposta inicial do prestador, a contraproposta da operadora e o valor final fechado. A economia em reais e o percentual serão calculados automaticamente e salvos com a demanda.</p>
+<div id="negotiationFields" class="formgrid" style="display:none">
+<div><label>Negociação inicial — proposta do prestador (R$) *</label><input id="initialProposal" type="number" min="0" step="0.01" placeholder="0,00"></div>
+<div><label>Contraproposta da operadora (R$)</label><input id="counterProposal" type="number" min="0" step="0.01" placeholder="0,00"></div>
+<div><label>Negociação final — valor fechado (R$) *</label><input id="finalAgreed" type="number" min="0" step="0.01" placeholder="0,00"></div>
+<div><label>Economia obtida (R$)</label><input id="negotiationSavings" type="number" readonly placeholder="Calculada automaticamente"></div>
+<div><label>Percentual de economia (%)</label><input id="negotiationSavingsPercent" type="text" readonly placeholder="Calculado automaticamente"></div>
+<div><label>Data da proposta inicial</label><input id="initialProposalDate" type="date"></div>
+<div><label>Data do fechamento</label><input id="finalAgreedDate" type="date"></div>
+<div class="full"><label>Histórico / condições negociadas</label><textarea id="negotiationHistory" rows="2" placeholder="Registre propostas, contrapropostas e condições finais"></textarea></div>
+</div>
+<div id="visitFields" class="formgrid" style="display:none">
+<div><label>Participantes</label><input id="visitParticipants" placeholder="Nomes ou áreas participantes"></div>
+<div class="full"><label>Objetivo da visita</label><textarea id="visitObjective" rows="2"></textarea></div>
+<div class="full"><label>Resultado / encaminhamentos</label><textarea id="visitOutcome" rows="2"></textarea></div>
+</div>
+<div id="credentialFields" class="formgrid" style="display:none">
+<div><label>Data de início do credenciamento/extensão</label><input id="credentialDate" type="date"></div>
+<div><label>Serviço / especialidade incluída</label><input id="credentialService" placeholder="Serviço ou especialidade"></div>
+<div><label>Valor/tabela acordada (R$)</label><input id="credentialValue" type="number" min="0" step="0.01" placeholder="0,00"></div>
+<div><label>Status da tratativa</label><select id="credentialStage"><option value="">Selecione</option><option>Em análise</option><option>Em negociação</option><option>Aprovado</option><option>Implantado</option><option>Não aprovado</option></select></div>
+</div>
+<div class="formactions"><button type="button" class="secondary" onclick="backToBaseFields()">← Voltar</button><button type="submit">Salvar demanda</button></div>
+</section>
+</form></div></div>
 </div>
 <script>
+const PROVIDER_LOOKUP_URL='https://script.google.com/macros/s/AKfycbwuxsF70hLFQBYG6IyGLEmvS6_jRMSjn20jSJxs0mDt7FkdTSHNpZk6Izq2AOtpk4vk/exec';
+let providerLookupTimer=null;
+function lookupProviderDebounced(){clearTimeout(providerLookupTimer);providerLookupTimer=setTimeout(lookupProviderByCode,450);}
+function lookupProviderByCode(){
+ const codeEl=document.getElementById('providerCode'),nameEl=document.getElementById('provider'),statusEl=document.getElementById('providerLookupStatus'),typeEl=document.getElementById('providerType'),networkEl=document.getElementById('providerNetwork'),networkBadge=document.getElementById('providerNetworkBadge');
+ if(!codeEl||!nameEl||!statusEl)return;
+ const code=codeEl.value.trim();
+ if(!code){statusEl.textContent='Digite o código para localizar o prestador na planilha Rede.';nameEl.value='';if(typeEl)typeEl.value='';if(networkEl)networkEl.value='';if(networkBadge){networkBadge.textContent='Informe o código do prestador';networkBadge.dataset.network='';}return;}
+ statusEl.textContent='Consultando a planilha Rede…';
+ if(networkBadge){networkBadge.textContent='Consultando rede…';networkBadge.dataset.network='';}
+ const callback='providerLookupCallback_'+Date.now()+'_'+Math.floor(Math.random()*100000);
+ const script=document.createElement('script');let finished=false;
+ const cleanup=()=>{if(script.parentNode)script.parentNode.removeChild(script);try{delete window[callback]}catch(e){window[callback]=undefined}};
+ const timeout=setTimeout(()=>{if(finished)return;finished=true;cleanup();statusEl.textContent='Tempo esgotado ao consultar a base. Confira a implantação do Apps Script.';if(networkBadge)networkBadge.textContent='Rede indisponível';},12000);
+ window[callback]=function(data){if(finished)return;finished=true;clearTimeout(timeout);cleanup();if(String(codeEl.value).trim()!==code)return;if(data&&data.found&&data.name){nameEl.value=data.name;if(typeEl)typeEl.value=data.type||'';if(networkEl)networkEl.value=data.rede||data.network||'';if(networkBadge){const rede=String(data.rede||data.network||'').trim().toUpperCase();networkBadge.textContent=rede?'REDE: '+rede:'REDE: NÃO INFORMADA';networkBadge.dataset.network=rede;}statusEl.textContent='Prestador localizado na planilha Rede.';nameEl.dispatchEvent(new Event('change',{bubbles:true}));if(typeEl)typeEl.dispatchEvent(new Event('change',{bubbles:true}));}else{statusEl.textContent=(data&&data.error)||'Código não encontrado na planilha Rede.';if(typeEl)typeEl.value='';if(networkEl)networkEl.value='';if(networkBadge){networkBadge.textContent='Rede não localizada';networkBadge.dataset.network='';}}};
+ script.onerror=function(){if(finished)return;finished=true;clearTimeout(timeout);cleanup();statusEl.textContent='Falha na consulta. Verifique se o Apps Script está implantado para acesso pelo painel.';if(networkBadge)networkBadge.textContent='Falha ao consultar rede';};
+ script.src=PROVIDER_LOOKUP_URL+'?code='+encodeURIComponent(code)+'&callback='+encodeURIComponent(callback)+'&t='+Date.now();document.body.appendChild(script);
+}
 const KEY='gestaoHospitalarDemandasV2_vazio';
 const LEGACY_KEYS=['gestaoHospitalarDemandasV1','gestaoHospitalarDemandasV2','gestaoHospitalarDemandasV2_vazio'];
 const sample=[];
@@ -332,18 +467,27 @@ function load(){
   } catch(e) { console.warn('Não foi possível recuperar registros locais anteriores.',e); }
   return sample.map(x=>({...x}));
 }
+let panelSaveQueue = Promise.resolve();
+let panelLocalRevision = 0;
 function persist(){
-  try { localStorage.setItem(KEY,JSON.stringify(tasks)); }
+  const snapshot = JSON.parse(JSON.stringify(tasks));
+  const revision = ++panelLocalRevision;
+  try { localStorage.setItem(KEY,JSON.stringify(snapshot)); }
   catch(e) { console.warn('Não foi possível salvar cópia local.',e); }
+  if (typeof renderRecords === 'function') renderRecords();
+  if (typeof render === 'function') render();
   if (window.panelCloudReady && window.panelCloudClient) {
     window.panelLastLocalWrite = Date.now();
-    document.getElementById('syncStatus').textContent = 'Salvando na nuvem…';
-    window.panelCloudClient.from('panel_state').upsert({id:'main', payload:tasks, updated_at:new Date().toISOString()})
-      .then(({error})=>{
-        const el=document.getElementById('syncStatus');
-        if(error){el.textContent='Falha na sincronização';console.error(error);alert('A alteração ficou salva apenas neste navegador. Falha ao sincronizar com a nuvem: '+error.message);}
-        else el.textContent='Sincronizado na nuvem';
-      });
+    const statusEl=document.getElementById('syncStatus');
+    if(statusEl) statusEl.textContent = 'Salvando na nuvem…';
+    // Serializa gravações para que ações rápidas não se sobrescrevam entre si.
+    panelSaveQueue = panelSaveQueue.then(async()=>{
+      const {error}=await window.panelCloudClient.from('panel_state').upsert({id:'main', payload:snapshot, updated_at:new Date().toISOString()});
+      const el=document.getElementById('syncStatus');
+      if(error){if(el)el.textContent='Falha na sincronização';console.error(error);alert('Não foi possível sincronizar a alteração com a nuvem: '+error.message);return;}
+      if(revision===panelLocalRevision && el)el.textContent='Sincronizado na nuvem';
+      window.panelLastCloudWrite=Date.now();
+    }).catch(error=>{console.error(error);const el=document.getElementById('syncStatus');if(el)el.textContent='Falha na sincronização';});
   }
 }
 function today(){let d=new Date();return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`}
@@ -370,10 +514,14 @@ function portfolioType(t){
 }
 function showPortfolio(owner){
  selectedPortfolio=owner;
- document.getElementById('tabLarissa').className=owner==='Larissa'?'active':'secondary';
- document.getElementById('tabDiego').className=owner==='Diego'?'active':'secondary';
+ const tabLarissa=document.getElementById('tabLarissa');
+ if(tabLarissa) tabLarissa.className=owner==='Larissa'?'active':'secondary';
+ const tabDiego=document.getElementById('tabDiego');
+ if(tabDiego) tabDiego.className=owner==='Diego'?'active':'secondary';
  const assigned=tasks.filter(t=>t.owner===owner);
- document.getElementById('portfolioDetails').innerHTML='<div class="portfolio-types">'+portfolioTypes[owner].map(type=>{
+ const portfolioDetails=document.getElementById('portfolioDetails');
+ if(!portfolioDetails || !portfolioTypes[owner]) return;
+ portfolioDetails.innerHTML='<div class="portfolio-types">'+portfolioTypes[owner].map(type=>{
  const list=assigned.filter(t=>portfolioType(t)===type);
  const active=list.filter(t=>!['Concluída','Suspensa'].includes(t.status)).length;
  return `<div class="portfolio-type"><b>${type}</b><span>${list.length} demanda(s) · ${active} aberta(s)</span></div>`;
@@ -381,6 +529,33 @@ function showPortfolio(owner){
 }
 
 function datePlus(days){let d=new Date();d.setDate(d.getDate()+days);return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`}
+let quickFilterMode='';
+function quickFilter(mode){
+ quickFilterMode=mode||'';
+ ['search','ownerFilter','priorityFilter','statusFilter','categoryFilter'].forEach(id=>{const el=document.getElementById(id);if(el)el.value=''});
+ if(mode==='critical') document.getElementById('priorityFilter').value='Crítica';
+ if(mode==='waiting') document.getElementById('statusFilter').value='Aguardando terceiros';
+ if(mode==='done') document.getElementById('statusFilter').value='Concluída';
+ if(mode==='reajuste'||mode==='reajusteAll') document.getElementById('categoryFilter').value='Reajuste';
+ switchPanelTab('registros'); renderRecords();
+}
+function clearQuickFilter(){quickFilterMode='';['search','ownerFilter','priorityFilter','statusFilter','categoryFilter'].forEach(id=>{const el=document.getElementById(id);if(el)el.value=''});renderRecords();}
+
+function renderRecords(){
+ const searchEl=document.getElementById('search');
+ const tbody=document.getElementById('tbody');
+ if(!searchEl || !tbody) return;
+ const q=searchEl.value.toLowerCase(),own=document.getElementById('ownerFilter').value,pri=document.getElementById('priorityFilter').value,st=document.getElementById('statusFilter').value,cat=document.getElementById('categoryFilter').value;
+ const filtered=tasks.filter(t=>{
+  const active=!['Concluída','Suspensa'].includes(t.status), isOverdue=active&&t.due&&t.due<today();
+  const quickOk=quickFilterMode==='open'?active:quickFilterMode==='overdue'?Boolean(isOverdue):quickFilterMode==='reajuste'?String(t.category||'').trim().toLowerCase()==='reajuste'&&t.status==='Concluída':true;
+  return quickOk&&(!q||[t.id,t.providerCode,t.osNumber,t.provider,t.subject,t.description,t.next,t.contractAnniversary].join(' ').toLowerCase().includes(q))&&(!own||t.owner===own)&&(!pri||t.priority===pri)&&(!st||t.status===st)&&(!cat||t.category===cat)
+ }).sort((a,b)=>rank(a)-rank(b)||(a.due||'9999').localeCompare(b.due||'9999'));
+ document.getElementById('resultCount').textContent=`${filtered.length} registro(s)`;
+ tbody.innerHTML=filtered.length?filtered.map(t=>`<tr><td><b>${esc(t.id)}</b><br><span class="muted">${t.due?'Prazo: '+esc(t.due):'Sem prazo'}</span>${t.due&&t.due<today()&&!['Concluída','Suspensa'].includes(t.status)?'<br><span style="color:#c73e4d;font-weight:bold">VENCIDA</span>':''}</td><td><b>${esc(t.osNumber||'—')}</b></td><td><b>${esc(t.providerCode||'—')} | ${esc(t.provider)}</b><br>${esc(t.subject||'—')}<br><span class="muted">${esc(t.category)}</span>${t.contractAnniversary?'<br><span class="muted">Aniversário contratual: '+esc(t.contractAnniversary)+'</span>':''}</td><td>${esc(t.providerType||portfolioType(t))}</td><td><span class="network-chip" data-network="${esc(String(t.providerNetwork||'').toUpperCase())}">${esc(t.providerNetwork||'—')}</span></td><td><span class="pill ${esc(t.priority)}">${esc(t.priority)}</span><br><span class="muted">${esc(t.impact||'')}</span></td><td><b>${esc(t.owner)}</b><br><span class="muted">Apoio: ${esc(t.support||'Nenhum')}</span></td><td><span class="pill status" data-s="${esc(t.status)}">${esc(t.status)}</span></td><td>${esc(t.next||'—')}<br><span class="muted">${t.dependency?'Aguardando: '+esc(t.dependency):''}</span></td><td class="action-cell"><button class="secondary icon-action" type="button" title="Editar demanda" aria-label="Editar demanda" onclick="editTask('${esc(t.id)}')">✏️</button><button class="secondary icon-action" type="button" title="${t.status==='Concluída'?'Reabrir demanda':'Concluir demanda'}" aria-label="${t.status==='Concluída'?'Reabrir demanda':'Concluir demanda'}" onclick="finishTask('${esc(t.id)}')">${t.status==='Concluída'?'↩️':'✓'}</button><button class="icon-action delete-action" type="button" title="Excluir demanda" aria-label="Excluir demanda" onclick="deleteTask('${esc(t.id)}')">🗑️</button></td></tr>`).join(''):'<tr><td colspan="10" class="empty">Nenhuma demanda corresponde aos filtros.</td></tr>';
+
+}
+
 function render(){
  const open=openTasks(), overdue=open.filter(t=>t.due&&t.due<today()), done=tasks.filter(t=>t.status==='Concluída');
  document.getElementById('openCount').textContent=open.length;
@@ -389,6 +564,11 @@ function render(){
  document.getElementById('waitingCount').textContent=open.filter(t=>t.status==='Aguardando terceiros').length;
 
  document.getElementById('doneCount').textContent=done.length;
+ const reajustedProviders=new Set(tasks.filter(t=>String(t.category||'').trim().toLowerCase()==='reajuste' && t.status==='Concluída' && String(t.provider||'').trim()).map(t=>String(t.provider).trim().toLowerCase()));
+ const reajustedCount=Math.min(102,reajustedProviders.size);
+ document.getElementById('providersReajustedCount').textContent=reajustedCount;
+ document.getElementById('providersWithoutReajuste').textContent=Math.max(0,102-reajustedCount);
+ document.getElementById('providersReajustedPercent').textContent=(reajustedCount/102*100).toFixed(1).replace('.',',')+'%';
  ['Larissa','Diego'].forEach(owner=>{
   const prefix='exec'+owner;
   const all=tasks.filter(t=>t.owner===owner);
@@ -414,8 +594,10 @@ function render(){
   card.querySelector('.exec-explain').textContent=message;
  });
 
- document.getElementById('larissaPortfolioCount').textContent=tasks.filter(t=>t.owner==='Larissa').length+' demanda(s) registradas';
- document.getElementById('diegoPortfolioCount').textContent=tasks.filter(t=>t.owner==='Diego').length+' demanda(s) registradas';
+ const larissaCountEl=document.getElementById('larissaPortfolioCount');
+ if(larissaCountEl) larissaCountEl.textContent=tasks.filter(t=>t.owner==='Larissa').length+' demanda(s) registradas';
+ const diegoCountEl=document.getElementById('diegoPortfolioCount');
+ if(diegoCountEl) diegoCountEl.textContent=tasks.filter(t=>t.owner==='Diego').length+' demanda(s) registradas';
  showPortfolio(selectedPortfolio);
  const owners=['Larissa','Diego'].map(name=>{
    const all=tasks.filter(t=>t.owner===name);
@@ -427,7 +609,8 @@ function render(){
    const due=active.filter(t=>t.due&&t.due<today());
    const dueSoon=active.filter(t=>t.due&&t.due>=today()&&t.due<=datePlus(3));
    const critical=active.filter(t=>t.priority==='Crítica');
-   return {name,all,active,inProgress,waiting,newItems,completed,due,dueSoon,critical};
+   const descredActive=active.filter(t=>t.category==='Descredenciamentos');
+   return {name,all,active,inProgress,waiting,newItems,completed,due,dueSoon,critical,descredActive};
  }).sort((a,b)=>b.active.length-a.active.length||b.critical.length-a.critical.length||a.name.localeCompare(b.name));
  document.getElementById('ownerQueues').innerHTML=owners.map((o,i)=>`<article class="owner-card">
    <div class="owner-top"><div><div class="muted" style="font-size:11px;text-transform:uppercase;letter-spacing:.8px">Ranking de demandas abertas #${i+1}</div><div class="owner-name">${o.name}</div></div><div class="rank">${i+1}</div></div>
@@ -442,63 +625,205 @@ function render(){
    <div class="queue-row"><span>Críticas em aberto</span><span class="queue-count">${o.critical.length}</span></div>
    <div class="queue-row"><span>Com prazo vencido</span><span class="queue-count" style="color:${o.due.length?'#c73e4d':'inherit'}">${o.due.length}</span></div>
    <div class="queue-row"><span>Vencem nos próximos 3 dias</span><span class="queue-count">${o.dueSoon.length}</span></div>
+   ${o.descredActive.length ? `<div class="descred-queue"><div class="descred-queue-title">Descredenciamentos em andamento (${o.descredActive.length})</div>${o.descredActive.map(t=>`<div class="descred-queue-item"><strong>${escapeHtml(t.provider||'Prestador não informado')}</strong><span>Em processo de descredenciamento</span><b>Encerramento previsto: ${t.contractEndDate?formatDateBR(t.contractEndDate):'data não informada'}</b></div>`).join('')}</div>` : ''}
    <div class="queue-title">Carga aberta vs. total em aberto</div>
    <div class="bar"><span style="width:${open.length?Math.round(o.active.length/open.length*100):0}%"></span></div>
    <div class="hint" style="margin-top:6px">${open.length?Math.round(o.active.length/open.length*100):0}% das demandas abertas atribuídas a ${o.name}. Total histórico: ${o.all.length} demanda(s).</div>
  </article>`).join('');
  document.getElementById('ownerChart').innerHTML=['Larissa','Diego'].map(n=>{let c=open.filter(t=>t.owner===n).length,p=open.length?Math.round(c/open.length*100):0;return `<div class="barline"><div class="barhead"><b>${n}</b><span>${c} demanda(s) · ${p}%</span></div><div class="bar"><span style="width:${p}%"></span></div></div>`}).join('');
  const order=['Crítica','Alta','Normal','Baixa'];document.getElementById('priorityChart').innerHTML=order.map(n=>{let c=open.filter(t=>t.priority===n).length,p=open.length?Math.round(c/open.length*100):0;return `<div class="barline"><div class="barhead"><b>${n}</b><span>${c}</span></div><div class="bar"><span style="width:${p}%;background:${n==='Crítica'?'#c73e4d':n==='Alta'?'#c88716':n==='Normal'?'#1686c9':'#25845c'}"></span></div></div>`}).join('');
- const q=document.getElementById('search').value.toLowerCase(),own=document.getElementById('ownerFilter').value,pri=document.getElementById('priorityFilter').value,st=document.getElementById('statusFilter').value,cat=document.getElementById('categoryFilter').value;
- const filtered=tasks.filter(t=>(!q||[t.id,t.osNumber,t.provider,t.subject,t.description,t.next,t.contractAnniversary].join(' ').toLowerCase().includes(q))&&(!own||t.owner===own)&&(!pri||t.priority===pri)&&(!st||t.status===st)&&(!cat||t.category===cat)).sort((a,b)=>rank(a)-rank(b)||(a.due||'9999').localeCompare(b.due||'9999'));
- document.getElementById('resultCount').textContent=`${filtered.length} registro(s)`;
- document.getElementById('tbody').innerHTML=filtered.length?filtered.map(t=>`<tr><td><b>${esc(t.id)}</b><br><span class="muted">${t.due?'Prazo: '+esc(t.due):'Sem prazo'}</span>${t.due&&t.due<today()&&!['Concluída','Suspensa'].includes(t.status)?'<br><span style="color:#c73e4d;font-weight:bold">VENCIDA</span>':''}</td><td><b>${esc(t.osNumber||'—')}</b></td><td><b>${esc(t.provider)}</b><br>${esc(t.subject)}<br><span class="muted">${esc(t.category)}</span>${t.contractAnniversary?'<br><span class="muted">Aniversário contratual: '+esc(t.contractAnniversary)+'</span>':''}</td><td>${esc(t.providerType||portfolioType(t))}</td><td><span class="pill ${esc(t.priority)}">${esc(t.priority)}</span><br><span class="muted">${esc(t.impact||'')}</span></td><td><b>${esc(t.owner)}</b><br><span class="muted">Apoio: ${esc(t.support||'Nenhum')}</span></td><td><span class="pill status" data-s="${esc(t.status)}">${esc(t.status)}</span></td><td>${esc(t.next||'—')}<br><span class="muted">${t.dependency?'Aguardando: '+esc(t.dependency):''}</span></td><td><button class="secondary" onclick="editTask('${esc(t.id)}')">Editar</button><br><br><button class="secondary" onclick="finishTask('${esc(t.id)}')">${t.status==='Concluída'?'Reabrir':'Concluir'}</button><br><br><button style="background:#fbe8ea;color:#a52332" onclick="deleteTask('${esc(t.id)}')">Excluir</button></td></tr>`).join(''):'<tr><td colspan="9" class="empty">Nenhuma demanda corresponde aos filtros.</td></tr>';
-}
-function rank(t){return ({'Crítica':0,'Alta':1,'Normal':2,'Baixa':3}[t.priority]??4)}
+ renderRecords();}
 
-const PROVIDER_LOOKUP_URL='https://script.google.com/macros/s/AKfycbwuxsF70hLFQBYG6IyGLEmvS6_jRMSjn20jSJxs0mDt7FkdTSHNpZk6Izq2AOtpk4vk/exec';
-let providerLookupTimer=null;
-function lookupProviderDebounced(){
-  clearTimeout(providerLookupTimer);
-  providerLookupTimer=setTimeout(lookupProviderByCode,450);
+// Dashboard mensal de Gestão de Rede: indicadores complementares compartilhados no Supabase.
+const metricMonthNames=['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
+let monthlyMetrics={};
+let metricsSaveQueue=Promise.resolve();
+function metricKey(year,month){return String(year)+'-'+String(month).padStart(2,'0')}
+function emptyMetric(){return {savings:0,visits:0,adjustments:0,providers:0,extensions:0,demandsForwarded:0,notes:''}}
+function getMetric(year,month){return {...emptyMetric(),...(monthlyMetrics[metricKey(year,month)]||{})}}
+function initDashboardControls(){
+ const yearEl=document.getElementById('dashYear'),monthEl=document.getElementById('dashMonth');if(!yearEl||!monthEl)return;
+ const currentYear=new Date().getFullYear();yearEl.innerHTML='';for(let y=currentYear-2;y<=currentYear+2;y++){const o=document.createElement('option');o.value=String(y);o.textContent=String(y);if(y===currentYear)o.selected=true;yearEl.appendChild(o)}
+ monthEl.innerHTML=metricMonthNames.map((m,i)=>`<option value="${i+1}" ${i===new Date().getMonth()?'selected':''}>${m}</option>`).join('');
+ loadMetricForm();renderDashboard();
 }
-function lookupProviderByCode(){
-  const codeEl=document.getElementById('providerCode');
-  const nameEl=document.getElementById('provider');
-  const statusEl=document.getElementById('providerLookupStatus');
-  if(!codeEl||!nameEl||!statusEl)return;
-  const code=codeEl.value.trim();
-  if(!code){statusEl.textContent='Digite o código para localizar o prestador na planilha Rede.';return;}
-  statusEl.textContent='Consultando a planilha Rede…';
-  const callback='providerLookupCallback_'+Date.now()+'_'+Math.floor(Math.random()*100000);
-  let script=document.createElement('script');
-  let finished=false;
-  const cleanup=()=>{if(script.parentNode)script.parentNode.removeChild(script);try{delete window[callback]}catch(e){window[callback]=undefined}};
-  const timeout=setTimeout(()=>{if(finished)return;finished=true;cleanup();statusEl.textContent='Não foi possível consultar a base. Confira a implantação do Apps Script.';},12000);
-  window[callback]=function(data){
-    if(finished)return;finished=true;clearTimeout(timeout);cleanup();
-    if(String(codeEl.value).trim()!==code){return;}
-    if(data&&data.found&&data.name){
-      nameEl.value=data.name;
-      statusEl.textContent='Prestador localizado na planilha Rede.';
-      nameEl.dispatchEvent(new Event('change',{bubbles:true}));
-    }else{
-      statusEl.textContent=(data&&data.error)||'Código não encontrado na planilha Rede.';
-    }
-  };
-  script.onerror=function(){if(finished)return;finished=true;clearTimeout(timeout);cleanup();statusEl.textContent='Falha ao acessar a consulta. Verifique se o Apps Script está implantado para acesso pelo painel.';};
-  script.src=PROVIDER_LOOKUP_URL+'?code='+encodeURIComponent(code)+'&callback='+encodeURIComponent(callback)+'&t='+Date.now();
-  document.body.appendChild(script);
+function loadMetricForm(){const y=Number(document.getElementById('dashYear')?.value||new Date().getFullYear()),m=Number(document.getElementById('dashMonth')?.value||new Date().getMonth()+1),v=getMetric(y,m);
+ const map={metricSavings:v.savings,metricVisits:v.visits,metricAdjustments:v.adjustments,metricProviders:v.providers,metricExtensions:v.extensions,metricDemandsForwarded:v.demandsForwarded,metricNotes:v.notes};Object.entries(map).forEach(([id,value])=>{const el=document.getElementById(id);if(el)el.value=value??''});const st=document.getElementById('metricSaveStatus');if(st)st.textContent='Editando '+metricMonthNames[m-1]+' de '+y+'.';}
+function fmtMoney(n){return Number(n||0).toLocaleString('pt-BR',{style:'currency',currency:'BRL',maximumFractionDigits:2})}
+function monthTasks(year,month){const prefix=metricKey(year,month);const created=tasks.filter(t=>(t.created||'').slice(0,7)===prefix).length;const completed=tasks.filter(t=>(t.completed||'').slice(0,7)===prefix || (!t.completed&&t.status==='Concluída'&&(t.last||'').slice(0,7)===prefix)).length;const negotiations=tasks.filter(t=>{const initial=Number(t.initialProposal)||0,final=Number(t.finalAgreed)||0;const date=(t.finalAgreedDate||t.last||t.created||'').slice(0,7);return t.category==='Reajuste' && (initial>0||final>0) && date===prefix;});const reajusteProviders=new Set(negotiations.filter(t=>t.status==='Concluída'&&String(t.provider||'').trim()).map(t=>String(t.provider).trim().toLowerCase()));const reajusteSavings=negotiations.reduce((sum,t)=>sum+Math.max(0,(Number(t.initialProposal)||0)-(Number(t.finalAgreed)||0)),0);return {created,completed,reajusteSavings,reajusteProviders:reajusteProviders.size}}
+function svgBars(values,labels,{color='#1686c9',format='number',secondValues=null,secondColor='#159d9a'}={}){
+ const W=600,H=220,L=44,R=12,T=18,B=34,plotW=W-L-R,plotH=H-T-B,max=Math.max(1,...values,...(secondValues||[])),step=plotW/Math.max(1,values.length),bw=Math.min(22,step*.28);
+ let out=`<svg class="dash-chart" viewBox="0 0 ${W} ${H}" role="img" aria-label="Gráfico mensal"><line x1="${L}" y1="${T+plotH}" x2="${W-R}" y2="${T+plotH}" stroke="#dbe5ef"/>`;
+ for(let g=0;g<=3;g++){const y=T+plotH-g*plotH/3;out+=`<line x1="${L}" y1="${y}" x2="${W-R}" y2="${y}" stroke="#edf2f7"/><text x="${L-8}" y="${y+4}" text-anchor="end" font-size="10" fill="#61758a">${Math.round(max*g/3)}</text>`}
+ values.forEach((v,i)=>{const cx=L+step*(i+.5);const h=v/max*plotH;out+=`<rect x="${cx-bw-(secondValues?2:0)}" y="${T+plotH-h}" width="${bw}" height="${h}" rx="3" fill="${color}"/><text x="${cx}" y="${H-12}" text-anchor="middle" font-size="10" fill="#61758a">${labels[i]}</text>`;if(secondValues){const v2=secondValues[i]||0,h2=v2/max*plotH;out+=`<rect x="${cx+2}" y="${T+plotH-h2}" width="${bw}" height="${h2}" rx="3" fill="${secondColor}"/>`}});
+ if(format==='money'){out=out.replace(/<text x="(\$\{L-8\})"/g,'<text x="${L-8}"')}
+ return out+'</svg>';
 }
-function openForm(t=null){document.getElementById('taskForm').reset();const lookupStatus=document.getElementById('providerLookupStatus');if(lookupStatus)lookupStatus.textContent='Digite o código para localizar o prestador na planilha Rede.';document.getElementById('editId').value=t?.id||'';document.getElementById('formTitle').textContent=t?'Editar demanda':'Nova demanda';const map={providerCode:'providerCode',provider:'provider',osNumber:'osNumber',providerType:'providerType',subject:'subject',category:'category',impact:'impact',priority:'priority',owner:'owner',support:'support',status:'status',due:'due',contractAnniversary:'contractAnniversary',money:'money',description:'description',next:'next',dependency:'dependency',notes:'notes'};for(const [k,id] of Object.entries(map))document.getElementById(id).value=t?.[k]??(k==='support'?'Nenhum':k==='priority'?'Normal':k==='status'?'Processo de assinatura':'');document.getElementById('modal').classList.add('open')}
+function chartLine(id,values,labels,color='#1686c9',money=false){const el=document.getElementById(id);if(!el)return;const max=Math.max(1,...values),W=600,H=220,L=46,R=12,T=18,B=34,pw=W-L-R,ph=H-T-B,step=pw/Math.max(1,values.length-1);let pts=values.map((v,i)=>`${L+i*step},${T+ph-(v/max)*ph}`).join(' ');let s=`<svg class="dash-chart" viewBox="0 0 ${W} ${H}" role="img" aria-label="Evolução mensal"><line x1="${L}" y1="${T+ph}" x2="${W-R}" y2="${T+ph}" stroke="#dbe5ef"/>`;for(let g=0;g<=3;g++){let y=T+ph-g*ph/3;s+=`<line x1="${L}" y1="${y}" x2="${W-R}" y2="${y}" stroke="#edf2f7"/><text x="${L-8}" y="${y+4}" text-anchor="end" font-size="10" fill="#61758a">${money?Math.round(max*g/3/1000)+'k':Math.round(max*g/3)}</text>`}s+=`<polyline points="${pts}" fill="none" stroke="${color}" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"/>`;values.forEach((v,i)=>{const x=L+i*step,y=T+ph-(v/max)*ph;s+=`<circle cx="${x}" cy="${y}" r="4" fill="${color}"/><text x="${x}" y="${H-12}" text-anchor="middle" font-size="10" fill="#61758a">${labels[i]}</text>`});el.innerHTML=s+'</svg>'}
+function renderDashboard(){const y=Number(document.getElementById('dashYear')?.value||new Date().getFullYear());const rows=metricMonthNames.map((name,i)=>{const m=i+1,base=monthTasks(y,m),v=getMetric(y,m);return {name,m,...base,...v}});const total=key=>rows.reduce((sum,r)=>sum+Number(r[key]||0),0);const currentTasks=tasks.length,completed=tasks.filter(t=>t.status==='Concluída').length,owners=[{name:'Larissa',n:tasks.filter(t=>t.owner==='Larissa').length},{name:'Diego',n:tasks.filter(t=>t.owner==='Diego').length}];
+ const totalSavings=rows.reduce((sum,r)=>sum+(r.reajusteSavings||0),0)+rows.reduce((sum,r)=>sum+Number(r.savings||0),0);const adjustedProviders=new Set(tasks.filter(t=>t.category==='Reajuste'&&t.status==='Concluída'&&String(t.provider||'').trim()&&(Number(t.initialProposal)||0)>0).map(t=>String(t.provider).trim().toLowerCase()));const kpis=[['Demandas cadastradas',currentTasks,'Total atual do painel'],['Demandas concluídas',completed,'Status atual'],['Economia negociada',fmtMoney(totalSavings),'Lançamentos mensais + economia registrada nas demandas de reajuste'],['Prestadores reajustados',adjustedProviders.size+' de 102',Math.round(adjustedProviders.size/102*100)+'% da carteira de referência'],['Média estimada por demanda',fmtMoney(total('savings')/Math.max(1,total('demandsForwarded'))),total('demandsForwarded')+' demandas encaminhadas no ano'],['Visitas realizadas',total('visits'),'Total lançado no ano'],['Reajustes negociados',total('adjustments'),'Total lançado no ano'],['Novos prestadores',total('providers'),'Total lançado no ano'],['Extensões de serviços',total('extensions'),'Total lançado no ano'],['Responsável com maior carteira',owners.sort((a,b)=>b.n-a.n)[0]?.name||'—','Distribuição atual']];
+ const k=document.getElementById('dashKpis');if(k)k.innerHTML=kpis.map(([label,value,foot])=>`<article class="dash-kpi"><div class="k-label">${esc(label)}</div><div class="k-value">${esc(value)}</div><div class="k-foot">${esc(foot)}</div></article>`).join('');
+ const labels=rows.map(r=>r.name.slice(0,3));const prod=document.getElementById('dashProductionChart');if(prod)prod.innerHTML=svgBars(rows.map(r=>r.created),labels,{color:'#1686c9',secondValues:rows.map(r=>r.completed)}).replace('</svg>','<rect x="390" y="8" width="9" height="9" rx="2" fill="#1686c9"/><text x="404" y="16" font-size="10" fill="#61758a">Registradas</text><rect x="480" y="8" width="9" height="9" rx="2" fill="#159d9a"/><text x="494" y="16" font-size="10" fill="#61758a">Concluídas</text></svg>');
+ chartLine('dashSavingsChart',rows.map(r=>(Number(r.savings)||0)+(Number(r.reajusteSavings)||0)),labels,'#159d9a',true);
+ const visitEl=document.getElementById('dashVisitsChart');if(visitEl)visitEl.innerHTML=svgBars(rows.map(r=>Number(r.visits)||0),labels,{color:'#1686c9'});
+ const ownEl=document.getElementById('dashOwnerChart');if(ownEl){const max=Math.max(1,...owners.map(o=>o.n));ownEl.innerHTML=owners.map(o=>`<div class="dash-owner-row"><b>${esc(o.name)}</b><div class="dash-owner-track"><div class="dash-owner-fill" style="width:${o.n/max*100}%"></div></div><span>${o.n}</span></div>`).join('')}
+ const adj=document.getElementById('dashAdjustmentsChart');if(adj)adj.innerHTML=svgBars(rows.map(r=>Number(r.adjustments)||0),labels,{color:'#c88716'});
+ const net=document.getElementById('dashNetworkChart');if(net)net.innerHTML=svgBars(rows.map(r=>Number(r.providers)||0),labels,{color:'#1686c9',secondValues:rows.map(r=>Number(r.extensions)||0),secondColor:'#159d9a'}).replace('</svg>','<rect x="390" y="8" width="9" height="9" rx="2" fill="#1686c9"/><text x="404" y="16" font-size="10" fill="#61758a">Credenciados</text><rect x="480" y="8" width="9" height="9" rx="2" fill="#159d9a"/><text x="494" y="16" font-size="10" fill="#61758a">Extensões</text></svg>');
+ const tb=document.getElementById('dashMonthlyTable');if(tb)tb.innerHTML=rows.map(r=>`<tr><td>${r.name}</td><td>${r.created}</td><td>${r.completed}</td><td>${fmtMoney((Number(r.savings)||0)+(Number(r.reajusteSavings)||0))}</td><td>${r.visits}</td><td>${r.adjustments}</td><td>${r.providers}</td><td>${r.extensions}</td></tr>`).join('');
+}
+async function saveMonthlyMetrics(){const y=Number(document.getElementById('dashYear').value),m=Number(document.getElementById('dashMonth').value),key=metricKey(y,m);const vals={savings:Math.max(0,Number(document.getElementById('metricSavings').value)||0),demandsForwarded:Math.max(0,Math.floor(Number(document.getElementById('metricDemandsForwarded')?.value)||0)),visits:Math.max(0,Math.floor(Number(document.getElementById('metricVisits').value)||0)),adjustments:Math.max(0,Math.floor(Number(document.getElementById('metricAdjustments').value)||0)),providers:Math.max(0,Math.floor(Number(document.getElementById('metricProviders').value)||0)),extensions:Math.max(0,Math.floor(Number(document.getElementById('metricExtensions').value)||0)),notes:document.getElementById('metricNotes').value.trim()};const status=document.getElementById('metricSaveStatus');if(!window.panelCloudReady||!window.panelCloudClient){if(status)status.textContent='Sem conexão com a base compartilhada. Entre novamente e tente salvar.';return;}monthlyMetrics[key]=vals;if(status)status.textContent='Salvando na base compartilhada…';metricsSaveQueue=metricsSaveQueue.then(async()=>{const {error}=await window.panelCloudClient.from('panel_state').upsert({id:'metrics',payload:monthlyMetrics,updated_at:new Date().toISOString()});if(error){if(status)status.textContent='Falha ao salvar na nuvem: '+error.message;console.error('Erro ao salvar indicadores mensais',error);return;}window.panelLastCloudWrite=Date.now();if(status)status.textContent='Indicadores de '+metricMonthNames[m-1]+' salvos e compartilhados.';renderDashboard();}).catch(e=>{if(status)status.textContent='Falha ao salvar os indicadores.';console.error(e)});await metricsSaveQueue;}
+async function loadMonthlyMetrics(){if(!window.panelCloudReady||!window.panelCloudClient)return;const status=document.getElementById('metricSaveStatus');const result=await window.panelCloudClient.from('panel_state').select('payload,updated_at').eq('id','metrics').maybeSingle();if(result.error){console.warn('Não foi possível carregar indicadores mensais:',result.error.message);const badge=document.getElementById('dashCloudBadge');if(badge)badge.textContent='Verificar permissão de indicadores';return;}if(result.data&&result.data.payload&&typeof result.data.payload==='object'&&!Array.isArray(result.data.payload)){monthlyMetrics=result.data.payload;}else{monthlyMetrics={};}const badge=document.getElementById('dashCloudBadge');if(badge)badge.textContent='Dados compartilhados · Supabase';loadMetricForm();renderDashboard();if(status)status.textContent='Indicadores mensais carregados da nuvem.';}
+function refreshDashboard(){renderDashboard();if(window.panelCloudReady)loadMonthlyMetrics();}
+
+function rank(t){return ({'Crítica':0,'Alta':1,'Normal':2,'Baixa':3}[t.priority]??4)}
+function escapeHtml(value){return String(value??'').replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));}
+function formatDateBR(value){if(!value)return '';const parts=String(value).split('-');return parts.length===3?`${parts[2]}/${parts[1]}/${parts[0]}`:String(value);}
+function updateCategoryFields(){
+ const cat=String(document.getElementById('category')?.value||'').trim();
+ const isVisit=cat==='Visitas';
+ const isTravas=cat==='Revisão de travas';
+ const isDescred=cat==='Descredenciamentos';
+ const isReajuste=cat==='Reajuste';
+ const allowedNext=['Reajuste','Credenciamentos','Extensões'];
+ const common=new Set(['providerCode','provider','providerType','providerNetwork','category','priority','owner','status']);
+ const keepByCategory={
+   'Visitas':new Set([...common,'visitDate']),
+   'Revisão de travas':new Set([...common,'osNumber','transaction','requestDate','dependency']),
+   'Descredenciamentos':new Set([...common])
+ };
+ const baseGrid=document.querySelector('#taskForm > .formgrid');
+ if(baseGrid){
+   Array.from(baseGrid.children).forEach(wrap=>{
+     const control=wrap.querySelector('input,select,textarea');
+     if(!control)return;
+     const id=control.id;
+     let visible=true;
+     if(isVisit||isTravas||isDescred) visible=(keepByCategory[cat]||common).has(id);
+     if(id==='contractAnniversary') visible=isReajuste;
+     if(id==='transaction'||id==='requestDate') visible=isTravas;
+     if(id==='visitDate') visible=isVisit;
+     wrap.hidden=!visible;
+     wrap.style.display=visible?'':'none';
+     control.disabled=!visible;
+     const requiredCommon=['providerCode','provider','providerType','priority','owner','status'];
+     const required=requiredCommon.includes(id) || (visible && ((id==='subject'&&!isVisit&&!isTravas&&!isDescred)||(id==='visitDate'&&isVisit)||(id==='transaction'&&isTravas)||(id==='requestDate'&&isTravas)));
+     control.required=required;
+     if(!visible && !requiredCommon.includes(id) && !['category'].includes(id)) control.value='';
+   });
+ }
+ const descred=document.getElementById('descredFields');
+ if(descred){descred.style.display=isDescred?'block':'none';descred.hidden=!isDescred;}
+ if(descred){
+   descred.querySelectorAll('input,select,textarea').forEach(control=>{
+     const visible=isDescred;
+     control.disabled=!visible;
+     if(control.id==='descredDate'||control.id==='descredReason'||control.id==='descredDays') control.required=isDescred;
+     if(!visible) control.value='';
+   });
+ }
+ const allowed=allowedNext.includes(cat);
+ const nextButton=document.getElementById('nextStepButton');
+ const directSaveButton=document.getElementById('saveDirectButton');
+ if(nextButton)nextButton.style.display=allowed?'inline-flex':'none';
+ if(directSaveButton)directSaveButton.style.display=allowed?'none':'inline-flex';
+ const negotiationCategories=['Reajuste','Extensões','Contratos','Honorário cirúrgico','Credenciamentos','Parametrização'];
+ const isNegotiation=negotiationCategories.includes(cat);
+ const isCredential=['Credenciamentos','Extensões'].includes(cat);
+ const negotiation=document.getElementById('negotiationFields');
+ const visit=document.getElementById('visitFields');
+ const credential=document.getElementById('credentialFields');
+ if(negotiation)negotiation.style.display=isNegotiation?'grid':'none';
+ if(visit)visit.style.display='none';
+ if(credential)credential.style.display=isCredential?'grid':'none';
+ const progress=document.getElementById('progressFields');
+ if(progress && !allowed) progress.style.display='none';
+ const hint=document.getElementById('progressCategoryHint');
+ if(hint)hint.textContent=isNegotiation?'Preencha a proposta inicial, contraproposta e valor final. A economia e o percentual são calculados automaticamente.':isCredential?'Preencha os dados do credenciamento ou extensão.':'';
+ const title=document.getElementById('progressTitle');
+ if(title)title.textContent=isCredential?'Detalhes do credenciamento / extensão':'Detalhes da negociação';
+ calculateContractEndDate();
+}
+function calculateContractEndDate(){
+ const start=document.getElementById('descredDate')?.value||'';
+ const days=Number(document.getElementById('descredDays')?.value||0);
+ const end=document.getElementById('contractEndDate');
+ if(!end)return;
+ if(!start||![30,60].includes(days)){end.value='';return;}
+ const d=new Date(start+'T12:00:00');d.setDate(d.getDate()+days);
+ end.value=`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+}
+function showProgressFields(){const cat=String(document.getElementById('category')?.value||'').trim();const allowed=['Reajuste','Credenciamentos','Extensões'];if(!allowed.includes(cat)){alert('A etapa Próximo está disponível somente para Reajuste, Credenciamentos ou Extensões. Para esta categoria, permaneça na primeira tela e salve a demanda.');return;}updateCategoryFields();document.getElementById('progressFields').style.display='block';document.getElementById('baseFormActions').style.display='none';}
+function backToBaseFields(){document.getElementById('progressFields').style.display='none';document.getElementById('baseFormActions').style.display='flex';}
+document.addEventListener('input',e=>{if(e.target&&['initialProposal','finalAgreed'].includes(e.target.id))updateNegotiationSavings();});
+function updateNegotiationSavings(){const initialEl=document.getElementById('initialProposal'),finalEl=document.getElementById('finalAgreed');const a=Number(initialEl.value),b=Number(finalEl.value);const valid=initialEl.value.trim()!==''&&finalEl.value.trim()!==''&&Number.isFinite(a)&&Number.isFinite(b)&&a>0&&b>=0;const savings=document.getElementById('negotiationSavings');if(savings)savings.value=valid?Math.max(0,a-b).toFixed(2):'';const pct=document.getElementById('negotiationSavingsPercent');if(pct)pct.value=valid?(Math.max(0,(a-b)/a*100)).toFixed(2)+'%':'';}
+function clearTaskForm(){
+ if(!window.confirm('Deseja limpar os campos preenchidos? As informações ainda não salvas serão perdidas.'))return;
+ const form=document.getElementById('taskForm');
+ if(!form)return;
+ form.reset();
+ document.getElementById('editId').value='';
+ document.getElementById('formTitle').textContent='Nova demanda';
+ document.getElementById('priority').value='Normal';
+ document.getElementById('support').value='Nenhum';
+ const status=document.getElementById('status');
+ if(status && Array.from(status.options).some(o=>o.value==='Nova'))status.value='Nova';
+ const network=document.getElementById('providerNetwork');
+ if(network)network.value='';
+ const badge=document.getElementById('providerNetworkBadge');
+ if(badge){badge.textContent='Informe o código do prestador';badge.dataset.network='';}
+ const lookupStatus=document.getElementById('providerLookupStatus');
+ if(lookupStatus)lookupStatus.textContent='Digite o código para localizar o prestador na planilha Rede.';
+ document.getElementById('progressFields').style.display='none';
+ document.getElementById('baseFormActions').style.display='flex';
+ updateNegotiationSavings();
+ updateCategoryFields();
+ const descredSection=document.getElementById('descredFields');
+ if(descredSection){descredSection.hidden=true;descredSection.style.display='none';}
+}
+
+function openForm(t=null){document.getElementById('taskForm').reset();document.getElementById('editId').value=t?.id||'';document.getElementById('formTitle').textContent=t?'Editar demanda':'Nova demanda';const map={providerCode:'providerCode',provider:'provider',providerNetwork:'providerNetwork',osNumber:'osNumber',transaction:'transaction',requestDate:'requestDate',visitDate:'visitDate',providerType:'providerType',subject:'subject',category:'category',impact:'impact',priority:'priority',owner:'owner',support:'support',status:'status',due:'due',contractAnniversary:'contractAnniversary',money:'money',description:'description',next:'next',dependency:'dependency',notes:'notes',initialProposal:'initialProposal',counterProposal:'counterProposal',finalAgreed:'finalAgreed',negotiationSavings:'negotiationSavings',negotiationSavingsPercent:'negotiationSavingsPercent',initialProposalDate:'initialProposalDate',finalAgreedDate:'finalAgreedDate',negotiationHistory:'negotiationHistory',visitDate:'visitDate',visitParticipants:'visitParticipants',visitObjective:'visitObjective',visitOutcome:'visitOutcome',credentialDate:'credentialDate',credentialService:'credentialService',credentialValue:'credentialValue',credentialStage:'credentialStage',descredDate:'descredDate',descredReason:'descredReason',descredDays:'descredDays',contractEndDate:'contractEndDate'};for(const [k,id] of Object.entries(map))document.getElementById(id).value=t?.[k]??(k==='support'?'Nenhum':k==='priority'?'Normal':k==='status'?'Nova':'');const net=document.getElementById('providerNetwork')?.value||'';const netBadge=document.getElementById('providerNetworkBadge');if(netBadge){netBadge.textContent=net?'REDE: '+net.toUpperCase():'Informe o código do prestador';netBadge.dataset.network=net.toUpperCase();}updateNegotiationSavings();document.getElementById('progressFields').style.display='none';document.getElementById('baseFormActions').style.display='flex';updateCategoryFields();const descredSection=document.getElementById('descredFields');if(descredSection){const isDescred=String(document.getElementById('category').value||'').trim()==='Descredenciamentos';descredSection.hidden=!isDescred;descredSection.style.display=isDescred?'block':'none';}if(t&&['Reajuste','Credenciamentos','Extensões'].includes(String(t.category||''))&&(['initialProposal','counterProposal','finalAgreed','visitDate','credentialDate'].some(k=>t[k])||t.category==='Reajuste'))showProgressFields();document.getElementById('modal').classList.add('open')}
 function closeForm(){document.getElementById('modal').classList.remove('open')}
-function saveTask(e){e.preventDefault();let id=document.getElementById('editId').value;let t={};for(const k of ['providerCode','provider','osNumber','providerType','subject','category','impact','priority','owner','support','status','due','contractAnniversary','money','description','next','dependency','notes'])t[k]=document.getElementById(k).value;t.money=Number(t.money||0);t.last=today();if(id){let old=tasks.find(x=>x.id===id);Object.assign(old,t)}else{t.id='H-'+String(Date.now()).slice(-6);t.created=today();tasks.push(t)}persist();closeForm();render();switchPanelTab('registros',document.querySelector('[data-tab-target="registros"]'))}
+async function saveTask(e){
+ e.preventDefault();
+ const form=document.getElementById('taskForm');
+ const saveButton=form.querySelector('button[type="submit"]');
+ // Validação obrigatória dos campos desativada a pedido do usuário.
+ if(saveButton){saveButton.disabled=true;saveButton.dataset.originalText=saveButton.textContent;saveButton.textContent='Salvando…';}
+ try {
+  const id=document.getElementById('editId').value;
+  const t={};
+  for(const k of ['providerCode','provider','providerNetwork','osNumber','transaction','requestDate','visitDate','providerType','subject','category','impact','priority','owner','support','status','due','contractAnniversary','money','description','next','dependency','notes','initialProposal','counterProposal','finalAgreed','negotiationSavings','negotiationSavingsPercent','initialProposalDate','finalAgreedDate','negotiationHistory','visitDate','visitParticipants','visitObjective','visitOutcome','credentialDate','credentialService','credentialValue','credentialStage','descredDate','descredReason','descredDays','contractEndDate']) t[k]=document.getElementById(k).value;
+  if(t.category==='Descredenciamentos'){calculateContractEndDate();t.contractEndDate=document.getElementById('contractEndDate').value;}
+  t.money=Number(t.money||0);for(const k of ['initialProposal','counterProposal','finalAgreed','credentialValue'])t[k]=Number(t[k]||0);const initial=Number(t.initialProposal||0), finalValue=Number(t.finalAgreed||0);
+  t.negotiationSavings=Math.max(0,initial-finalValue);
+  t.negotiationSavingsPercent=(initial>0 && t.initialProposal!=='' && t.finalAgreed!=='')?(Math.max(0,(initial-finalValue)/initial*100)).toFixed(2):'';
+  t.last=today();
+  if(id){const old=tasks.find(x=>x.id===id);if(!old)throw new Error('A demanda não foi encontrada. Atualize a página e tente novamente.');Object.assign(old,t);}
+  else {t.id='H-'+String(Date.now()).slice(-6);t.created=today();tasks.push(t);}
+  persist();
+  render();renderRecords();if(typeof renderAnnualVisits==='function')renderAnnualVisits();
+  const tab=document.querySelector('[data-tab-target="registros"]');
+  if(tab)switchPanelTab('registros',tab);
+  closeForm();
+ } catch(err){
+  console.error('Erro ao salvar demanda:',err);
+  alert('Não foi possível salvar a demanda. Confira os campos e tente novamente.');
+ } finally {
+  if(saveButton){saveButton.disabled=false;saveButton.textContent=saveButton.dataset.originalText||'Salvar demanda';}
+ }
+}
 function editTask(id){let t=tasks.find(x=>x.id===id);if(t)openForm(t)}
-function finishTask(id){let t=tasks.find(x=>x.id===id);if(t){t.status=t.status==='Concluída'?'Em andamento':'Concluída';if(t.status==='Concluída')t.completed=today();t.last=today();persist();render()}}
-function deleteTask(id){const item=tasks.find(t=>t.id===id);if(!item)return;if(confirm('Excluir definitivamente a demanda '+id+' — '+(item.subject||item.provider||'sem assunto')+'? Esta ação não pode ser desfeita.')){tasks=tasks.filter(t=>t.id!==id);persist();render()}}
+function finishTask(id){let t=tasks.find(x=>x.id===id);if(t){t.status=t.status==='Concluída'?'Em andamento':'Concluída';if(t.status==='Concluída')t.completed=today();t.last=today();persist();render();renderRecords();if(typeof renderAnnualVisits==='function')renderAnnualVisits()}}
+function deleteTask(id){const item=tasks.find(t=>t.id===id);if(!item)return;if(confirm('Excluir definitivamente a demanda '+id+' — '+(item.subject||item.provider||'sem assunto')+'? Esta ação não pode ser desfeita.')){tasks=tasks.filter(t=>t.id!==id);persist();render();renderRecords();if(typeof renderAnnualVisits==='function')renderAnnualVisits()}}
 function csvCell(v){return '"'+String(v??'').replace(/"/g,'""')+'"'}
-const cols=['id','created','providerCode','osNumber','provider','providerType','subject','category','description','impact','priority','owner','support','status','due','contractAnniversary','next','last','dependency','money','completed','notes'];
-const labels=['ID','Data de registro','Código do prestador','Número da O.S.','Prestador','Tipo de prestador','Assunto','Categoria','Descrição / contexto','Impacto','Prioridade','Responsável principal','Apoio','Status','Prazo da demanda','Aniversário contratual','Próxima ação','Data do último acompanhamento','Dependência / aguardando','Impacto financeiro estimado (R$)','Data de conclusão','Observações'];
-function exportCSV(){let csv=[labels,...tasks.map(t=>cols.map(k=>t[k]??''))].map(r=>r.map(csvCell).join(';')).join('\r\n');downloadBlob('\ufeff'+csv,'Demandas_Carteira_Hospitalar.csv','text/csv;charset=utf-8')}
+const cols=['id','created','osNumber','provider','providerType','subject','category','description','impact','priority','owner','support','status','due','contractAnniversary','next','last','dependency','money','completed','notes','initialProposal','counterProposal','finalAgreed','negotiationSavings','negotiationSavingsPercent','initialProposalDate','finalAgreedDate','negotiationHistory','visitDate','visitParticipants','visitObjective','visitOutcome','credentialDate','credentialService','credentialValue','credentialStage'];
+const labels=['ID','Data de registro','Código do prestador','Prestador','Tipo de prestador','Rede','Assunto','Categoria','Descrição / contexto','Impacto','Prioridade','Responsável principal','Apoio','Status','Prazo da demanda','Aniversário contratual','Próxima ação','Data do último acompanhamento','Dependência / aguardando','Impacto financeiro estimado (R$)','Data de conclusão','Observações'];
+function exportCSV(){
+ const exportCols=['id','created','providerCode','osNumber','provider','providerType','providerNetwork','subject','category','owner','status','priority','due','next','dependency','initialProposal','counterProposal','finalAgreed','negotiationSavings','negotiationSavingsPercent','initialProposalDate','finalAgreedDate','negotiationHistory','visitDate','visitOutcome','credentialDate','credentialService','credentialStage','descredDate','descredReason','descredDays','contractEndDate'];
+ const exportLabels=['ID','Data de registro','Código do prestador','Nº O.S.','Prestador','Tipo de prestador','Rede','Assunto','Categoria','Responsável','Status','Prioridade','Prazo','Próxima ação','Aguardando / dependência','Proposta inicial (R$)','Contraproposta (R$)','Valor final (R$)','Economia (R$)','Economia (%)','Data da proposta','Data do fechamento','Histórico da negociação','Data da visita','Resultado da visita','Data do credenciamento','Serviço credenciado','Etapa do credenciamento','Data do descredenciamento','Motivo da rescisão','Prazo de cumprimento (dias)','Término do contrato'];
+ const csv=[exportLabels,...tasks.map(t=>exportCols.map(k=>t[k]??''))].map(r=>r.map(csvCell).join(';')).join('\r\n');
+ downloadBlob('\ufeff'+csv,'Base_Simplificada_Gestao_Rede.csv','text/csv;charset=utf-8');
+}
 
 function xmlEscape(v){return String(v??'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&apos;')}
 function xCell(v){return '<Cell><Data ss:Type="String">'+xmlEscape(v)+'</Data></Cell>'}
@@ -512,8 +837,8 @@ function exportExcelReport(){
  summary.push([],['INDICADORES POR CATEGORIA','Total cadastradas','Abertas','Concluídas']);
  const cats=[...new Set([...['Credenciamentos','Descredenciamentos','Contratos','Extensões','Reajuste','Honorário cirúrgico','Parametrização','Revisão de travas','Visitas','Outros'],...tasks.map(t=>t.category).filter(Boolean)])];
  cats.forEach(c=>{const a=tasks.filter(t=>(t.category||'')===c);summary.push([c,a.length,a.filter(t=>!['Concluída','Suspensa'].includes(t.status)).length,a.filter(t=>t.status==='Concluída').length])});
- const detailLabels=['ID','Data de registro','Número da O.S.','Prestador','Tipo de prestador','Assunto','Categoria','Descrição / contexto','Impacto','Prioridade','Responsável principal','Apoio','Status','Prazo da demanda','Aniversário contratual','Situação do prazo','Próxima ação','Data do último acompanhamento','Dependência / aguardando','Impacto financeiro estimado (R$)','Data de conclusão','Observações'];
- const detail=tasks.map(t=>{const isOpen=!['Concluída','Suspensa'].includes(t.status);let deadline='Sem prazo definido';if(t.due&&isOpen)deadline=t.due<now?'Vencido':t.due<=datePlus(3)?'Vence em até 3 dias':'Dentro do prazo';else if(t.due&&!isOpen)deadline='Encerrada / suspensa';return [t.id,t.created,t.osNumber,t.provider,t.providerType,t.subject,t.category,t.description,t.impact,t.priority,t.owner,t.support,t.status,t.due,t.contractAnniversary,deadline,t.next,t.last,t.dependency,t.money,t.completed,t.notes]});
+ const detailLabels=['ID','Data de registro','Código do prestador','Número da O.S.','Prestador','Tipo de prestador','Rede','Assunto','Categoria','Descrição / contexto','Impacto','Prioridade','Responsável principal','Apoio','Status','Prazo da demanda','Aniversário contratual','Situação do prazo','Próxima ação','Data do último acompanhamento','Dependência / aguardando','Impacto financeiro estimado (R$)','Data de conclusão','Observações'];
+ const detail=tasks.map(t=>{const isOpen=!['Concluída','Suspensa'].includes(t.status);let deadline='Sem prazo definido';if(t.due&&isOpen)deadline=t.due<now?'Vencido':t.due<=datePlus(3)?'Vence em até 3 dias':'Dentro do prazo';else if(t.due&&!isOpen)deadline='Encerrada / suspensa';return [t.id,t.created,t.providerCode,t.osNumber,t.provider,t.providerType,t.providerNetwork,t.subject,t.category,t.description,t.impact,t.priority,t.owner,t.support,t.status,t.due,t.contractAnniversary,deadline,t.next,t.last,t.dependency,t.money,t.completed,t.notes]});
  const workbook='<?xml version="1.0"?><?mso-application progid="Excel.Sheet"?><Workbook xmlns="urn:schemas-microsoft-com:office:spreadsheet" xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns:ss="urn:schemas-microsoft-com:office:spreadsheet"><Styles><Style ss:ID="Default" ss:Name="Normal"><Alignment ss:Vertical="Center"/><Font ss:FontName="Arial" ss:Size="10"/></Style><Style ss:ID="Header"><Font ss:Bold="1" ss:Color="#FFFFFF"/><Interior ss:Color="#12305A" ss:Pattern="Solid"/></Style></Styles><Worksheet ss:Name="Indicadores"><Table>'+summary.map((r,i)=>i===0||String(r[0]||'').startsWith('INDICADORES')?'<Row>'+r.map(v=>'<Cell ss:StyleID="Header"><Data ss:Type="String">'+xmlEscape(v)+'</Data></Cell>').join('')+'</Row>':xRow(r)).join('')+'</Table><WorksheetOptions xmlns="urn:schemas-microsoft-com:office:excel"><FreezePanes/><FrozenNoSplit/><SplitHorizontal>3</SplitHorizontal><TopRowBottomPane>3</TopRowBottomPane></WorksheetOptions></Worksheet><Worksheet ss:Name="Demandas"><Table>'+[detailLabels,...detail].map((r,i)=>i===0?'<Row>'+r.map(v=>'<Cell ss:StyleID="Header"><Data ss:Type="String">'+xmlEscape(v)+'</Data></Cell>').join('')+'</Row>':xRow(r)).join('')+'</Table><WorksheetOptions xmlns="urn:schemas-microsoft-com:office:excel"><FreezePanes/><FrozenNoSplit/><SplitHorizontal>1</SplitHorizontal><TopRowBottomPane>1</TopRowBottomPane></WorksheetOptions></Worksheet></Workbook>';
  downloadBlob('\ufeff'+workbook,'Relatorio_Gestao_Rede_Indicadores.xls','application/vnd.ms-excel;charset=utf-8');
 }
@@ -556,6 +881,19 @@ if(typeof google!=='undefined' && google.script && google.script.run){setInterva
 
 
 <script>
+function initAnnualVisitYear(){
+ const el=document.getElementById('visitScheduleYear'); if(!el||el.options.length)return;
+ const current=new Date().getFullYear(); for(let y=current-2;y<=current+5;y++){const o=document.createElement('option');o.value=String(y);o.textContent=String(y);if(y===current)o.selected=true;el.appendChild(o);}
+}
+function renderAnnualVisits(){
+ initAnnualVisitYear(); const year=Number(document.getElementById('visitScheduleYear')?.value||new Date().getFullYear());
+ const visits=(Array.isArray(tasks)?tasks:[]).filter(t=>String(t.category||'').trim()==='Visitas' && /^\d{4}-\d{2}-\d{2}$/.test(String(t.visitDate||'')) && Number(String(t.visitDate).slice(0,4))===year).sort((a,b)=>String(a.visitDate).localeCompare(String(b.visitDate)));
+ const scheduled=visits.filter(t=>t.status==='Agendado').length, completed=visits.filter(t=>t.status==='Concluída').length;
+ const set=(id,v)=>{const e=document.getElementById(id);if(e)e.textContent=String(v)};set('annualVisitTotal',visits.length);set('annualVisitScheduled',scheduled);set('annualVisitCompleted',completed);
+ const body=document.getElementById('annualVisitsBody'); if(!body)return;
+ body.innerHTML=visits.length?visits.map(t=>`<tr><td><strong>${escapeHtml(formatDateBR(t.visitDate))}</strong></td><td>${escapeHtml(new Date(String(t.visitDate)+'T12:00:00').toLocaleDateString('pt-BR',{month:'long'}))}</td><td>${escapeHtml(t.providerCode||'—')} · ${escapeHtml(t.provider||'Prestador não informado')}</td><td>${escapeHtml(t.owner||'—')}</td><td><span class="pill status" data-s="${escapeHtml(t.status||'')}">${escapeHtml(t.status||'—')}</span></td><td>${escapeHtml(t.visitObjective||t.next||t.subject||'—')}</td><td><button type="button" class="secondary icon-action" title="Editar visita" onclick="editTask('${escapeHtml(t.id)}')">✏️</button></td></tr>`).join(''):'<tr><td colspan="7" class="empty">Nenhuma visita com data cadastrada para '+year+'. Cadastre uma demanda na categoria “Visitas” para preencher o cronograma.</td></tr>';
+}
+function openFormForVisit(){openForm();const cat=document.getElementById('category');if(cat){cat.value='Visitas';updateCategoryFields();}switchPanelTab('demandas',document.querySelector('[data-tab-target="demandas"]'));openForm();const cat2=document.getElementById('category');if(cat2){cat2.value='Visitas';updateCategoryFields();}}
 function switchPanelTab(tab, button){
   document.querySelectorAll('[data-tab-panel]').forEach(function(panel){
     panel.hidden = panel.getAttribute('data-tab-panel') !== tab;
@@ -566,6 +904,9 @@ function switchPanelTab(tab, button){
     btn.setAttribute('aria-selected', active ? 'true' : 'false');
   });
   if(button) button.focus({preventScroll:true});
+  if(tab === 'registros' && typeof renderRecords === 'function') renderRecords();
+  if(tab === 'visitas-ano' && typeof renderAnnualVisits === 'function') renderAnnualVisits();
+  if(tab === 'dashboard' && typeof initDashboardControls === 'function') { if(!document.getElementById('dashYear').options.length) initDashboardControls(); renderDashboard(); if(window.panelCloudReady) loadMonthlyMetrics(); }
   window.scrollTo({top:0, behavior:'smooth'});
 }
 </script>
@@ -605,16 +946,26 @@ async function initializePanelForUser(user){
   }
   window.panelCloudReady=true;
   render();
+  if(typeof initDashboardControls==='function') initDashboardControls();
+  await loadMonthlyMetrics();
   status.textContent='Sincronizado na nuvem';
   if(panelPoll)clearInterval(panelPoll);
   panelPoll=setInterval(async()=>{
-    if(!window.panelCloudReady || Date.now()-(window.panelLastLocalWrite||0)<5000)return;
+    if(!window.panelCloudReady || Date.now()-(window.panelLastLocalWrite||0)<2500 || Date.now()-(window.panelLastCloudWrite||0)<1500)return;
     const result=await panelSupabase.from('panel_state').select('payload,updated_at').eq('id','main').maybeSingle();
     if(!result.error && result.data && Array.isArray(result.data.payload)){
       const incoming=JSON.stringify(result.data.payload);
-      if(incoming!==JSON.stringify(tasks)){tasks=result.data.payload;try{localStorage.setItem(KEY,incoming)}catch(e){}render();status.textContent='Atualizado com alterações da equipe';}
+      if(incoming!==JSON.stringify(tasks)){tasks=result.data.payload;try{localStorage.setItem(KEY,incoming)}catch(e){}render();renderRecords();renderDashboard();status.textContent='Atualizado com alterações da equipe';}
     }
-  },8000);
+    const metricResult=await panelSupabase.from('panel_state').select('payload,updated_at').eq('id','metrics').maybeSingle();
+    if(!metricResult.error && metricResult.data && metricResult.data.payload && typeof metricResult.data.payload==='object' && !Array.isArray(metricResult.data.payload)){
+      if(JSON.stringify(metricResult.data.payload)!==JSON.stringify(monthlyMetrics)){
+        monthlyMetrics=metricResult.data.payload;
+        const dash=document.querySelector('[data-tab-panel="dashboard"]');
+        if(dash && !dash.hidden){loadMetricForm();renderDashboard();}
+      }
+    }
+  },5000);
 }
 async function signOutPanel(){
   window.panelCloudReady=false;
@@ -647,11 +998,3 @@ document.addEventListener('DOMContentLoaded',async()=>{
   panelSupabase.auth.onAuthStateChange(async(event,session)=>{
     if(event==='SIGNED_OUT'){
       window.panelCloudReady=false;
-      document.getElementById('appRoot').style.display='none';
-      document.getElementById('loginScreen').style.display='flex';
-    }
-  });
-});
-</script>
-
-</body></html>
