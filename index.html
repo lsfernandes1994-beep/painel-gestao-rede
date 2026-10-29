@@ -363,7 +363,7 @@ footer{color:var(--muted);font-size:11px;text-align:center;padding:18px}
 </div>
 </main><footer>Gestão de Rede · Protótipo demonstrativo. Não insira dados pessoais de pacientes.</footer>
 <div class="modal" id="modal"><div class="dialog"><h2 id="formTitle">Nova demanda</h2><form id="taskForm" onsubmit="saveTask(event)"><input type="hidden" id="editId"><div class="formgrid">
-<div><label>Código do prestador (opcional para demanda avulsa)</label><input id="providerCode" inputmode="numeric" autocomplete="off" placeholder="Digite o código, se houver" oninput="lookupProviderDebounced()"><small id="providerLookupStatus" class="hint">Informe o código para localizar automaticamente ou deixe em branco para cadastrar uma demanda avulsa.</small></div>
+<div><label>Código do prestador</label><input id="providerCode" inputmode="numeric" autocomplete="off" placeholder="Digite o código, se houver" oninput="lookupProviderDebounced()"><small id="providerLookupStatus" class="hint">Informe o código para localizar automaticamente ou deixe em branco para cadastrar uma demanda avulsa.</small></div>
 <div><label>Prestador / nome do prestador *</label><input id="provider" required placeholder="Digite o nome do prestador ou assunto da demanda avulsa" autocomplete="off"></div>
 <div><label>Número da O.S.</label><input id="osNumber" placeholder="Ex.: 623401" inputmode="numeric"></div>
 <div class="wide"><label>Assunto *</label><input id="subject" placeholder="Resumo objetivo da demanda"></div>
