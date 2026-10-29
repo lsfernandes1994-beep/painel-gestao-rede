@@ -984,50 +984,17 @@ document.addEventListener('DOMContentLoaded',async()=>{
   }
   if(!window.supabase || !window.supabase.createClient){showLoginError('Não foi possível carregar o serviço de autenticação. Verifique a conexão com a internet.');return;}
   panelSupabase=window.supabase.createClient(SUPABASE_URL,SUPABASE_ANON_KEY);
+  const {data:{session}}=await panelSupabase.auth.getSession();
+  if(session) await initializePanelForUser(session.user);
   document.getElementById('loginForm').addEventListener('submit',async e=>{
     e.preventDefault();showLoginError('');setLoginBusy(true);
     const email=document.getElementById('loginEmail').value.trim();
     const password=document.getElementById('loginPassword').value;
-    let timeoutId;
-    try {
-      const timeout = new Promise((_,reject)=>{ timeoutId=setTimeout(()=>reject(new Error('TIMEOUT_AUTH')),15000); });
-      const result = await Promise.race([
-        panelSupabase.auth.signInWithPassword({email,password}),
-        timeout
-      ]);
-      clearTimeout(timeoutId);
-      setLoginBusy(false);
-      const {data,error}=result;
-      if(error){
-        showLoginError(error.message==='Invalid login credentials'
-          ? 'E-mail ou senha incorretos, ou a conta ainda não foi criada/liberada no Supabase.'
-          : 'Falha na autenticação: '+(error.message||'verifique a configuração do acesso.'));
-        return;
-      }
-      await initializePanelForUser(data.user);
-    } catch(err) {
-      if(timeoutId) clearTimeout(timeoutId);
-      setLoginBusy(false);
-      showLoginError(err && err.message==='TIMEOUT_AUTH'
-        ? 'A autenticação não respondeu em 15 segundos. Verifique a conexão com o Supabase ou tente outra rede/navegador.'
-        : 'Não foi possível concluir o login. Verifique a conexão e tente novamente.');
-      console.error('Falha no login do painel:',err);
-    }
+    const {data,error}=await panelSupabase.auth.signInWithPassword({email,password});
+    setLoginBusy(false);
+    if(error){showLoginError('Não foi possível entrar. Confira o e-mail e a senha ou solicite a criação/liberação da conta.');return;}
+    await initializePanelForUser(data.user);
   });
-  // O formulário de login fica ativo antes de consultar a sessão salva,
-  // para que uma falha ou demora do getSession não bloqueie o botão.
-  try {
-    const sessionResult = await Promise.race([
-      panelSupabase.auth.getSession(),
-      new Promise((_, reject) => setTimeout(() => reject(new Error('SESSION_TIMEOUT')), 8000))
-    ]);
-    if(sessionResult.data && sessionResult.data.session) {
-      await initializePanelForUser(sessionResult.data.session.user);
-    }
-  } catch(err) {
-    console.error('Não foi possível recuperar a sessão existente:', err);
-    showLoginError('A verificação da sessão demorou. Você ainda pode tentar entrar novamente.');
-  }
   panelSupabase.auth.onAuthStateChange(async(event,session)=>{
     if(event==='SIGNED_OUT'){
       window.panelCloudReady=false;
