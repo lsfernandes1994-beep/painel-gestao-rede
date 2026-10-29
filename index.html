@@ -222,6 +222,19 @@ footer{color:var(--muted);font-size:11px;text-align:center;padding:18px}
 .kpi-click::after{content:'Clique para detalhar';display:block;margin-top:7px;font-size:10px;color:var(--muted)}
 .quick-filter-note{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;background:#eaf3fa;border:1px solid #d5e6f3;border-radius:10px;padding:10px 13px;margin:0 0 16px;font-size:12px;color:var(--navy)}
 .descred-queue{margin-top:12px;padding:10px;border:1px solid #efb7ac;background:#fff4f1;border-radius:10px}.descred-queue-title{font-size:12px;font-weight:800;color:#963f32;margin-bottom:7px}.descred-queue-item{padding:8px 0;border-top:1px solid #f0d2cc;display:flex;flex-direction:column;gap:3px;font-size:11px;color:#73443d}.descred-queue-item strong{font-size:12px;color:#7e2e25}.descred-queue-item b{color:#963f32}
+
+.descred-main-panel{margin:14px 0 18px;padding:16px;border:1px solid #efaaa0;border-radius:14px;background:#fff5f2;box-shadow:0 4px 14px rgba(150,63,50,.07)}
+.descred-main-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:12px}
+.descred-main-head h2{margin:0;color:#963f32;font-size:17px}
+.descred-main-head p{margin:4px 0 0;color:#8d5a52;font-size:12px}
+.descred-main-count{display:inline-flex;align-items:center;justify-content:center;min-width:32px;height:32px;padding:0 9px;border-radius:999px;background:#f4c9c1;color:#8d3025;font-weight:800}
+.descred-main-list{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px}
+.descred-main-item{background:#fff;border:1px solid #f0c2ba;border-radius:10px;padding:12px;display:grid;gap:5px}
+.descred-main-item strong{color:#263d53;font-size:14px}
+.descred-main-item .descred-status{color:#963f32;font-size:12px;font-weight:700}
+.descred-main-item .descred-meta{font-size:12px;color:#5d6f80}
+.descred-main-empty{font-size:13px;color:#6b8195;padding:8px 0}
+
 </style><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
@@ -258,6 +271,10 @@ footer{color:var(--muted);font-size:11px;text-align:center;padding:18px}
 <div class="card kpi-click" role="button" tabindex="0" title="Ver demandas concluídas" onclick="quickFilter('done')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();quickFilter('done')}"><div class="label">Concluídas</div><div class="metric" id="doneCount">0</div><div class="hint">Demandas finalizadas</div></div>
 <div class="card kpi-click" role="button" tabindex="0" title="Ver reajustes concluídos" onclick="quickFilter('reajuste')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();quickFilter('reajuste')}"><div class="label">Prestadores com reajuste aplicado</div><div class="metric"><span id="providersReajustedCount">0</span><small style="font-size:14px;color:var(--muted)"> / 102</small></div><div class="hint"><span id="providersReajustedPercent">0%</span> da carteira de Larissa e Diego</div></div>
 <div class="card kpi-click" role="button" tabindex="0" title="Ver base de reajustes" onclick="quickFilter('reajusteAll')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();quickFilter('reajusteAll')}"><div class="label">Prestadores sem reajuste registrado</div><div class="metric" id="providersWithoutReajuste">102</div><div class="hint">Com base nos 102 prestadores da carteira</div></div>
+</section>
+<section id="descredMainPanel" class="descred-main-panel" aria-live="polite" style="display:none">
+  <div class="descred-main-head"><div><h2>Descredenciamentos em andamento</h2><p>Prestadores com encerramento contratual previsto</p></div><span id="descredMainCount" class="descred-main-count">0</span></div>
+  <div id="descredMainList" class="descred-main-list"></div>
 </section>
 <div class="quick-filter-note"><span><strong>Visão rápida:</strong> selecione qualquer indicador para abrir os registros correspondentes. Use o Dashboard para acompanhar tendências mensais.</span><button type="button" class="secondary" onclick="clearQuickFilter()">Limpar filtros</button></div>
 
@@ -524,6 +541,23 @@ function renderRecords(){
 
 }
 
+
+function renderMainDescredenciamentos(){
+ const panel=document.getElementById('descredMainPanel');
+ const list=document.getElementById('descredMainList');
+ const count=document.getElementById('descredMainCount');
+ if(!panel||!list||!count)return;
+ const items=tasks.filter(t=>['descredenciamentos','descredenciamento'].includes(String(t.category||'').trim().toLowerCase())&&!['Concluída','Suspensa'].includes(t.status));
+ panel.style.display=items.length?'block':'none';
+ count.textContent=items.length;
+ list.innerHTML=items.length?items.map(t=>`<article class="descred-main-item">
+  <strong>${escapeHtml(t.provider||'Prestador não informado')}</strong>
+  <span class="descred-status">Em processo de descredenciamento</span>
+  <span class="descred-meta">Responsável: ${escapeHtml(t.owner||'Não informado')}</span>
+  <span class="descred-meta">Encerramento previsto: <b>${t.contractEndDate?formatDateBR(t.contractEndDate):'data não informada'}</b></span>
+ </article>`).join(''):'<div class="descred-main-empty">Nenhum descredenciamento em andamento.</div>';
+}
+
 function render(){
  const open=openTasks(), overdue=open.filter(t=>t.due&&t.due<today()), done=tasks.filter(t=>t.status==='Concluída');
  document.getElementById('openCount').textContent=open.length;
@@ -532,6 +566,7 @@ function render(){
  document.getElementById('waitingCount').textContent=open.filter(t=>t.status==='Aguardando terceiros').length;
 
  document.getElementById('doneCount').textContent=done.length;
+ renderMainDescredenciamentos();
  const reajustedProviders=new Set(tasks.filter(t=>String(t.category||'').trim().toLowerCase()==='reajuste' && t.status==='Concluída' && String(t.provider||'').trim()).map(t=>String(t.provider).trim().toLowerCase()));
  const reajustedCount=Math.min(102,reajustedProviders.size);
  document.getElementById('providersReajustedCount').textContent=reajustedCount;
