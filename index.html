@@ -380,7 +380,7 @@ footer{color:var(--muted);font-size:11px;text-align:center;padding:18px}
 <div><label>Status *</label><select id="status" required><option>Processo de assinatura</option><option>Agendado</option><option>Em andamento</option><option>Aguardando terceiros</option><option>Concluída</option><option>Suspensa</option></select></div>
 <div><label>Prazo da demanda</label><input id="due" type="date"></div>
 <div><label>Aniversário contratual</label><input id="contractAnniversary" type="date"><small class="hint">Data-base para controle de reajustes.</small></div>
-<div><label>Impacto financeiro estimado (R$)</label><input id="money" type="number" min="0" step=".01" placeholder="0,00"></div>
+<div><label>Impacto financeiro estimado (R$)</label><input id="money" type="text" inputmode="decimal" autocomplete="off" placeholder="Ex.: 30.792,00"><small class="hint">Use o formato brasileiro: 30.792,00 para trinta mil setecentos e noventa e dois reais.</small></div>
 <div class="full"><label>Descrição / contexto</label><textarea id="description" rows="2"></textarea></div>
 <div class="full"><label>Próxima ação *</label><input id="next" placeholder="Qual é o próximo passo concreto?"></div>
 <div><label>Dependência / aguardando</label><input id="dependency" placeholder="Prestador, Diretoria, área interna..."></div>
@@ -792,6 +792,18 @@ function clearTaskForm(){
 
 function openForm(t=null){document.getElementById('taskForm').reset();document.getElementById('providerType').readOnly=true;document.getElementById('providerType').value='';const typeHint=document.getElementById('providerTypeHint');if(typeHint)typeHint.textContent='Sem código de prestador, este campo ficará disponível para preenchimento manual.';document.getElementById('editId').value=t?.id||'';document.getElementById('formTitle').textContent=t?'Editar demanda':'Nova demanda';const map={providerCode:'providerCode',provider:'provider',providerNetwork:'providerNetwork',osNumber:'osNumber',transaction:'transaction',requestDate:'requestDate',visitDate:'visitDate',providerType:'providerType',subject:'subject',category:'category',impact:'impact',priority:'priority',owner:'owner',support:'support',status:'status',due:'due',contractAnniversary:'contractAnniversary',money:'money',description:'description',next:'next',dependency:'dependency',notes:'notes',initialProposal:'initialProposal',counterProposal:'counterProposal',finalAgreed:'finalAgreed',negotiationSavings:'negotiationSavings',negotiationSavingsPercent:'negotiationSavingsPercent',initialProposalDate:'initialProposalDate',finalAgreedDate:'finalAgreedDate',negotiationHistory:'negotiationHistory',visitDate:'visitDate',visitParticipants:'visitParticipants',visitObjective:'visitObjective',visitOutcome:'visitOutcome',credentialDate:'credentialDate',credentialService:'credentialService',credentialValue:'credentialValue',credentialStage:'credentialStage',descredDate:'descredDate',descredReason:'descredReason',descredDays:'descredDays',contractEndDate:'contractEndDate'};for(const [k,id] of Object.entries(map))document.getElementById(id).value=t?.[k]??(k==='support'?'Nenhum':k==='priority'?'Normal':k==='status'?'Nova':'');const net=document.getElementById('providerNetwork')?.value||'';const netBadge=document.getElementById('providerNetworkBadge');if(netBadge){netBadge.textContent=net?'REDE: '+net.toUpperCase():'Informe o código do prestador';netBadge.dataset.network=net.toUpperCase();}updateNegotiationSavings();const codeInput=document.getElementById('providerCode');if(codeInput && !String(codeInput.value||'').trim()){document.getElementById('providerType').readOnly=false;const hint=document.getElementById('providerTypeHint');if(hint)hint.textContent='Preencha manualmente o tipo de prestador para esta demanda avulsa.';}document.getElementById('progressFields').style.display='none';document.getElementById('baseFormActions').style.display='flex';updateCategoryFields();const descredSection=document.getElementById('descredFields');if(descredSection){const isDescred=String(document.getElementById('category').value||'').trim()==='Descredenciamentos';descredSection.hidden=!isDescred;descredSection.style.display=isDescred?'block':'none';}if(t&&['Reajuste','Credenciamentos','Extensões'].includes(String(t.category||''))&&(['initialProposal','counterProposal','finalAgreed','visitDate','credentialDate'].some(k=>t[k])||t.category==='Reajuste'))showProgressFields();document.getElementById('modal').classList.add('open')}
 function closeForm(){document.getElementById('modal').classList.remove('open')}
+function parseBrazilianMoney(value){
+ const raw=String(value??'').trim().replace(/\s|R\$/g,'');
+ if(!raw)return 0;
+ let normalized=raw;
+ if(raw.includes(',')){
+   normalized=raw.replace(/\./g,'').replace(',','.');
+ } else if(/^\d{1,3}(\.\d{3})+$/.test(raw)){
+   normalized=raw.replace(/\./g,'');
+ }
+ const number=Number(normalized);
+ return Number.isFinite(number)&&number>=0?number:0;
+}
 async function saveTask(e){
  e.preventDefault();
  const form=document.getElementById('taskForm');
@@ -803,7 +815,7 @@ async function saveTask(e){
   const t={};
   for(const k of ['providerCode','provider','providerNetwork','osNumber','transaction','requestDate','visitDate','providerType','subject','category','impact','priority','owner','support','status','due','contractAnniversary','money','description','next','dependency','notes','initialProposal','counterProposal','finalAgreed','negotiationSavings','negotiationSavingsPercent','initialProposalDate','finalAgreedDate','negotiationHistory','visitDate','visitParticipants','visitObjective','visitOutcome','credentialDate','credentialService','credentialValue','credentialStage','descredDate','descredReason','descredDays','contractEndDate']) t[k]=document.getElementById(k).value;
   if(t.category==='Descredenciamentos'){calculateContractEndDate();t.contractEndDate=document.getElementById('contractEndDate').value;}
-  t.money=Number(t.money||0);for(const k of ['initialProposal','counterProposal','finalAgreed','credentialValue'])t[k]=Number(t[k]||0);const initial=Number(t.initialProposal||0), finalValue=Number(t.finalAgreed||0);
+  t.money=parseBrazilianMoney(t.money);for(const k of ['initialProposal','counterProposal','finalAgreed','credentialValue'])t[k]=Number(t[k]||0);const initial=Number(t.initialProposal||0), finalValue=Number(t.finalAgreed||0);
   t.negotiationSavings=Math.max(0,initial-finalValue);
   t.negotiationSavingsPercent=(initial>0 && t.initialProposal!=='' && t.finalAgreed!=='')?(Math.max(0,(initial-finalValue)/initial*100)).toFixed(2):'';
   t.last=today();
