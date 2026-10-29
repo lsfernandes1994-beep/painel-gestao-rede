@@ -1029,3 +1029,10 @@ document.addEventListener('DOMContentLoaded',async()=>{
   panelSupabase.auth.onAuthStateChange(async(event,session)=>{
     if(event==='SIGNED_OUT'){
       window.panelCloudReady=false;
+      if(panelPoll) clearInterval(panelPoll);
+    }
+  });
+});
+</script>
+</body>
+</html>
