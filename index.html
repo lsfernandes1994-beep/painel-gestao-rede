@@ -742,6 +742,11 @@ function refreshDashboard(){renderDashboard();if(window.panelCloudReady)loadMont
 function rank(t){return ({'Crítica':0,'Alta':1,'Normal':2,'Baixa':3}[t.priority]??4)}
 function escapeHtml(value){return String(value??'').replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));}
 function formatDateBR(value){if(!value)return '';const parts=String(value).split('-');return parts.length===3?`${parts[2]}/${parts[1]}/${parts[0]}`:String(value);}
+document.addEventListener('change',e=>{
+ if(e.target && e.target.id==='category'){
+   updateCategoryFields();
+ }
+});
 function updateCategoryFields(){
  const cat=String(document.getElementById('category')?.value||'').trim();
  const isVisit=cat==='Visitas';
