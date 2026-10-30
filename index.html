@@ -240,29 +240,29 @@ footer{color:var(--muted);font-size:11px;text-align:center;padding:18px}
   </form>
 </div>
 <div id="appRoot" style="display:none">
-<div class="user-strip"><span>Conectado como <strong id="signedInEmail"></strong></span><span id="syncStatus">Conectando à base compartilhada…</span><button class="light" type="button" onclick="signOutPanel()">Sair</button></div>
-<header><div><div class="eyebrow">Gestão de Rede · Operação Hospitalar</div><h1>Painel de Demandas</h1><p>Carteira Hospitalar · Prioridades, responsabilidades e prazos em um só lugar</p></div><div><button class="light" onclick="exportCSV()">Exportar CSV</button> <button class="light" onclick="exportExcelReport()">Relatório Excel / Indicadores</button> <button onclick="openForm()">+ Nova demanda</button></div></header>
+<div class="user-strip"><span>Conectado como <strong id="signedInEmail"></strong></span><span id="syncStatus">Conectando à base compartilhada…</span><button class="light" type="button" data-action="signOutPanel">Sair</button></div>
+<header><div><div class="eyebrow">Gestão de Rede · Operação Hospitalar</div><h1>Painel de Demandas</h1><p>Carteira Hospitalar · Prioridades, responsabilidades e prazos em um só lugar</p></div><div><button class="light" type="button" data-action="exportCSV">Exportar CSV</button> <button class="light" type="button" data-action="exportExcelReport">Relatório Excel / Indicadores</button> <button type="button" data-action="openForm">+ Nova demanda</button></div></header>
 <main>
 <nav class="tab-navigation" role="tablist" aria-label="Seções do painel">
-<button type="button" class="tab-button active" role="tab" aria-selected="true" data-tab-target="demandas" onclick="switchPanelTab('demandas', this)">Demandas e acompanhamento</button>
-<button type="button" class="tab-button" role="tab" aria-selected="false" data-tab-target="registros" onclick="switchPanelTab('registros', this)">Consultar / editar demandas</button>
-<button type="button" class="tab-button" role="tab" aria-selected="false" data-tab-target="executivo" onclick="switchPanelTab('executivo', this)">Resumo executivo por responsável</button>
-<button type="button" class="tab-button" role="tab" aria-selected="false" data-tab-target="dashboard" onclick="switchPanelTab('dashboard', this)">Dashboard de Gestão</button>
-<button type="button" class="tab-button" role="tab" aria-selected="false" data-tab-target="visitas-ano" onclick="switchPanelTab('visitas-ano', this)">Cronograma anual de visitas</button>
+<button type="button" class="tab-button active" role="tab" aria-selected="true" data-tab-target="demandas" data-action="switchPanelTab" data-action-arg="demandas">Demandas e acompanhamento</button>
+<button type="button" class="tab-button" role="tab" aria-selected="false" data-tab-target="registros" data-action="switchPanelTab" data-action-arg="registros">Consultar / editar demandas</button>
+<button type="button" class="tab-button" role="tab" aria-selected="false" data-tab-target="executivo" data-action="switchPanelTab" data-action-arg="executivo">Resumo executivo por responsável</button>
+<button type="button" class="tab-button" role="tab" aria-selected="false" data-tab-target="dashboard" data-action="switchPanelTab" data-action-arg="dashboard">Dashboard de Gestão</button>
+<button type="button" class="tab-button" role="tab" aria-selected="false" data-tab-target="visitas-ano" data-action="switchPanelTab" data-action-arg="visitas-ano">Cronograma anual de visitas</button>
 </nav>
 
 <div class="tab-panel" data-tab-panel="demandas">
-<div class="toolbar"><button onclick="openForm()">+ Registrar demanda</button><button class="secondary" onclick="document.getElementById('importFile').click()">Importar CSV</button><input id="importFile" type="file" accept=".csv,text/csv" hidden onchange="importCSV(event)"><button class="secondary" onclick="downloadTemplate()">Baixar modelo CSV</button><button class="secondary" onclick="resetDemo()">Restaurar exemplos</button><span class="hint" style="align-self:center">As demandas registradas entram na fila e atualizam os indicadores. Registros sincronizados na nuvem para usuários autenticados.</span></div>
+<div class="toolbar"><button type="button" data-action="openForm">+ Registrar demanda</button><button class="secondary" type="button" data-action="openImportFile">Importar CSV</button><input id="importFile" type="file" accept=".csv,text/csv" hidden><button class="secondary" type="button" data-action="downloadTemplate">Baixar modelo CSV</button><button class="secondary" type="button" data-action="resetDemo">Restaurar exemplos</button><span class="hint" style="align-self:center">As demandas registradas entram na fila e atualizam os indicadores. Registros sincronizados na nuvem para usuários autenticados.</span></div>
 <section class="cards">
-<div class="card kpi-click" role="button" tabindex="0" title="Ver demandas abertas" onclick="quickFilter('open')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();quickFilter('open')}"><div class="label">Demandas abertas</div><div class="metric" id="openCount">0</div><div class="hint">Não concluídas ou suspensas</div></div>
-<div class="card kpi-click" role="button" tabindex="0" title="Ver demandas críticas" onclick="quickFilter('critical')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();quickFilter('critical')}"><div class="label">Prioridade crítica</div><div class="metric" id="criticalCount">0</div><div class="hint">Exigem avaliação imediata</div></div>
-<div class="card kpi-click" role="button" tabindex="0" title="Ver demandas vencidas" onclick="quickFilter('overdue')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();quickFilter('overdue')}"><div class="label">Prazos vencidos</div><div class="metric" id="overdueCount">0</div><div class="hint">Demandas abertas fora do prazo</div></div>
-<div class="card kpi-click" role="button" tabindex="0" title="Ver demandas aguardando terceiros" onclick="quickFilter('waiting')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();quickFilter('waiting')}"><div class="label">Aguardando terceiros</div><div class="metric" id="waitingCount">0</div><div class="hint">Cobrar e registrar retorno</div></div>
-<div class="card kpi-click" role="button" tabindex="0" title="Ver demandas concluídas" onclick="quickFilter('done')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();quickFilter('done')}"><div class="label">Concluídas</div><div class="metric" id="doneCount">0</div><div class="hint">Demandas finalizadas</div></div>
-<div class="card kpi-click" role="button" tabindex="0" title="Ver reajustes concluídos" onclick="quickFilter('reajuste')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();quickFilter('reajuste')}"><div class="label">Prestadores com reajuste aplicado</div><div class="metric"><span id="providersReajustedCount">0</span><small style="font-size:14px;color:var(--muted)"> / 102</small></div><div class="hint"><span id="providersReajustedPercent">0%</span> da carteira de Larissa e Diego</div></div>
-<div class="card kpi-click" role="button" tabindex="0" title="Ver base de reajustes" onclick="quickFilter('reajusteAll')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();quickFilter('reajusteAll')}"><div class="label">Prestadores sem reajuste registrado</div><div class="metric" id="providersWithoutReajuste">102</div><div class="hint">Com base nos 102 prestadores da carteira</div></div>
+<div class="card kpi-click" role="button" tabindex="0" title="Ver demandas abertas" data-action="quickFilter" data-action-arg="open"><div class="label">Demandas abertas</div><div class="metric" id="openCount">0</div><div class="hint">Não concluídas ou suspensas</div></div>
+<div class="card kpi-click" role="button" tabindex="0" title="Ver demandas críticas" data-action="quickFilter" data-action-arg="critical"><div class="label">Prioridade crítica</div><div class="metric" id="criticalCount">0</div><div class="hint">Exigem avaliação imediata</div></div>
+<div class="card kpi-click" role="button" tabindex="0" title="Ver demandas vencidas" data-action="quickFilter" data-action-arg="overdue"><div class="label">Prazos vencidos</div><div class="metric" id="overdueCount">0</div><div class="hint">Demandas abertas fora do prazo</div></div>
+<div class="card kpi-click" role="button" tabindex="0" title="Ver demandas aguardando terceiros" data-action="quickFilter" data-action-arg="waiting"><div class="label">Aguardando terceiros</div><div class="metric" id="waitingCount">0</div><div class="hint">Cobrar e registrar retorno</div></div>
+<div class="card kpi-click" role="button" tabindex="0" title="Ver demandas concluídas" data-action="quickFilter" data-action-arg="done"><div class="label">Concluídas</div><div class="metric" id="doneCount">0</div><div class="hint">Demandas finalizadas</div></div>
+<div class="card kpi-click" role="button" tabindex="0" title="Ver reajustes concluídos" data-action="quickFilter" data-action-arg="reajuste"><div class="label">Prestadores com reajuste aplicado</div><div class="metric"><span id="providersReajustedCount">0</span><small style="font-size:14px;color:var(--muted)"> / 102</small></div><div class="hint"><span id="providersReajustedPercent">0%</span> da carteira de Larissa e Diego</div></div>
+<div class="card kpi-click" role="button" tabindex="0" title="Ver base de reajustes" data-action="quickFilter" data-action-arg="reajusteAll"><div class="label">Prestadores sem reajuste registrado</div><div class="metric" id="providersWithoutReajuste">102</div><div class="hint">Com base nos 102 prestadores da carteira</div></div>
 </section>
-<div class="quick-filter-note"><span><strong>Visão rápida:</strong> selecione qualquer indicador para abrir os registros correspondentes. Use o Dashboard para acompanhar tendências mensais.</span><button type="button" class="secondary" onclick="clearQuickFilter()">Limpar filtros</button></div>
+<div class="quick-filter-note"><span><strong>Visão rápida:</strong> selecione qualquer indicador para abrir os registros correspondentes. Use o Dashboard para acompanhar tendências mensais.</span><button type="button" class="secondary" data-action="clearQuickFilter">Limpar filtros</button></div>
 
 </div>
 
@@ -270,9 +270,9 @@ footer{color:var(--muted);font-size:11px;text-align:center;padding:18px}
  <div class="dash-shell">
   <div class="sectionhead"><div><h2>Dashboard de Gestão de Rede Hospitalar</h2><span class="muted">Visão mensal de produção, negociações e atividade da equipe</span></div><span class="dash-pill" id="dashCloudBadge">Base compartilhada</span></div>
   <div class="dash-toolbar">
-   <div><label for="dashYear">Ano de referência</label><select id="dashYear" onchange="renderDashboard()"></select></div>
-   <div><label for="dashMonth">Mês para lançamento</label><select id="dashMonth" onchange="loadMetricForm()"></select></div>
-   <button type="button" onclick="refreshDashboard()" class="secondary">↻ Atualizar indicadores</button>
+   <div><label for="dashYear">Ano de referência</label><select id="dashYear"></select></div>
+   <div><label for="dashMonth">Mês para lançamento</label><select id="dashMonth"></select></div>
+   <button type="button" class="secondary" data-action="refreshDashboard">↻ Atualizar indicadores</button>
   </div>
   <section class="dash-kpis" id="dashKpis"></section>
   <div class="dash-grid">
@@ -293,7 +293,7 @@ footer{color:var(--muted);font-size:11px;text-align:center;padding:18px}
     <div><label for="metricExtensions">Extensões de serviços</label><input id="metricExtensions" type="number" min="0" step="1" placeholder="0"></div>
     <div><label for="metricNotes">Observações do mês</label><input id="metricNotes" type="text" maxlength="300" placeholder="Ex.: visitas em hospitais prioritários"></div>
    </div>
-   <div class="dash-actions"><span id="metricSaveStatus" class="dash-status">Selecione o mês e preencha os indicadores.</span><button type="button" class="secondary" onclick="loadMetricForm()">Desfazer alterações</button><button type="button" onclick="saveMonthlyMetrics()">Salvar indicadores do mês</button></div>
+   <div class="dash-actions"><span id="metricSaveStatus" class="dash-status">Selecione o mês e preencha os indicadores.</span><button type="button" class="secondary" data-action="loadMetricForm">Desfazer alterações</button><button type="button" data-action="saveMonthlyMetrics">Salvar indicadores do mês</button></div>
   </section>
   <section class="dash-card"><h3>Resumo mensal</h3><p>Produção derivada das demandas e lançamentos complementares.</p><div style="overflow:auto"><table class="dash-table"><thead><tr><th>Mês</th><th>Registradas</th><th>Concluídas</th><th>Economia</th><th>Visitas</th><th>Reajustes</th><th>Novos prestadores</th><th>Extensões</th></tr></thead><tbody id="dashMonthlyTable"></tbody></table></div></section>
   <p class="dash-footnote">Nota: produção e conclusão são calculadas a partir dos campos de data das demandas existentes. A economia combina lançamentos mensais com a economia calculada nas demandas de reajuste. O quantitativo de prestadores reajustados conta nomes únicos em demandas de reajuste concluídas com proposta inicial preenchida, sobre a referência de 102 prestadores. A economia deve refletir o valor efetivamente negociado segundo o critério interno da equipe. Os indicadores compartilhados usam a tabela panel_state já configurada no Supabase; caso as políticas atuais não permitam gravar a linha de métricas, será necessário ajustar a política de acesso.</p>
@@ -302,7 +302,7 @@ footer{color:var(--muted);font-size:11px;text-align:center;padding:18px}
 
 <div class="tab-panel" data-tab-panel="visitas-ano" hidden>
  <div class="sectionhead"><div><h2>Cronograma anual de visitas</h2><span class="muted">As visitas aparecem automaticamente conforme você cadastrar a categoria “Visitas” e preencher a data da visita.</span></div>
- <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap"><label for="visitScheduleYear">Ano:</label><select id="visitScheduleYear" onchange="renderAnnualVisits()" style="padding:9px;border:1px solid #cbd7e4;border-radius:8px;background:white"></select><button type="button" class="secondary" onclick="openFormForVisit()">+ Agendar visita</button></div></div>
+ <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap"><label for="visitScheduleYear">Ano:</label><select id="visitScheduleYear" style="padding:9px;border:1px solid #cbd7e4;border-radius:8px;background:white"></select><button type="button" class="secondary" data-action="openFormForVisit">+ Agendar visita</button></div></div>
  <section class="cards" style="margin-bottom:16px"><div class="card"><div class="label">Visitas no ano</div><div class="metric" id="annualVisitTotal">0</div></div><div class="card"><div class="label">Agendadas</div><div class="metric" id="annualVisitScheduled">0</div></div><div class="card"><div class="label">Concluídas</div><div class="metric" id="annualVisitCompleted">0</div></div></section>
  <div class="panel"><div class="tablewrap"><table><thead><tr><th>Data</th><th>Mês</th><th>Código / Prestador</th><th>Responsável</th><th>Status</th><th>Objetivo / próxima ação</th><th>Ação</th></tr></thead><tbody id="annualVisitsBody"></tbody></table></div><p class="hint" style="margin-top:12px">Para incluir uma visita: clique em “Agendar visita”, escolha a categoria “Visitas”, preencha a data da visita e selecione o status “Agendado”. A lista é montada a partir das demandas salvas e acompanha alterações e exclusões.</p></div>
 </div>
@@ -348,11 +348,11 @@ footer{color:var(--muted);font-size:11px;text-align:center;padding:18px}
 <div class="sectionhead"><h2>Registro e acompanhamento</h2><span class="muted" id="resultCount"></span></div>
 <div class="panel">
 <div class="filters">
-<div><label>Buscar</label><input id="search" placeholder="Prestador, assunto, ID..." oninput="renderRecords()"></div>
-<div><label>Responsável</label><select id="ownerFilter" onchange="renderRecords()"><option value="">Todos</option><option>Larissa</option><option>Diego</option></select></div>
-<div><label>Prioridade</label><select id="priorityFilter" onchange="renderRecords()"><option value="">Todas</option><option>Crítica</option><option>Alta</option><option>Normal</option><option>Baixa</option></select></div>
-<div><label>Status</label><select id="statusFilter" onchange="renderRecords()"><option value="">Todos</option><option>Nova</option><option>Agendado</option><option>Em andamento</option><option>Aguardando terceiros</option><option>Concluída</option><option>Suspensa</option></select></div>
-<div><label>Categoria</label><select id="categoryFilter" onchange="renderRecords()"><option value="">Todas</option><option>Credenciamentos</option><option>Descredenciamentos</option><option>Contratos</option><option>Extensões</option><option>Reajuste</option><option>Honorário cirúrgico</option><option>Parametrização</option><option>Revisão de travas</option><option>Visitas</option><option>Outros</option></select></div>
+<div><label>Buscar</label><input id="search" placeholder="Prestador, assunto, ID..."></div>
+<div><label>Responsável</label><select id="ownerFilter"><option value="">Todos</option><option>Larissa</option><option>Diego</option></select></div>
+<div><label>Prioridade</label><select id="priorityFilter"><option value="">Todas</option><option>Crítica</option><option>Alta</option><option>Normal</option><option>Baixa</option></select></div>
+<div><label>Status</label><select id="statusFilter"><option value="">Todos</option><option>Nova</option><option>Agendado</option><option>Em andamento</option><option>Aguardando terceiros</option><option>Concluída</option><option>Suspensa</option></select></div>
+<div><label>Categoria</label><select id="categoryFilter"><option value="">Todas</option><option>Credenciamentos</option><option>Descredenciamentos</option><option>Contratos</option><option>Extensões</option><option>Reajuste</option><option>Honorário cirúrgico</option><option>Parametrização</option><option>Revisão de travas</option><option>Visitas</option><option>Outros</option></select></div>
 </div>
 <div class="tablewrap"><table><thead><tr><th>ID / Prazo</th><th>Data de inclusão</th><th>Nº da O.S.</th><th>Prestador / Assunto</th><th>Tipo de prestador</th><th>Rede</th><th>Prioridade</th><th>Responsável / Apoio</th><th>Status</th><th>Próxima ação</th><th>Ações</th></tr></thead><tbody id="tbody"></tbody></table></div>
 </div>
@@ -362,14 +362,14 @@ footer{color:var(--muted);font-size:11px;text-align:center;padding:18px}
 <section class="panel"><h2>Diego · Organização e acompanhamento operacional</h2><ul><li>Controle de documentos, cadastros e pendências de credenciamento.</li><li>Solicitação e conferência de informações junto aos prestadores.</li><li>Atualização dos registros, prazos, evidências e histórico de contato.</li><li>Follow-up de retornos e preparação de subsídios para negociação.</li><li>Monitoramento de pendências e sinalização antecipada de riscos.</li></ul><p class="hint">Atribuição sugerida por tipo de demanda, não por cargo. Larissa e Diego podem atuar em dupla; cada item deve ter um responsável principal e, quando útil, um apoio.</p></section>
 </div>
 </main><footer>Gestão de Rede · Protótipo demonstrativo. Não insira dados pessoais de pacientes.</footer>
-<div class="modal" id="modal"><div class="dialog"><div class="dialog-header"><h2 id="formTitle">Nova demanda</h2><button type="button" class="modal-close" aria-label="Fechar tela" title="Fechar tela" onclick="closeForm()">×</button></div><form id="taskForm" onsubmit="saveTask(event)"><input type="hidden" id="editId"><div class="formgrid">
-<div><label>Código do prestador</label><input id="providerCode" inputmode="numeric" autocomplete="off" placeholder="Digite o código, se houver" oninput="lookupProviderDebounced()"><small id="providerLookupStatus" class="hint">Informe o código para localizar automaticamente ou deixe em branco para cadastrar uma demanda avulsa.</small></div>
+<div class="modal" id="modal"><div class="dialog"><div class="dialog-header"><h2 id="formTitle">Nova demanda</h2><button type="button" class="modal-close" aria-label="Fechar tela" title="Fechar tela" data-action="closeForm">×</button></div><form id="taskForm"><input type="hidden" id="editId"><div class="formgrid">
+<div><label>Código do prestador</label><input id="providerCode" inputmode="numeric" autocomplete="off" placeholder="Digite o código, se houver"><small id="providerLookupStatus" class="hint">Informe o código para localizar automaticamente ou deixe em branco para cadastrar uma demanda avulsa.</small></div>
 <div><label>Prestador / nome do prestador *</label><input id="provider" required placeholder="Digite o nome do prestador ou assunto da demanda avulsa" autocomplete="off"></div>
 <div><label>Número da O.S.</label><input id="osNumber" placeholder="Ex.: 623401" inputmode="numeric"></div>
 <div class="wide"><label>Assunto *</label><input id="subject" placeholder="Resumo objetivo da demanda"></div>
 <div><label>Tipo de prestador *</label><input id="providerType" required readonly placeholder="Com código: preenchido automaticamente; sem código: preencha manualmente"><small id="providerTypeHint" class="hint">Sem código de prestador, este campo ficará disponível para preenchimento manual.</small></div>
 <div><label>Rede do prestador</label><button type="button" id="providerNetworkBadge" class="network-badge" disabled>Informe o código do prestador</button><input type="hidden" id="providerNetwork" value=""></div>
-<div><label>Categoria</label><select id="category" onchange="updateCategoryFields()"><option>Credenciamentos</option><option>Descredenciamentos</option><option>Contratos</option><option>Extensões</option><option>Reajuste</option><option>Honorário cirúrgico</option><option>Parametrização</option><option>Revisão de travas</option><option>Visitas</option><option>Outros</option></select></div>
+<div><label>Categoria</label><select id="category"><option>Credenciamentos</option><option>Descredenciamentos</option><option>Contratos</option><option>Extensões</option><option>Reajuste</option><option>Honorário cirúrgico</option><option>Parametrização</option><option>Revisão de travas</option><option>Visitas</option><option>Outros</option></select></div>
 <div style="display:none"><label>Transação (TR) *</label><input id="transaction" placeholder="Informe a transação"></div>
 <div style="display:none"><label>Data da demanda *</label><input id="requestDate" type="date"></div>
 <div style="display:none" id="visitDateField"><label>Data da visita *</label><input id="visitDate" type="date"></div>
@@ -389,12 +389,12 @@ footer{color:var(--muted);font-size:11px;text-align:center;padding:18px}
 <section id="descredFields" class="panel" style="display:none;margin-top:14px;padding:16px;background:#fff8f6;border:1px solid #efc0b7">
 <h3 style="margin-top:0">Dados do descredenciamento</h3>
 <div class="formgrid">
-<div><label>Data do descredenciamento *</label><input id="descredDate" type="date" onchange="calculateContractEndDate()"></div>
+<div><label>Data do descredenciamento *</label><input id="descredDate" type="date"></div>
 <div><label>Motivo da rescisão *</label><select id="descredReason"><option value="">Selecione o motivo</option><option>Solicitação do prestador</option><option>Decisão da operadora</option><option>Descumprimento contratual</option><option>Baixa demanda / estratégia de rede</option><option>Encerramento das atividades</option><option>Irregularidade documental ou regulatória</option><option>Outro</option></select></div>
-<div><label>Prazo de cumprimento</label><select id="descredDays" onchange="calculateContractEndDate()"><option value="">Selecione</option><option value="30">30 dias</option><option value="60">60 dias</option></select></div>
+<div><label>Prazo de cumprimento</label><select id="descredDays"><option value="">Selecione</option><option value="30">30 dias</option><option value="60">60 dias</option></select></div>
 <div><label>Data de término do contrato (calculada)</label><input id="contractEndDate" type="date" readonly><small class="hint">Calculada a partir da data do descredenciamento e do prazo selecionado.</small></div>
 </div></section>
-<div class="formactions" id="baseFormActions"><button type="button" class="secondary" onclick="clearTaskForm()">Limpar formulário</button><button type="submit" id="saveDirectButton">Salvar demanda</button><button type="button" id="nextStepButton" onclick="showProgressFields()" style="display:none">Próximo: negociação / detalhes →</button></div>
+<div class="formactions" id="baseFormActions"><button type="button" class="secondary" data-action="clearTaskForm">Limpar formulário</button><button type="submit" id="saveDirectButton">Salvar demanda</button><button type="button" id="nextStepButton" data-action="showProgressFields" style="display:none">Próximo: negociação / detalhes →</button></div>
 <section id="progressFields" class="panel" style="display:none;margin-top:18px;padding:16px">
 <div id="progressCategoryHint" class="muted" style="margin:0 0 12px"></div>
 <h3 id="progressTitle">Evolução da demanda</h3>
@@ -420,7 +420,7 @@ footer{color:var(--muted);font-size:11px;text-align:center;padding:18px}
 <div><label>Valor/tabela acordada (R$)</label><input id="credentialValue" type="text" inputmode="decimal" autocomplete="off" min="0" step="0.01" placeholder="0,00"></div>
 <div><label>Status da tratativa</label><select id="credentialStage"><option value="">Selecione</option><option>Em análise</option><option>Em negociação</option><option>Aprovado</option><option>Implantado</option><option>Não aprovado</option></select></div>
 </div>
-<div class="formactions"><button type="button" class="secondary" onclick="backToBaseFields()">← Voltar</button><button type="submit">Salvar demanda</button></div>
+<div class="formactions"><button type="button" class="secondary" data-action="backToBaseFields">← Voltar</button><button type="submit">Salvar demanda</button></div>
 </section>
 </form></div></div>
 </div>
@@ -501,6 +501,60 @@ function persist(){
 }
 function today(){let d=new Date();return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`}
 function esc(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+function sanitizeTaskId(value, fallback='IMP'){
+  const text=String(value??'').trim();
+  const normalized=text.replace(/[^A-Za-z0-9._-]+/g,'-').replace(/^-+|-+$/g,'').replace(/-+/g,'-');
+  if(!normalized)return fallback;
+  return normalized.slice(0,80);
+}
+function bindTaskActionButtons(container){
+  if(!container || typeof container.querySelectorAll !== 'function') return;
+  container.querySelectorAll('[data-task-action]').forEach(button=>{
+    button.addEventListener('click',()=>{
+      const action=button.getAttribute('data-task-action');
+      const id=String(button.getAttribute('data-task-id')||'');
+      if(action==='edit') editTask(id);
+      else if(action==='finish') finishTask(id);
+      else if(action==='delete') deleteTask(id);
+    });
+  });
+}
+function handleDataActionTrigger(target){
+  if(!target || !(target instanceof Element)) return;
+  const trigger=target.closest('[data-action]');
+  if(!trigger) return;
+  const action=trigger.getAttribute('data-action');
+  const arg=trigger.getAttribute('data-action-arg');
+  if(!action) return;
+  const fn=typeof window[action]==='function'?window[action]:null;
+  if(!fn){
+    console.warn('Ação não registrada:', action);
+    return;
+  }
+  if(action==='switchPanelTab'){
+    fn(arg || trigger.getAttribute('data-tab-target'));
+    return;
+  }
+  if(action==='quickFilter' || action==='openFormForVisit' || action==='showProgressFields' || action==='clearTaskForm' || action==='backToBaseFields' || action==='closeForm' || action==='signOutPanel' || action==='refreshDashboard' || action==='loadMetricForm' || action==='saveMonthlyMetrics' || action==='openForm' || action==='exportCSV' || action==='exportExcelReport' || action==='openImportFile' || action==='downloadTemplate' || action==='resetDemo' || action==='clearQuickFilter'){
+    fn(arg || undefined);
+    return;
+  }
+  fn();
+}
+document.addEventListener('click',event=>{
+  const target=event.target;
+  if(target && typeof target.closest==='function') handleDataActionTrigger(target);
+});
+document.addEventListener('keydown',event=>{
+  const target=event.target;
+  if(!target || typeof target.closest!=='function') return;
+  const trigger=target.closest('[data-action]');
+  if(!trigger) return;
+  if((event.key==='Enter' || event.key===' ') && trigger.matches('[role="button"], [data-action]')){
+    event.preventDefault();
+    handleDataActionTrigger(trigger);
+  }
+});
 function openTasks(){return tasks.filter(t=>!['Concluída','Suspensa'].includes(t.status))}
 
 const portfolioTypes={
@@ -561,7 +615,8 @@ function renderRecords(){
   return quickOk&&(!q||[t.id,t.providerCode,t.osNumber,t.provider,t.subject,t.description,t.next,t.contractAnniversary].join(' ').toLowerCase().includes(q))&&(!own||t.owner===own)&&(!pri||t.priority===pri)&&(!st||t.status===st)&&(!cat||t.category===cat)
  }).sort((a,b)=>rank(a)-rank(b)||(a.due||'9999').localeCompare(b.due||'9999'));
  document.getElementById('resultCount').textContent=`${filtered.length} registro(s)`;
- tbody.innerHTML=filtered.length?filtered.map(t=>`<tr><td><b>${esc(t.id)}</b><br><span class="muted">${t.due?'Prazo: '+esc(t.due):'Sem prazo'}</span>${t.due&&t.due<today()&&!['Concluída','Suspensa'].includes(t.status)?'<br><span style="color:#c73e4d;font-weight:bold">VENCIDA</span>':''}</td><td>${esc(t.createdAt?new Date(t.createdAt).toLocaleString('pt-BR',{day:'2-digit',month:'2-digit',year:'numeric',hour:'2-digit',minute:'2-digit',second:'2-digit'}):(formatDateBR(t.created||t.inseridoEm||'')||'—'))}</td><td><b>${esc(t.osNumber||'—')}</b></td><td><b>${esc(t.providerCode||'—')} | ${esc(t.provider)}</b><br>${esc(t.subject||'—')}<br><span class="muted">${esc(t.category)}</span>${t.contractAnniversary?'<br><span class="muted">Aniversário contratual: '+esc(t.contractAnniversary)+'</span>':''}</td><td>${esc(t.providerType||portfolioType(t))}</td><td><span class="network-chip" data-network="${esc(String(t.providerNetwork||'').toUpperCase())}">${esc(t.providerNetwork||'—')}</span></td><td><span class="pill ${esc(t.priority)}">${esc(t.priority)}</span><br><span class="muted">${esc(t.impact||'')}</span></td><td><b>${esc(t.owner)}</b><br><span class="muted">Apoio: ${esc(t.support||'Nenhum')}</span></td><td><span class="pill status" data-s="${esc(t.status)}">${esc(t.status)}</span></td><td>${esc(t.next||'—')}<br><span class="muted">${t.dependency?'Aguardando: '+esc(t.dependency):''}</span></td><td class="action-cell"><button class="secondary icon-action" type="button" title="Editar demanda" aria-label="Editar demanda" onclick="editTask('${esc(t.id)}')">✏️</button><button class="secondary icon-action" type="button" title="${t.status==='Concluída'?'Reabrir demanda':'Concluir demanda'}" aria-label="${t.status==='Concluída'?'Reabrir demanda':'Concluir demanda'}" onclick="finishTask('${esc(t.id)}')">${t.status==='Concluída'?'↩️':'✓'}</button><button class="icon-action delete-action" type="button" title="Excluir demanda" aria-label="Excluir demanda" onclick="deleteTask('${esc(t.id)}')">🗑️</button></td></tr>`).join(''):'<tr><td colspan="11" class="empty">Nenhuma demanda corresponde aos filtros.</td></tr>';
+ tbody.innerHTML=filtered.length?filtered.map(t=>`<tr><td><b>${esc(t.id)}</b><br><span class="muted">${t.due?'Prazo: '+esc(t.due):'Sem prazo'}</span>${t.due&&t.due<today()&&!['Concluída','Suspensa'].includes(t.status)?'<br><span style="color:#c73e4d;font-weight:bold">VENCIDA</span>':''}</td><td>${esc(t.createdAt?new Date(t.createdAt).toLocaleString('pt-BR',{day:'2-digit',month:'2-digit',year:'numeric',hour:'2-digit',minute:'2-digit',second:'2-digit'}):(formatDateBR(t.created||t.inseridoEm||'')||'—'))}</td><td><b>${esc(t.osNumber||'—')}</b></td><td><b>${esc(t.providerCode||'—')} | ${esc(t.provider)}</b><br>${esc(t.subject||'—')}<br><span class="muted">${esc(t.category)}</span>${t.contractAnniversary?'<br><span class="muted">Aniversário contratual: '+esc(t.contractAnniversary)+'</span>':''}</td><td>${esc(t.providerType||portfolioType(t))}</td><td><span class="network-chip" data-network="${esc(String(t.providerNetwork||'').toUpperCase())}">${esc(t.providerNetwork||'—')}</span></td><td><span class="pill ${esc(t.priority)}">${esc(t.priority)}</span><br><span class="muted">${esc(t.impact||'')}</span></td><td><b>${esc(t.owner)}</b><br><span class="muted">Apoio: ${esc(t.support||'Nenhum')}</span></td><td><span class="pill status" data-s="${esc(t.status)}">${esc(t.status)}</span></td><td>${esc(t.next||'—')}<br><span class="muted">${t.dependency?'Aguardando: '+esc(t.dependency):''}</span></td><td class="action-cell"><button class="secondary icon-action" type="button" title="Editar demanda" aria-label="Editar demanda" data-task-action="edit" data-task-id="${esc(t.id)}">✏️</button><button class="secondary icon-action" type="button" title="${t.status==='Concluída'?'Reabrir demanda':'Concluir demanda'}" aria-label="${t.status==='Concluída'?'Reabrir demanda':'Concluir demanda'}" data-task-action="finish" data-task-id="${esc(t.id)}">${t.status==='Concluída'?'↩️':'✓'}</button><button class="icon-action delete-action" type="button" title="Excluir demanda" aria-label="Excluir demanda" data-task-action="delete" data-task-id="${esc(t.id)}">🗑️</button></td></tr>`).join(''):'<tr><td colspan="11" class="empty">Nenhuma demanda corresponde aos filtros.</td></tr>';
+ bindTaskActionButtons(tbody);
 
 }
 
@@ -764,6 +819,8 @@ function calculateContractEndDate(){
 function showProgressFields(){const cat=String(document.getElementById('category')?.value||'').trim();const allowed=['Reajuste','Credenciamentos','Extensões'];if(!allowed.includes(cat)){alert('A etapa Próximo está disponível somente para Reajuste, Credenciamentos ou Extensões. Para esta categoria, permaneça na primeira tela e salve a demanda.');return;}updateCategoryFields();document.getElementById('progressFields').style.display='block';document.getElementById('baseFormActions').style.display='none';}
 function backToBaseFields(){document.getElementById('progressFields').style.display='none';document.getElementById('baseFormActions').style.display='flex';}
 document.addEventListener('input',e=>{if(e.target&&['initialProposal','finalAgreed'].includes(e.target.id))updateNegotiationSavings();});
+document.addEventListener('input',e=>{if(e.target&&e.target.id==='search')renderRecords();if(e.target&&e.target.id==='providerCode')lookupProviderDebounced();});
+document.addEventListener('change',e=>{if(e.target&&(e.target.id==='descredDate'||e.target.id==='descredDays'))calculateContractEndDate();});
 function updateNegotiationSavings(){const initialEl=document.getElementById('initialProposal'),finalEl=document.getElementById('finalAgreed');const a=parseBrazilianMoney(initialEl.value),b=parseBrazilianMoney(finalEl.value);const valid=initialEl.value.trim()!==''&&finalEl.value.trim()!==''&&a>0&&b>=0;const savings=document.getElementById('negotiationSavings');if(savings)savings.value=valid?formatBrazilianNumber(Math.max(0,a-b)):'';const pct=document.getElementById('negotiationSavingsPercent');if(pct)pct.value=valid?(Math.max(0,(a-b)/a*100)).toFixed(2)+'%':'';}
 function clearTaskForm(){
  if(!window.confirm('Deseja limpar os campos preenchidos? As informações ainda não salvas serão perdidas.'))return;
@@ -867,8 +924,7 @@ function exportExcelReport(){
 
 function downloadTemplate(){let csv=[labels].map(r=>r.map(csvCell).join(';')).join('\r\n');downloadBlob('\ufeff'+csv,'Modelo_Demandas_Carteira_Hospitalar.csv','text/csv;charset=utf-8')}
 function downloadBlob(content,name,type){let a=document.createElement('a');a.href=URL.createObjectURL(new Blob([content],{type}));a.download=name;a.click();URL.revokeObjectURL(a.href)}
-function importCSV(ev){let file=ev.target.files[0];if(!file)return;let reader=new FileReader();reader.onload=()=>{try{let lines=reader.result.replace(/^\ufeff/,'').split(/\r?\n/).filter(Boolean);let parse=line=>{let out=[],s='',q=false;for(let i=0;i<line.length;i++){let c=line[i];if(c==='"'&&line[i+1]==='"'&&q){s+='"';i++}else if(c==='"')q=!q;else if(c===';'&&!q){out.push(s);s=''}else s+=c}out.push(s);return out};let data=lines.slice(1).map(parse);let imported=data.map(r=>Object.fromEntries(cols.map((k,i)=>[k,r[i]||'']))).filter(t=>t.provider||t.subject);if(!imported.length)throw Error('Arquivo sem linhas de demanda');if(confirm(`Importar ${imported.length} linha(s)? Elas serão adicionadas ao painel.`)){imported.forEach((t,i)=>{t.id=t.id||'IMP-'+Date.now().toString().slice(-5)+'-'+i;t.money=Number(t.money||0)});tasks=tasks.concat(imported);persist();render();alert('Importação concluída.')} }catch(e){alert('Não foi possível importar. Use o CSV exportado pelo painel ou o modelo CSV.')}ev.target.value=''};reader.readAsText(file,'UTF-8')}
-function resetDemo(){if(confirm('Substituir os registros atuais pelos três exemplos fictícios? Exporte antes se quiser guardar os dados.')){tasks=sample.map(x=>({...x}));persist();render()}}
+function importCSV(ev){let file=ev.target.files[0];if(!file)return;let reader=new FileReader();reader.onload=()=>{try{let lines=reader.result.replace(/^\ufeff/,'').split(/\r?\n/).filter(Boolean);let parse=line=>{let out=[],s='',q=false;for(let i=0;i<line.length;i++){let c=line[i];if(c==='"'&&line[i+1]==='"'&&q){s+='"';i++}else if(c==='"')q=!q;else if(c===';'&&!q){out.push(s);s=''}else s+=c}out.push(s);return out};let data=lines.slice(1).map(parse);let imported=data.map(r=>Object.fromEntries(cols.map((k,i)=>[k,r[i]||'']))).filter(t=>t.provider||t.subject);if(!imported.length)throw Error('Arquivo sem linhas de demanda');if(confirm(`Importar ${imported.length} linha(s)? Elas serão adicionadas ao painel.`)){imported.forEach((t,i)=>{const fallback='IMP-'+Date.now().toString().slice(-5)+'-'+i;t.id=sanitizeTaskId(t.id||fallback,fallback);t.money=Number(t.money||0)});tasks=tasks.concat(imported);persist();render();alert('Importação concluída.')} }catch(e){alert('Não foi possível importar. Use o CSV exportado pelo painel ou o modelo CSV.')}ev.target.value=''};reader.readAsText(file,'UTF-8')}function resetDemo(){if(confirm('Substituir os registros atuais pelos três exemplos fictícios? Exporte antes se quiser guardar os dados.')){tasks=sample.map(x=>({...x}));persist();render()}}
 render();
 </script>
 <script>
@@ -913,8 +969,9 @@ function renderAnnualVisits(){
  const scheduled=visits.filter(t=>t.status==='Agendado').length, completed=visits.filter(t=>t.status==='Concluída').length;
  const set=(id,v)=>{const e=document.getElementById(id);if(e)e.textContent=String(v)};set('annualVisitTotal',visits.length);set('annualVisitScheduled',scheduled);set('annualVisitCompleted',completed);
  const body=document.getElementById('annualVisitsBody'); if(!body)return;
- body.innerHTML=visits.length?visits.map(t=>`<tr><td><strong>${escapeHtml(formatDateBR(t.visitDate))}</strong></td><td>${escapeHtml(new Date(String(t.visitDate)+'T12:00:00').toLocaleDateString('pt-BR',{month:'long'}))}</td><td>${escapeHtml(t.providerCode||'—')} · ${escapeHtml(t.provider||'Prestador não informado')}</td><td>${escapeHtml(t.owner||'—')}</td><td><span class="pill status" data-s="${escapeHtml(t.status||'')}">${escapeHtml(t.status||'—')}</span></td><td>${escapeHtml(t.visitObjective||t.next||t.subject||'—')}</td><td><button type="button" class="secondary icon-action" title="Editar visita" onclick="editTask('${escapeHtml(t.id)}')">✏️</button></td></tr>`).join(''):'<tr><td colspan="7" class="empty">Nenhuma visita com data cadastrada para '+year+'. Cadastre uma demanda na categoria “Visitas” para preencher o cronograma.</td></tr>';
-}
+  body.innerHTML=visits.length?visits.map(t=>`<tr><td><strong>${escapeHtml(formatDateBR(t.visitDate))}</strong></td><td>${escapeHtml(new Date(String(t.visitDate)+'T12:00:00').toLocaleDateString('pt-BR',{month:'long'}))}</td><td>${escapeHtml(t.providerCode||'—')} · ${escapeHtml(t.provider||'Prestador não informado')}</td><td>${escapeHtml(t.owner||'—')}</td><td><span class="pill status" data-s="${escapeHtml(t.status||'')}">${escapeHtml(t.status||'—')}</span></td><td>${escapeHtml(t.visitObjective||t.next||t.subject||'—')}</td><td><button type="button" class="secondary icon-action" title="Editar visita" data-task-action="edit" data-task-id="${escapeHtml(t.id)}">✏️</button></td></tr>`).join(''):'<tr><td colspan="7" class="empty">Nenhuma visita com data cadastrada para '+year+'. Cadastre uma demanda na categoria “Visitas” para preencher o cronograma.</td></tr>';
+  bindTaskActionButtons(body);
+ }
 function openFormForVisit(){openForm();const cat=document.getElementById('category');if(cat){cat.value='Visitas';updateCategoryFields();}switchPanelTab('demandas',document.querySelector('[data-tab-target="demandas"]'));openForm();const cat2=document.getElementById('category');if(cat2){cat2.value='Visitas';updateCategoryFields();}}
 function switchPanelTab(tab, button){
   document.querySelectorAll('[data-tab-panel]').forEach(function(panel){
@@ -1006,6 +1063,8 @@ document.addEventListener('DOMContentLoaded',async()=>{
   }
   if(!window.supabase || !window.supabase.createClient){showLoginError('Não foi possível carregar o serviço de autenticação. Verifique a conexão com a internet.');return;}
   panelSupabase=window.supabase.createClient(SUPABASE_URL,SUPABASE_ANON_KEY);
+  const taskForm=document.getElementById('taskForm');
+  if(taskForm){taskForm.addEventListener('submit',saveTask);}
   // Registra o formulário imediatamente; não deixa uma consulta de sessão travar o login.
   document.getElementById('loginForm').addEventListener('submit',async e=>{
     e.preventDefault();
@@ -1045,7 +1104,7 @@ document.addEventListener('DOMContentLoaded',async()=>{
       await initializePanelForUser(sessionResult.data.session.user);
     }
   } catch(err) {
-    console.error('Falha ao recuperar sessão salva:',err);
+    console.error('Falha ao recuperar sesasão salva:',err);
     showLoginError('Não foi possível verificar a sessão anterior. Você pode tentar entrar normalmente.');
   }
   panelSupabase.auth.onAuthStateChange(async(event,session)=>{
