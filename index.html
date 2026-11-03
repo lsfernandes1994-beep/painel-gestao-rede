@@ -292,6 +292,70 @@ footer{color:var(--muted);font-size:11px;text-align:center;padding:18px}
 .dash-progress-foot{display:flex;justify-content:space-between;gap:8px;margin-top:7px;color:#71859a;font-size:9px}
 @media(max-width:850px){.dash-bottom-grid{grid-template-columns:1fr}}
 @media(max-width:520px){.dash-mini-kpis{grid-template-columns:1fr 1fr}.dash-result-mini{grid-template-columns:repeat(2,minmax(0,1fr))}.dash-donut-wrap{width:115px;flex-basis:115px}.dash-savings-highlight strong{font-size:23px}}
+
+/* Identidade visual Santa Saúde + fachada do Hospital Mont Serrat */
+:root{--navy:#07396f;--ink:#102f54;--muted:#607b96;--bg:#edf6ff;--line:#d6e6f5}
+body{background:linear-gradient(180deg,#eaf5ff 0%,#f5f9fd 45%,#edf5fc 100%);color:#102f54;font-family:Arial,Helvetica,sans-serif}
+.user-strip{background:#e8f3ff;color:#0b3768;border-bottom:1px solid #d5e8fa;padding:7px clamp(12px,3vw,32px);font-size:11px}
+.site-header{position:relative;isolation:isolate;overflow:hidden;min-height:142px;padding:18px clamp(16px,3vw,36px);display:flex;align-items:stretch;justify-content:space-between;gap:16px;background:linear-gradient(110deg,#052d60 0%,#064b91 58%,#0875c5 100%);border-radius:0 0 18px 18px;box-shadow:0 5px 18px #063a7024}
+.site-header:before{content:"";position:absolute;z-index:-1;right:23%;top:-115px;width:390px;height:340px;border-radius:50%;background:linear-gradient(135deg,#0877cf88,#14b5ed55);transform:rotate(24deg)}
+.site-header-copy{display:flex;align-items:center;gap:20px;min-width:0;flex:1}
+.site-brand{display:flex;align-items:center;gap:8px;color:white;min-width:185px}
+.brand-mark{width:54px;height:54px;display:grid;place-items:center;border-radius:50%;font-size:40px;line-height:1;color:#fff;background:linear-gradient(145deg,#1cc5e8,#0877cf);text-shadow:0 2px 5px #003b77}
+.brand-name{font-size:10px;letter-spacing:3px;line-height:1.05}.brand-name strong{font-size:21px;letter-spacing:-.5px}
+.brand-divider{width:2px;height:62px;background:#21c7e8;opacity:.9}
+.site-heading{min-width:0}.site-header .eyebrow{color:#a9e8ff;font-size:11px;letter-spacing:2px;margin-bottom:4px}
+.site-header h1{font-size:clamp(26px,3vw,39px);line-height:1.05;color:white;margin:0 0 6px;font-weight:800;letter-spacing:-.7px}
+.site-header p{font-size:13px;color:#e0f2ff;margin:0}
+.site-header-actions{display:flex;align-items:center;gap:7px;flex-wrap:wrap;margin-top:9px}
+.site-header-actions button{font-size:10px;padding:8px 10px;border-radius:8px}
+.site-header-building{width:30%;max-width:430px;min-width:250px;align-self:stretch;position:relative;overflow:hidden;border-radius:0 12px 12px 0;clip-path:polygon(15% 0,100% 0,100% 100%,0 100%)}
+.site-header-building:after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,#07509a44,transparent 35%)}
+.site-header-building img{width:100%;height:100%;min-height:106px;object-fit:cover;object-position:50% 42%;display:block}
+main{max-width:1720px;padding:18px clamp(12px,2vw,28px) 42px}
+.tab-navigation{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:5px;background:linear-gradient(100deg,#d9edff,#edf7ff);padding:7px;border:1px solid #d3e8fb;border-radius:15px;box-shadow:0 5px 15px #123c6410;margin:0 0 20px}
+.tab-button{background:transparent;color:#123c69;border-radius:10px;padding:12px 9px;font-size:12px;line-height:1.25}
+.tab-button:hover{background:#ffffffa8}.tab-button.active{background:linear-gradient(120deg,#06447f,#0874c2);color:white;box-shadow:0 4px 10px #0b477b33}
+.tab-panel{animation:panelIn .22s ease}
+@keyframes panelIn{from{opacity:.7;transform:translateY(3px)}to{opacity:1;transform:translateY(0)}}
+.toolbar{background:#fff;border:1px solid #dceaf7;border-radius:13px;padding:12px;box-shadow:0 4px 14px #123c640b}
+.card,.panel,.owner-card,.exec-card,.dash-card{border:1px solid #dce9f5;border-radius:16px;box-shadow:0 5px 18px #123c6410}
+input,select,textarea{border-color:#c9deef!important;border-radius:9px!important}
+button{transition:transform .15s,box-shadow .15s}button:hover{filter:brightness(1.03);box-shadow:0 4px 12px #07396f20}button:active{transform:translateY(1px)}
+.sectionhead h2{color:#0b3768}
+.dash-shell>.sectionhead{background:transparent}
+.dash-toolbar{background:#f8fbff;border:1px solid #d8e9f8;border-radius:14px;padding:13px}
+.dash-kpis{grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+.dash-kpi{min-height:112px;border:0;border-radius:16px;padding:17px 18px;box-shadow:0 7px 17px #0b396b22;position:relative;overflow:hidden}
+.dash-kpi:after{content:"";position:absolute;right:-28px;bottom:-56px;width:130px;height:130px;border-radius:50%;background:#ffffff1b}
+.dash-kpi .k-label,.dash-kpi .k-value,.dash-kpi .k-foot{color:#fff}
+.dash-kpi .k-label{font-size:12px}.dash-kpi .k-value{font-size:29px;margin-top:10px}.dash-kpi .k-foot{font-size:10px;opacity:.84}
+.dash-kpi.tone-blue{background:linear-gradient(135deg,#0879d4,#06417f)}
+.dash-kpi.tone-green{background:linear-gradient(135deg,#08bf65,#078345)}
+.dash-kpi.tone-purple{background:linear-gradient(135deg,#a02de7,#5c13b4)}
+.dash-kpi.tone-orange{background:linear-gradient(135deg,#ff9b08,#e94e00)}
+.dash-bottom-grid{gap:16px}.dash-bottom-grid .dash-card{min-height:290px}
+.dash-bottom-title{background:linear-gradient(105deg,#073b78,#0756a0);margin:-17px -17px 15px;padding:13px 17px;border-radius:15px 15px 0 0;color:white;min-height:48px;align-items:center}
+.dash-bottom-title h3{font-size:16px;color:white}.dash-bottom-title p{color:#d7ebff}
+.dash-section-tag{color:#e4f7ff;background:#ffffff20}
+.dash-mini-card{min-height:75px;justify-content:space-between}
+.dash-mini-card span{font-size:11px}.dash-mini-card strong{font-size:24px;color:#102f54}
+.dash-donut-area{border:0;gap:14px}.dash-donut-wrap{width:155px;flex-basis:155px}
+.dash-donut-legend>div{font-size:11px}
+.dash-savings-highlight{min-height:112px;justify-content:center;background:linear-gradient(130deg,#a22de8,#5d08b8)}
+.dash-savings-highlight span{font-size:13px}.dash-savings-highlight strong{font-size:29px}
+.dash-result-mini{grid-template-columns:repeat(2,minmax(0,1fr))}
+.dash-result-chip{min-height:75px;justify-content:space-between}
+.dash-result-chip span{font-size:11px}.dash-result-chip b{font-size:25px;color:#102f54}
+.dash-progress-block{background:#f8fbff;border-radius:14px}
+.dash-progress-track{height:17px}
+.dash-progress-head{font-size:12px}
+.dash-progress-foot{font-size:10px}
+.dash-form-grid{background:#f8fbff;border-radius:12px;padding:14px}
+.dash-actions button{border-radius:9px}
+table{border-radius:12px;overflow:hidden}thead th{background:#eaf4fd!important;color:#17436c!important}
+@media(max-width:900px){.site-header{min-height:130px}.site-header-building{min-width:190px;width:28%}.site-brand{min-width:145px}.brand-name strong{font-size:17px}.site-header-copy{gap:12px}.tab-button{font-size:10px;padding:10px 5px}}
+@media(max-width:650px){.site-header{padding:14px;min-height:0}.site-header-copy{align-items:flex-start;flex-wrap:wrap}.site-brand{min-width:auto}.brand-divider{height:45px}.brand-mark{width:42px;height:42px;font-size:31px}.brand-name strong{font-size:15px}.site-heading{flex:1 1 180px}.site-heading h1{font-size:25px}.site-header p{font-size:11px}.site-header-building{width:100%;max-width:none;min-width:100%;height:95px;clip-path:none;border-radius:9px}.site-header-building img{min-height:95px}.site-header-actions{width:100%}.tab-navigation{grid-template-columns:repeat(2,minmax(0,1fr))}.tab-button:last-child{grid-column:span 2}.dash-kpis{grid-template-columns:repeat(2,minmax(0,1fr))}}
 </style><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
@@ -309,7 +373,7 @@ footer{color:var(--muted);font-size:11px;text-align:center;padding:18px}
 </div>
 <div id="appRoot" style="display:none">
 <div class="user-strip"><span>Conectado como <strong id="signedInEmail"></strong></span><span id="syncStatus">Conectando à base compartilhada…</span><button class="light" type="button" data-action="signOutPanel">Sair</button></div>
-<header><div><div class="eyebrow">Gestão de Rede · Hospitalar</div><h1>Painel de Demandas</h1><p>Carteira Hospitalar · Prioridades, responsabilidades e prazos em um só lugar</p></div><div><button class="light" type="button" data-action="exportCSV">Exportar CSV</button> <button class="light" type="button" data-action="exportExcelReport">Relatório Excel / Indicadores</button> <button type="button" data-action="openForm">+ Nova demanda</button></div></header>
+<header class="site-header"><div class="site-header-copy"><div class="site-brand"><span class="brand-mark">♥</span><span class="brand-name">PLANO<br><strong>Santa Saúde</strong></span></div><div class="brand-divider"></div><div class="site-heading"><div class="eyebrow">Gestão de Rede · Hospitalar</div><h1>Painel de Demandas</h1><p>Carteira Hospitalar · Prioridades, responsabilidades e prazos em um só lugar</p></div><div class="site-header-actions"><button class="light" type="button" data-action="exportCSV">Exportar CSV</button><button class="light" type="button" data-action="exportExcelReport">Relatório Excel / Indicadores</button><button type="button" data-action="openForm">+ Nova demanda</button></div></div><div class="site-header-building"><img src="mont-serrat-banner.jpg" alt="Fachada do Hospital Mont Serrat"></div></header>
 <main>
 <nav class="tab-navigation" role="tablist" aria-label="Seções do painel">
 <button type="button" class="tab-button active" role="tab" aria-selected="true" data-tab-target="demandas" data-action="switchPanelTab" data-action-arg="demandas">Demandas e acompanhamento</button>
@@ -853,15 +917,11 @@ function renderDashboard(){
  const totalSavings=rows.reduce((sum,r)=>sum+(Number(r.reajusteSavings)||0)+(Number(r.savings)||0),0);
  const adjustedProviders=new Set(tasks.filter(t=>t.category==='Reajuste'&&t.status==='Concluída'&&String(t.provider||'').trim()&&(Number(t.initialProposal)||0)>0).map(t=>String(t.provider).trim().toLowerCase()));
  const metrics=[
-  {label:'Demandas cadastradas',value:currentTasks,foot:'Registros ativos no painel',color:'blue',show:currentTasks>0},
-  {label:'Demandas concluídas',value:completed,foot:'Demandas com status concluído',color:'green',show:completed>0},
-  {label:'Economia negociada',value:fmtMoney(totalSavings),foot:'Valores registrados nas negociações',color:'purple',show:totalSavings>0},
-  {label:'Visitas realizadas',value:total('visits'),foot:'Visitas lançadas no período',color:'orange',show:total('visits')>0},
-  {label:'Reajustes negociados',value:total('adjustments'),foot:'Lançamentos mensais',color:'pink',show:total('adjustments')>0},
-  {label:'Novos prestadores',value:total('providers'),foot:'Credenciamentos registrados',color:'cyan',show:total('providers')>0},
-  {label:'Extensões de serviços',value:total('extensions'),foot:'Extensões registradas',color:'indigo',show:total('extensions')>0},
-  {label:'Prestadores reajustados',value:adjustedProviders.size+' de 102',foot:'Prestadores com reajuste concluído',color:'purple',show:adjustedProviders.size>0}
- ].filter(x=>x.show);
+  {label:'Demandas cadastradas',value:currentTasks,foot:'Registros ativos no painel',color:'blue',show:true},
+  {label:'Demandas concluídas',value:completed,foot:'Demandas com status concluído',color:'green',show:true},
+  {label:'Economia negociada',value:fmtMoney(totalSavings),foot:'Valores registrados nas negociações',color:'purple',show:true},
+  {label:'Prestadores reajustados',value:adjustedProviders.size+' de 102',foot:'Prestadores com reajuste concluído',color:'orange',show:true}
+ ];
  const k=document.getElementById('dashKpis');
  if(k)k.innerHTML=metrics.map(x=>`<article class="dash-kpi tone-${x.color}"><div class="k-label">${esc(x.label)}</div><div class="k-value">${esc(x.value)}</div><div class="k-foot">${esc(x.foot)}</div></article>`).join('')||'<div class="dash-empty">Ainda não há indicadores preenchidos para este painel.</div>';
  const labels=rows.map(r=>r.name.slice(0,3));
@@ -890,7 +950,7 @@ function renderDashboard(){
    {label:'Demandas cadastradas',value:currentTasks,cls:'mini-blue',show:currentTasks>0},
    {label:'Concluídas',value:completed,cls:'mini-green',show:completed>0},
    {label:'Economia negociada',value:fmtMoney(totalSavings),cls:'mini-purple',show:totalSavings>0},
-   {label:'Prestadores reajustados',value:adjustedProviders.size+' de 102',cls:'mini-orange',show:adjustedProviders.size>0}
+   {label:'Prestadores reajustados',value:adjustedProviders.size+' de 102',cls:'mini-orange',show:true}
   ].filter(x=>x.show);
   mini.innerHTML=miniItems.map(x=>`<article class="dash-mini-card ${x.cls}"><span>${esc(x.label)}</span><strong>${esc(x.value)}</strong></article>`).join('')||'<div class="dash-empty">Sem indicadores preenchidos.</div>';
  }
