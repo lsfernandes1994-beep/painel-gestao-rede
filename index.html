@@ -852,6 +852,22 @@ function bindTaskActionButtons(container){
     });
   });
 }
+function switchPanelTab(target){
+  const allowed=['demandas','registros','executivo','dashboard','visitas-ano'];
+  const selected=allowed.includes(String(target||''))?String(target):'demandas';
+  document.querySelectorAll('[data-tab-panel]').forEach(panel=>{
+    const active=panel.getAttribute('data-tab-panel')===selected;
+    panel.hidden=!active;
+  });
+  document.querySelectorAll('.tab-navigation [data-tab-target]').forEach(button=>{
+    const active=button.getAttribute('data-tab-target')===selected;
+    button.classList.toggle('active',active);
+    button.setAttribute('aria-selected',active?'true':'false');
+  });
+  if(selected==='dashboard' && typeof refreshDashboard==='function') refreshDashboard();
+}
+window.switchPanelTab=switchPanelTab;
+
 function handleDataActionTrigger(target){
   if(!target || !(target instanceof Element)) return;
   const trigger=target.closest('[data-action]');
