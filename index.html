@@ -260,6 +260,38 @@ footer{color:var(--muted);font-size:11px;text-align:center;padding:18px}
 .dash-footnote{display:none}
 @media(max-width:900px){.dash-kpis{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:520px){.dash-kpis{grid-template-columns:1fr 1fr}.dash-kpi{padding:14px;min-height:112px}.dash-kpi .k-value{font-size:23px}.dash-shell>.sectionhead h2{font-size:19px}}
+
+/* Composição inferior em dois painéis: analítica + resultados */
+.dash-bottom-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;align-items:stretch}
+.dash-bottom-grid .dash-card{padding:17px;border-radius:17px}
+.dash-bottom-title{display:flex;align-items:flex-start;justify-content:space-between;gap:8px;margin-bottom:13px}
+.dash-bottom-title h3{font-size:15px;margin:0 0 4px;color:#102f54}
+.dash-bottom-title p{font-size:10px;margin:0;color:#71859a}
+.dash-section-tag{font-size:8px;font-weight:900;letter-spacing:.7px;color:#176aa4;background:#eaf4ff;border-radius:20px;padding:5px 8px;white-space:nowrap}
+.dash-mini-kpis{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-bottom:13px}
+.dash-mini-card{padding:10px 11px;border-radius:11px;min-width:0;display:flex;flex-direction:column;gap:5px}
+.dash-mini-card span,.dash-result-chip span{font-size:9px;font-weight:700;line-height:1.2}
+.dash-mini-card strong{font-size:18px;line-height:1.1;overflow-wrap:anywhere}
+.mini-blue{background:#e6f2ff;color:#1769b2}.mini-green{background:#e1f7eb;color:#168052}.mini-purple{background:#f0e8ff;color:#7040b5}.mini-orange{background:#fff0dd;color:#bd6813}
+.dash-donut-area{display:flex;align-items:center;justify-content:center;gap:20px;padding:8px 4px 2px;border-top:1px solid #edf2f7}
+.dash-donut-wrap{width:142px;max-width:45%;flex:0 0 142px}.dash-donut-wrap svg{display:block;width:100%;height:auto}
+.dash-donut-legend{display:grid;gap:10px;flex:1;min-width:0}
+.dash-donut-legend>div{display:grid;grid-template-columns:9px minmax(0,1fr) auto auto;gap:6px;align-items:center;font-size:10px;color:#4d657b}
+.dash-donut-legend i{width:8px;height:8px;border-radius:3px}.dash-donut-legend b{color:#153653}.dash-donut-legend small{color:#8192a3;font-size:9px}
+.dash-savings-highlight{padding:16px;border-radius:13px;background:linear-gradient(120deg,#9253dc,#6132b4);color:#fff;display:flex;flex-direction:column;gap:4px;box-shadow:0 7px 16px #7142bd25}
+.dash-savings-highlight span{font-size:11px;font-weight:700;opacity:.94}.dash-savings-highlight strong{font-size:27px;line-height:1.1;overflow-wrap:anywhere}.dash-savings-highlight small{font-size:9px;opacity:.82}
+.dash-result-mini{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px;margin:10px 0 14px}
+.dash-result-chip{display:flex;flex-direction:column;gap:5px;padding:9px 8px;border-radius:10px;min-width:0}
+.dash-result-chip b{font-size:18px;line-height:1.1;overflow-wrap:anywhere}
+.result-blue{background:#e6f2ff;color:#1769b2}.result-green{background:#e1f7eb;color:#168052}.result-orange{background:#fff0dd;color:#bd6813}
+.dash-progress-block{padding:12px;border:1px solid #e5edf5;background:#f8fbfe;border-radius:12px}
+.dash-progress-head{display:flex;justify-content:space-between;gap:8px;align-items:center;font-size:10px;color:#294a66;margin-bottom:8px}
+.dash-progress-head b{color:#128453;font-size:12px}
+.dash-progress-track{height:13px;border-radius:20px;background:#dce8f2;overflow:hidden}
+.dash-progress-track span{display:block;height:100%;width:0;border-radius:20px;background:linear-gradient(90deg,#0fa968,#20c58b);transition:width .3s}
+.dash-progress-foot{display:flex;justify-content:space-between;gap:8px;margin-top:7px;color:#71859a;font-size:9px}
+@media(max-width:850px){.dash-bottom-grid{grid-template-columns:1fr}}
+@media(max-width:520px){.dash-mini-kpis{grid-template-columns:1fr 1fr}.dash-result-mini{grid-template-columns:repeat(2,minmax(0,1fr))}.dash-donut-wrap{width:115px;flex-basis:115px}.dash-savings-highlight strong{font-size:23px}}
 </style><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
@@ -312,13 +344,18 @@ footer{color:var(--muted);font-size:11px;text-align:center;padding:18px}
    <button type="button" class="secondary" data-action="refreshDashboard">↻ Atualizar indicadores</button>
   </div>
   <section class="dash-kpis" id="dashKpis"></section>
-  <div class="dash-grid">
-   <section class="dash-card"><h3>Produção mensal</h3><p>Demandas registradas e concluídas por mês, conforme as datas existentes nos registros.</p><div id="dashProductionChart"></div></section>
-   <section class="dash-card"><h3>Economia em negociações</h3><p>Valores lançados manualmente por mês (R$).</p><div id="dashSavingsChart"></div></section>
-   <section class="dash-card"><h3>Visitas realizadas</h3><p>Quantidade de visitas técnicas ou comerciais lançadas por mês.</p><div id="dashVisitsChart"></div></section>
-   <section class="dash-card"><h3>Atuação por responsável</h3><p>Demandas atualmente atribuídas a cada responsável.</p><div id="dashOwnerChart" class="dash-owner-bars"></div></section>
-   <section class="dash-card"><h3>Reajustes negociados</h3><p>Quantidade informada mensalmente.</p><div id="dashAdjustmentsChart"></div></section>
-   <section class="dash-card"><h3>Credenciamentos e extensões</h3><p>Novos prestadores e extensões de serviços informados por mês.</p><div id="dashNetworkChart"></div></section>
+  <div class="dash-bottom-grid">
+   <section class="dash-card dash-analytics">
+    <div class="dash-bottom-title"><div><h3>Analítica com gráficos</h3><p>Visão rápida da carteira e da situação das demandas.</p></div><span class="dash-section-tag">VISÃO GERAL</span></div>
+    <div class="dash-mini-kpis" id="dashMiniKpis"></div>
+    <div class="dash-donut-area"><div class="dash-donut-wrap" id="dashStatusDonut"></div><div class="dash-donut-legend" id="dashStatusLegend"></div></div>
+   </section>
+   <section class="dash-card dash-results">
+    <div class="dash-bottom-title"><div><h3>Foco em resultados e evolução</h3><p>Acompanhe os resultados consolidados da equipe.</p></div><span class="dash-section-tag">RESULTADOS</span></div>
+    <div class="dash-savings-highlight"><span>Economia negociada</span><strong id="dashSavingsHero">R$ 0,00</strong><small>Valores registrados nas negociações</small></div>
+    <div class="dash-result-mini" id="dashResultMini"></div>
+    <div class="dash-progress-block"><div class="dash-progress-head"><strong>Taxa de conclusão das demandas</strong><b id="dashCompletionPercent">0%</b></div><div class="dash-progress-track"><span id="dashCompletionBar"></span></div><div class="dash-progress-foot"><span id="dashCompletionText">0 de 0 demandas</span><span id="dashOpenText">0 em andamento</span></div></div>
+   </section>
   </div>
   <section class="dash-card">
    <div class="sectionhead"><div><h3>Lançamento mensal de resultados</h3><p>Preencha os indicadores complementares. Ao salvar, os dados ficam compartilhados com os usuários autenticados do painel.</p></div></div>
@@ -843,6 +880,41 @@ function renderDashboard(){
  const adj=document.getElementById('dashAdjustmentsChart');if(adj&&hasAdjustments)adj.innerHTML=svgBars(rows.map(r=>Number(r.adjustments)||0),labels,{color:'#ec4899'});
  const net=document.getElementById('dashNetworkChart');if(net&&hasNetwork)net.innerHTML=svgBars(rows.map(r=>Number(r.providers)||0),labels,{color:'#06a6a6',secondValues:rows.map(r=>Number(r.extensions)||0),secondColor:'#6366f1'}).replace('</svg>','<rect x="390" y="8" width="9" height="9" rx="2" fill="#06a6a6"/><text x="404" y="16" font-size="10" fill="#61758a">Credenciados</text><rect x="480" y="8" width="9" height="9" rx="2" fill="#6366f1"/><text x="494" y="16" font-size="10" fill="#61758a">Extensões</text></svg>');
  const grid=document.querySelector('.dash-grid');if(grid){grid.hidden=!panels.some(x=>x[1]);}
+ const statusDone=completed;
+ const statusWaiting=tasks.filter(t=>String(t.status||'').toLowerCase().includes('aguard')).length;
+ const statusOpen=Math.max(0,currentTasks-statusDone-statusWaiting);
+ const pct=currentTasks?Math.round(statusDone/currentTasks*100):0;
+ const mini=document.getElementById('dashMiniKpis');
+ if(mini){
+  const miniItems=[
+   {label:'Demandas cadastradas',value:currentTasks,cls:'mini-blue',show:currentTasks>0},
+   {label:'Concluídas',value:completed,cls:'mini-green',show:completed>0},
+   {label:'Economia negociada',value:fmtMoney(totalSavings),cls:'mini-purple',show:totalSavings>0},
+   {label:'Prestadores reajustados',value:adjustedProviders.size+' de 102',cls:'mini-orange',show:adjustedProviders.size>0}
+  ].filter(x=>x.show);
+  mini.innerHTML=miniItems.map(x=>`<article class="dash-mini-card ${x.cls}"><span>${esc(x.label)}</span><strong>${esc(x.value)}</strong></article>`).join('')||'<div class="dash-empty">Sem indicadores preenchidos.</div>';
+ }
+ const donut=document.getElementById('dashStatusDonut');
+ const legend=document.getElementById('dashStatusLegend');
+ if(donut&&legend){
+  if(currentTasks){
+   const vals=[statusDone,statusOpen,statusWaiting],colors=['#16b879','#4da3f5','#f5a623'];
+   const totalStatus=Math.max(1,vals.reduce((a,b)=>a+b,0));let offset=0;
+   const arcs=vals.map((v,i)=>{const length=v/totalStatus*100;const part=v? `<circle cx="60" cy="60" r="46" fill="none" stroke="${colors[i]}" stroke-width="15" stroke-dasharray="${length} ${100-length}" stroke-dashoffset="${-offset}" pathLength="100"/>` : '';offset+=length;return part;}).join('');
+   donut.innerHTML=`<svg viewBox="0 0 120 120" role="img" aria-label="Situação das demandas"><circle cx="60" cy="60" r="46" fill="none" stroke="#edf2f7" stroke-width="15"/>${arcs}<text x="60" y="56" text-anchor="middle" font-size="22" font-weight="800" fill="#102f54">${pct}%</text><text x="60" y="72" text-anchor="middle" font-size="8" fill="#61758a">Concluídas</text></svg>`;
+   legend.innerHTML=[['Concluídas',statusDone,colors[0]],['Em andamento',statusOpen,colors[1]],['Aguardando',statusWaiting,colors[2]]].filter(x=>x[1]>0).map(x=>`<div><i style="background:${x[2]}"></i><span>${x[0]}</span><b>${x[1]}</b><small>${Math.round(x[1]/currentTasks*100)}%</small></div>`).join('');
+  }else{donut.innerHTML='<div class="dash-empty">Cadastre demandas para visualizar a distribuição.</div>';legend.innerHTML='';}
+ }
+ const savingsHero=document.getElementById('dashSavingsHero');if(savingsHero)savingsHero.textContent=fmtMoney(totalSavings);
+ const resultMini=document.getElementById('dashResultMini');
+ if(resultMini){
+  const results=[{label:'Demandas cadastradas',value:currentTasks,cls:'result-blue',show:currentTasks>0},{label:'Concluídas',value:completed,cls:'result-green',show:completed>0},{label:'Prestadores reajustados',value:adjustedProviders.size+' de 102',cls:'result-orange',show:adjustedProviders.size>0}].filter(x=>x.show);
+  resultMini.innerHTML=results.map(x=>`<div class="dash-result-chip ${x.cls}"><span>${esc(x.label)}</span><b>${esc(x.value)}</b></div>`).join('');
+ }
+ const completionPercent=document.getElementById('dashCompletionPercent');if(completionPercent)completionPercent.textContent=pct+'%';
+ const completionBar=document.getElementById('dashCompletionBar');if(completionBar)completionBar.style.width=pct+'%';
+ const completionText=document.getElementById('dashCompletionText');if(completionText)completionText.textContent=completed+' de '+currentTasks+' demandas';
+ const openText=document.getElementById('dashOpenText');if(openText)openText.textContent=statusOpen+' em andamento'+(statusWaiting?' · '+statusWaiting+' aguardando':'');
  const monthlyHasData=rows.some(r=>Number(r.created)>0||Number(r.completed)>0||Number(r.savings)>0||Number(r.reajusteSavings)>0||Number(r.visits)>0||Number(r.adjustments)>0||Number(r.providers)>0||Number(r.extensions)>0);
  const tb=document.getElementById('dashMonthlyTable');if(tb)tb.innerHTML=monthlyHasData?rows.filter(r=>Number(r.created)>0||Number(r.completed)>0||Number(r.savings)>0||Number(r.reajusteSavings)>0||Number(r.visits)>0||Number(r.adjustments)>0||Number(r.providers)>0||Number(r.extensions)>0).map(r=>`<tr><td>${r.name}</td><td>${r.created}</td><td>${r.completed}</td><td>${fmtMoney((Number(r.savings)||0)+(Number(r.reajusteSavings)||0))}</td><td>${r.visits}</td><td>${r.adjustments}</td><td>${r.providers}</td><td>${r.extensions}</td></tr>`).join(''):'<tr><td colspan="8" class="dash-empty">Nenhum lançamento mensal preenchido.</td></tr>';
  const monthlySection=tb?.closest('.dash-card');if(monthlySection)monthlySection.hidden=!monthlyHasData;
