@@ -501,7 +501,7 @@ th,td{padding:11px 12px}
   </form>
 </div>
 <div id="appRoot" style="display: block;">
-<div class="user-strip"><span>Conectado como <strong id="signedInEmail">ls.fernandes1994@gmail.com</strong></span><span id="syncStatus">Sincronizado na nuvem</span><button class="light" type="button" data-action="signOutPanel">Sair</button></div>
+<div class="user-strip"><span>Conectado como <strong id="signedInEmail">ls.fernandes1994@gmail.com</strong></span><span id="syncStatus">Sincronizado na nuvem</span><button class="light" type="button" onclick="window.signOutPanel()">Sair</button></div>
 <header class="site-header"><div class="site-header-copy"><div class="site-heading"><div class="eyebrow">Gestão de Rede · Hospitalar</div><h1>Painel de Demandas</h1><p>Carteira Hospitalar · Prioridades, responsabilidades e prazos em um só lugar</p></div><div class="site-header-actions"><button class="light" type="button" data-action="exportCSV">Exportar CSV</button><button class="light" type="button" data-action="exportExcelReport">Relatório Excel / Indicadores</button><button type="button" data-action="openForm">+ Nova demanda</button></div></div></header>
 <main>
 <nav class="tab-navigation" role="tablist" aria-label="Seções do painel">
@@ -1510,15 +1510,26 @@ async function initializePanelForUser(user){
     }
   },5000);
 }
-async function signOutPanel(){
-  window.panelCloudReady=false;
-  if(panelPoll)clearInterval(panelPoll);
-  await panelSupabase.auth.signOut();
-  document.getElementById('appRoot').style.display='none';
-  document.getElementById('loginScreen').style.display='flex';
-  document.getElementById('loginPassword').value='';
-  showLoginError('');
-}
+window.signOutPanel = async function(){
+  const button=document.querySelector('.user-strip button[onclick="window.signOutPanel()"]');
+  if(button){button.disabled=true;button.textContent='Saindo…';}
+  try{
+    if(!panelSupabase) throw new Error('Serviço de autenticação não inicializado.');
+    const {error}=await panelSupabase.auth.signOut({scope:'local'});
+    if(error) throw error;
+    window.panelCloudReady=false;
+    if(panelPoll){clearInterval(panelPoll);panelPoll=null;}
+    document.getElementById('appRoot').style.display='none';
+    document.getElementById('loginScreen').style.display='flex';
+    document.getElementById('loginPassword').value='';
+    showLoginError('');
+    setLoginBusy(false);
+  }catch(error){
+    console.error('Erro ao sair do painel:',error);
+    alert('Não foi possível encerrar a sessão. Verifique a conexão e tente novamente. '+(error?.message||''));
+    if(button){button.disabled=false;button.textContent='Sair';}
+  }
+};
 document.addEventListener('DOMContentLoaded',async()=>{
   if(SUPABASE_URL.startsWith('COLE_AQUI') || SUPABASE_ANON_KEY.startsWith('COLE_AQUI')){
     showLoginError('Configuração pendente: conecte o painel ao projeto Supabase seguindo o arquivo LEIA-ME.');
