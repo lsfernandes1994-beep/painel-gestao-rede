@@ -1328,27 +1328,7 @@ function exportExcelReport(){
  cats.forEach(c=>{const a=tasks.filter(t=>(t.category||'')===c);summary.push([c,a.length,a.filter(t=>!['Concluída','Suspensa'].includes(t.status)).length,a.filter(t=>t.status==='Concluída').length])});
  const detailLabels=['ID','Data de registro','Código do prestador','Número da O.S.','Prestador','Tipo de prestador','Rede','Assunto','Categoria','Descrição / contexto','Impacto','Prioridade','Responsável principal','Apoio','Status','Prazo da demanda','Aniversário contratual','Situação do prazo','Próxima ação','Data do último acompanhamento','Dependência / aguardando','Impacto financeiro estimado (R$)','Data de conclusão','Observações'];
  const detail=tasks.map(t=>{const isOpen=!['Concluída','Suspensa'].includes(t.status);let deadline='Sem prazo definido';if(t.due&&isOpen)deadline=t.due<now?'Vencido':t.due<=datePlus(3)?'Vence em até 3 dias':'Dentro do prazo';else if(t.due&&!isOpen)deadline='Encerrada / suspensa';return [t.id,t.created,t.providerCode,t.osNumber,t.provider,t.providerType,t.providerNetwork,t.subject,t.category,t.description,t.impact,t.priority,t.owner,t.support,t.status,t.due,t.contractAnniversary,deadline,t.next,t.last,t.dependency,t.money,t.completed,t.notes]});
- const workbook='<?xml version="1.0"?><?mso-application progid="Excel.Sheet"?><Workbook xmlns="urn:schemas-microsoft-com:office:spreadsheet" xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns:ss="urn:schemas-microsoft-com:office:spreadsheet"><Styles><Style ss:ID="Default" ss:Name="Normal"><Alignment ss:Vertical="Center"/><Font ss:FontName="Arial" ss:Size="10"/></Style><Style ss:ID="Header"><Font ss:Bold="1" ss:Color="#FFFFFF"/><Interior ss:Color="#12305A" ss:Pattern="Solid"/>
-/* Ajuste fino do enquadramento: rostos mais centralizados no banner */
-.annual-hero>img{
-  object-position: center 24% !important;
-}
-
-/* Correção de clique: elementos decorativos não podem bloquear a interface */
-.site-header:before,
-.site-header-building:after,
-.site-header-building img,
-.annual-hero>img,
-.annual-hero-art img{pointer-events:none!important}
-.tab-navigation{position:relative!important;z-index:50!important;pointer-events:auto!important}
-.tab-navigation .tab-button{position:relative!important;z-index:51!important;pointer-events:auto!important;cursor:pointer!important}
-.tab-panel, .toolbar, .toolbar button, main button, main input, main select, main textarea{pointer-events:auto}
-
-
-/* Banner final aprovado: largura total, proporção preservada e personagens menores com rostos visíveis */
-.annual-hero{display:block!important;width:100%!important;padding:0!important;overflow:hidden!important}
-.annual-hero>img{display:block!important;width:100%!important;height:auto!important;max-width:100%!important;max-height:none!important;object-fit:contain!important;object-position:center!important;margin:0!important;border-radius:0!important}
-</Style></Styles><Worksheet ss:Name="Indicadores"><Table>'+summary.map((r,i)=>i===0||String(r[0]||'').startsWith('INDICADORES')?'<Row>'+r.map(v=>'<Cell ss:StyleID="Header"><Data ss:Type="String">'+xmlEscape(v)+'</Data></Cell>').join('')+'</Row>':xRow(r)).join('')+'</Table><WorksheetOptions xmlns="urn:schemas-microsoft-com:office:excel"><FreezePanes/><FrozenNoSplit/><SplitHorizontal>3</SplitHorizontal><TopRowBottomPane>3</TopRowBottomPane></WorksheetOptions></Worksheet><Worksheet ss:Name="Demandas"><Table>'+[detailLabels,...detail].map((r,i)=>i===0?'<Row>'+r.map(v=>'<Cell ss:StyleID="Header"><Data ss:Type="String">'+xmlEscape(v)+'</Data></Cell>').join('')+'</Row>':xRow(r)).join('')+'</Table><WorksheetOptions xmlns="urn:schemas-microsoft-com:office:excel"><FreezePanes/><FrozenNoSplit/><SplitHorizontal>1</SplitHorizontal><TopRowBottomPane>1</TopRowBottomPane></WorksheetOptions></Worksheet></Workbook>';
+ const workbook='<?xml version="1.0"?><?mso-application progid="Excel.Sheet"?><Workbook xmlns="urn:schemas-microsoft-com:office:spreadsheet" xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns:ss="urn:schemas-microsoft-com:office:spreadsheet"><Styles><Style ss:ID="Default" ss:Name="Normal"><Alignment ss:Vertical="Center"/><Font ss:FontName="Arial" ss:Size="10"/></Style><Style ss:ID="Header"><Font ss:Bold="1" ss:Color="#FFFFFF"/><Interior ss:Color="#12305A" ss:Pattern="Solid"/></Style></Styles><Worksheet ss:Name="Indicadores"><Table>'+summary.map((r,i)=>i===0||String(r[0]||'').startsWith('INDICADORES')?'<Row>'+r.map(v=>'<Cell ss:StyleID="Header"><Data ss:Type="String">'+xmlEscape(v)+'</Data></Cell>').join('')+'</Row>':xRow(r)).join('')+'</Table><WorksheetOptions xmlns="urn:schemas-microsoft-com:office:excel"><FreezePanes/><FrozenNoSplit/><SplitHorizontal>3</SplitHorizontal><TopRowBottomPane>3</TopRowBottomPane></WorksheetOptions></Worksheet><Worksheet ss:Name="Demandas"><Table>'+[detailLabels,...detail].map((r,i)=>i===0?'<Row>'+r.map(v=>'<Cell ss:StyleID="Header"><Data ss:Type="String">'+xmlEscape(v)+'</Data></Cell>').join('')+'</Row>':xRow(r)).join('')+'</Table><WorksheetOptions xmlns="urn:schemas-microsoft-com:office:excel"><FreezePanes/><FrozenNoSplit/><SplitHorizontal>1</SplitHorizontal><TopRowBottomPane>1</TopRowBottomPane></WorksheetOptions></Worksheet></Workbook>';
  downloadBlob('\ufeff'+workbook,'Relatorio_Gestao_Rede_Indicadores.xls','application/vnd.ms-excel;charset=utf-8');
 }
 
