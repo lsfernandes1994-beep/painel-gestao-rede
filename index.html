@@ -13,19 +13,22 @@ main{max-width:1500px;margin:auto;padding:22px clamp(12px,3vw,32px) 40px}.toolba
 button,.button{border:0;border-radius:9px;padding:10px 14px;font-weight:700;cursor:pointer;background:var(--navy);color:#fff}.secondary{background:#e4edf5;color:var(--navy)}.light{background:white;color:var(--navy);border:1px solid var(--line)}
 .cards{display:grid;grid-template-columns:repeat(5,minmax(145px,1fr));gap:12px;margin:14px 0 20px}
 .card,.panel{background:white;border:1px solid var(--line);border-radius:14px;padding:16px;box-shadow:0 3px 12px #12324b08}
-/* Paleta aprovada: tons suaves, um pouco mais vivos e confortáveis */
-.cards .card:has(#openCount),.cards .card:has(#doneCount){background:#CFF0D9;border-color:#83D6A0}
-.cards .card:has(#openCount) .label,.cards .card:has(#openCount) .metric,.cards .card:has(#doneCount) .label,.cards .card:has(#doneCount) .metric{color:#14632D}
-.cards .card:has(#criticalCount){background:#F9DADD;border-color:#F3A7B1}
-.cards .card:has(#criticalCount) .label,.cards .card:has(#criticalCount) .metric{color:#A91F2B}
-.cards .card:has(#overdueCount){background:#F8CDD2;border:2px solid #E75B6A;box-shadow:0 4px 14px #C83C4D22}
+/* Paleta conforme a referência visual enviada */
+body{background:linear-gradient(135deg,#eaf5ff 0%,#f4f9ff 52%,#e7f3ff 100%)}
+.card,.panel,.owner-card,.portfolio-panel{box-shadow:0 5px 16px #1b568014}
+button.secondary,.secondary{background:#e2edf8;color:#082f55}
+.cards .card:has(#openCount),.cards .card:has(#doneCount){background:#C9EFD6;border:1px solid #86D9A3}
+.cards .card:has(#openCount) .label,.cards .card:has(#openCount) .metric,.cards .card:has(#doneCount) .label,.cards .card:has(#doneCount) .metric{color:#08632C}
+.cards .card:has(#criticalCount){background:#F8D3D8;border:1px solid #F2A5AF}
+.cards .card:has(#criticalCount) .label,.cards .card:has(#criticalCount) .metric{color:#A51E25}
+.cards .card:has(#overdueCount){background:#F8C9CF;border:2px solid #FF4050;box-shadow:0 5px 16px #C83C4D25}
 .cards .card:has(#overdueCount) .label,.cards .card:has(#overdueCount) .metric{color:#A51F2B}
 .cards .card:has(#overdueCount) .hint{color:#8E2630;font-weight:600}
-.cards .card:has(#waitingCount){background:#FFF0B8;border-color:#F4D35E}
+.cards .card:has(#waitingCount){background:#FFF0B8;border:1px solid #FFD23F}
 .cards .card:has(#waitingCount) .label,.cards .card:has(#waitingCount) .metric{color:#805500}
-.cards .card:has(#providersReajustedCount){background:#E8D9FA;border-color:#C49AF2}
+.cards .card:has(#providersReajustedCount){background:#E8D9FA;border:1px solid #C49AF2}
 .cards .card:has(#providersReajustedCount) .label,.cards .card:has(#providersReajustedCount) .metric{color:#4A168C}
-.cards .card:has(#providersWithoutReajuste){background:#FFD9C5;border-color:#F6A27A}
+.cards .card:has(#providersWithoutReajuste){background:#FFD8C5;border:1px solid #FFA274}
 .cards .card:has(#providersWithoutReajuste) .label,.cards .card:has(#providersWithoutReajuste) .metric{color:#8D3215}
 
 .card .label{color:var(--muted);font-size:12px;font-weight:700}.metric{font-size:30px;font-weight:800;color:var(--navy);margin-top:6px}.hint{font-size:11px;color:var(--muted)}
