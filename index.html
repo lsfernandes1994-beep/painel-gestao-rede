@@ -482,6 +482,9 @@ th,td{padding:11px 12px}
   position:relative!important;
   z-index:3!important;
 }
+
+/* Ajuste visual: aproxima os painéis inferiores dos indicadores */
+.dash-kpis + .dash-bottom-grid{margin-top:-6px}
 </style><script src="./Painel_Carteira_Hospitalar_files/supabase-js@2"></script>
 </head>
 <body>
@@ -536,12 +539,12 @@ th,td{padding:11px 12px}
   <section class="dash-kpis" id="dashKpis"><article class="dash-kpi tone-blue"><div class="k-label">Demandas cadastradas</div><div class="k-value">12</div><div class="k-foot">Registros ativos no painel</div></article><article class="dash-kpi tone-green"><div class="k-label">Demandas concluídas</div><div class="k-value">3</div><div class="k-foot">Demandas com status concluído</div></article><article class="dash-kpi tone-purple"><div class="k-label">Economia negociada</div><div class="k-value">R$&nbsp;137.242,56</div><div class="k-foot">Valores registrados nas negociações</div></article><article class="dash-kpi tone-orange"><div class="k-label">Prestadores reajustados</div><div class="k-value">0 de 102</div><div class="k-foot">Prestadores com reajuste concluído</div></article></section>
   <div class="dash-bottom-grid">
    <section class="dash-card dash-analytics">
-    <div class="dash-bottom-title"><div><h3>Opção 2 – Analítica com Gráficos</h3><p>Visão rápida da carteira e da situação das demandas.</p></div><span class="dash-section-tag">VISÃO GERAL</span></div>
+    <div class="dash-bottom-title"><div><h3>Analítica com Gráficos</h3><p>Visão rápida da carteira e da situação das demandas.</p></div><span class="dash-section-tag">VISÃO GERAL</span></div>
     <div class="dash-mini-kpis" id="dashMiniKpis"><article class="dash-mini-card mini-blue"><span>Demandas cadastradas</span><strong>12</strong></article><article class="dash-mini-card mini-green"><span>Concluídas</span><strong>3</strong></article><article class="dash-mini-card mini-purple"><span>Economia negociada</span><strong>R$&nbsp;137.242,56</strong></article><article class="dash-mini-card mini-orange"><span>Prestadores reajustados</span><strong>0 de 102</strong></article></div>
     <div class="dash-donut-area"><div class="dash-donut-wrap" id="dashStatusDonut"><svg viewBox="0 0 120 120" role="img" aria-label="Situação das demandas"><circle cx="60" cy="60" r="46" fill="none" stroke="#edf2f7" stroke-width="15"></circle><circle cx="60" cy="60" r="46" fill="none" stroke="#16b879" stroke-width="15" stroke-dasharray="25 75" stroke-dashoffset="0" pathLength="100"></circle><circle cx="60" cy="60" r="46" fill="none" stroke="#4da3f5" stroke-width="15" stroke-dasharray="66.66666666666666 33.33333333333334" stroke-dashoffset="-25" pathLength="100"></circle><circle cx="60" cy="60" r="46" fill="none" stroke="#f5a623" stroke-width="15" stroke-dasharray="8.333333333333332 91.66666666666667" stroke-dashoffset="-91.66666666666666" pathLength="100"></circle><text x="60" y="56" text-anchor="middle" font-size="22" font-weight="800" fill="#102f54">25%</text><text x="60" y="72" text-anchor="middle" font-size="8" fill="#61758a">Concluídas</text></svg></div><div class="dash-donut-legend" id="dashStatusLegend"><div><i style="background:#16b879"></i><span>Concluídas</span><b>3</b><small>25%</small></div><div><i style="background:#4da3f5"></i><span>Em andamento</span><b>8</b><small>67%</small></div><div><i style="background:#f5a623"></i><span>Aguardando</span><b>1</b><small>8%</small></div></div></div>
    </section>
    <section class="dash-card dash-results">
-    <div class="dash-bottom-title"><div><h3>Opção 3 – Foco em Resultados e Evolução</h3><p>Acompanhe os resultados consolidados da equipe.</p></div><span class="dash-section-tag">RESULTADOS</span></div>
+    <div class="dash-bottom-title"><div><h3>Foco em Resultados e Evolução</h3><p>Acompanhe os resultados consolidados da equipe.</p></div><span class="dash-section-tag">RESULTADOS</span></div>
     <div class="dash-savings-highlight"><span>Economia negociada</span><strong id="dashSavingsHero">R$&nbsp;137.242,56</strong><small>Valores registrados nas negociações</small></div>
     <div class="dash-result-mini" id="dashResultMini"><div class="dash-result-chip result-blue"><span>Demandas cadastradas</span><b>12</b></div><div class="dash-result-chip result-green"><span>Concluídas</span><b>3</b></div></div>
     <div class="dash-progress-block"><div class="dash-progress-head"><strong>Taxa de conclusão das demandas</strong><b id="dashCompletionPercent">25%</b></div><div class="dash-progress-track"><span id="dashCompletionBar" style="width: 25%;"></span></div><div class="dash-progress-foot"><span id="dashCompletionText">3 de 12 demandas</span><span id="dashOpenText">8 em andamento · 1 aguardando</span></div></div>
@@ -994,8 +997,7 @@ function render(){
   if(all.length>0){label='SOB CONTROLE';message=all.length+' demanda(s) registrada(s), sendo '+openOwner.length+' em aberto.';}
   if(late>0){state='red';label='PRAZO EM ATRASO';message=late+' demanda(s) aberta(s) com prazo vencido. Priorize a regularização.';}
   else if(soon>=3||(openOwner.length>0&&soon/openOwner.length>=0.3)){state='yellow';label='ATENÇÃO AOS PRAZOS';message=soon+' demanda(s) vencem nos próximos 3 dias. Revise a fila e antecipe as ações.';}
-  card.classList.add('state-'+state);
-  card.querySelector('.exec-label').textContent=label;
+  card.classList.add('state-'+state);  card.querySelector('.exec-label').textContent=label;
   card.querySelector('.exec-explain').textContent=message;
  });
 
