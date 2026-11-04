@@ -485,10 +485,10 @@ th,td{padding:11px 12px}
 
 /* Ajuste visual: aproxima os painéis inferiores dos indicadores */
 .dash-kpis + .dash-bottom-grid{margin-top:-6px}
-</style><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js" onerror="this.onerror=null;this.src='https://unpkg.com/@supabase/supabase-js@2/dist/umd/supabase.js'"></script>
+</style><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.119.0" onerror="this.onerror=null;this.src='https://unpkg.com/@supabase/supabase-js@2.119.0'"></script>
 </head>
 <body>
-<div id="loginScreen" class="auth-screen" style="display: none;">
+<div id="loginScreen" class="auth-screen" style="display: flex;">
   <form id="loginForm" class="auth-card">
     <div class="auth-brand">Plano Santa Saúde · Gestão de Rede</div>
     <h2>Acessar painel</h2>
@@ -500,7 +500,7 @@ th,td{padding:11px 12px}
     <p class="auth-note">O acesso é liberado para contas criadas pela administração do serviço. Se ainda não tiver usuário, solicite a criação da conta.</p>
   </form>
 </div>
-<div id="appRoot" style="display: block;">
+<div id="appRoot" style="display: none;">
 <div class="user-strip"><span>Conectado como <strong id="signedInEmail">ls.fernandes1994@gmail.com</strong></span><span id="syncStatus">Sincronizado na nuvem</span><button class="light" type="button" onclick="window.signOutPanel()">Sair</button></div>
 <header class="site-header"><div class="site-header-copy"><div class="site-heading"><div class="eyebrow">Gestão de Rede · Hospitalar</div><h1>Painel de Demandas</h1><p>Carteira Hospitalar · Prioridades, responsabilidades e prazos em um só lugar</p></div><div class="site-header-actions"><button class="light" type="button" data-action="exportCSV">Exportar CSV</button><button class="light" type="button" data-action="exportExcelReport">Relatório Excel / Indicadores</button><button type="button" data-action="openForm">+ Nova demanda</button></div></div></header>
 <main>
@@ -1567,19 +1567,7 @@ document.addEventListener('DOMContentLoaded',async()=>{
       console.error('Erro de autenticação do painel:',err);
     }
   });
-  // A sessão salva é verificada depois que o botão já está funcional.
-  try {
-    const sessionResult = await Promise.race([
-      panelSupabase.auth.getSession(),
-      new Promise((_,reject)=>setTimeout(()=>reject(new Error('SESSION_TIMEOUT')),8000))
-    ]);
-    if(sessionResult.data && sessionResult.data.session) {
-      await initializePanelForUser(sessionResult.data.session.user);
-    }
-  } catch(err) {
-    console.error('Falha ao recuperar sesasão salva:',err);
-    showLoginError('Não foi possível verificar a sessão anterior. Você pode tentar entrar normalmente.');
-  }
+  // Não recupera automaticamente a sessão anterior: cada acesso começa pela tela de login.
   panelSupabase.auth.onAuthStateChange(async(event,session)=>{
     if(event==='SIGNED_OUT'){
       window.panelCloudReady=false;
