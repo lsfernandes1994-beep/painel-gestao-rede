@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Carteira de Consultórios | Painel de Demandas</title>
+<style>
+:root{--navy:#073b70;--blue:#087bc1;--ink:#17324d;--muted:#61758a;--line:#dbe6ef;--bg:#eef5fb}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);font:14px Arial,sans-serif;color:var(--ink)}
+.hero{min-height:150px;padding:18px 2.2%;display:flex;align-items:center;justify-content:space-between;gap:24px;color:#fff;background:linear-gradient(90deg,#06366f 0%,#075b9b 48%,#0c8cc0 100%);border-radius:0 0 16px 16px}
+.eyebrow{font-size:13px;letter-spacing:2px;font-weight:bold;color:#b8e8ff;margin-bottom:8px}.hero h1{font-size:clamp(32px,3.2vw,50px);margin:0 0 8px}.hero p{margin:0;font-size:16px}
+.actions{display:flex;gap:10px;flex-wrap:wrap}.btn{border:0;border-radius:10px;padding:12px 16px;font-weight:bold;background:#fff;color:var(--navy);cursor:pointer}.btn.primary{background:#073b70;color:white}
+main{padding:20px 1.8% 40px}.tabs{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;padding:8px;background:#e1effc;border:1px solid #cfe4f8;border-radius:15px;margin-bottom:20px}
+.tab{padding:16px 10px;border:0;border-radius:10px;background:transparent;color:var(--navy);font-weight:bold;cursor:pointer}.tab.active{background:linear-gradient(105deg,#07508c,#087bc1);color:white;box-shadow:0 4px 12px #00498733}
+.toolbar{display:flex;align-items:center;gap:10px;flex-wrap:wrap;background:white;border:1px solid var(--line);border-radius:14px;padding:13px;margin-bottom:20px}.toolbar small{color:var(--muted);flex:1;min-width:250px}
+.kpis{display:grid;grid-template-columns:repeat(5,minmax(145px,1fr));gap:12px}.kpi{background:white;border:1px solid var(--line);border-radius:16px;padding:17px;min-height:140px;box-shadow:0 5px 14px #12395b0b}.kpi label{color:#42617c}.kpi strong{display:block;font-size:34px;margin:12px 0 5px;color:#073b70}.kpi small{color:var(--muted)}
+.green{background:#def3e5;border-color:#b5e4c4}.red{background:#fde3e3;border-color:#f4b9b9}.yellow{background:#fff3c8;border-color:#f1d66b}.purple{background:#eee4fb;border-color:#d7bdf6}.blue{background:#e2f0fa;border-color:#c4deef}
+.progress{margin-top:20px;background:#eff8f2;border:1px solid #cfe6d7;padding:17px;border-radius:13px;color:#245b45}.quick{margin-top:16px;background:#eaf3f9;border:1px solid #d7e7f2;padding:14px;border-radius:11px}
+.panel{display:none;background:white;border:1px solid var(--line);border-radius:15px;padding:22px;margin-top:18px}.panel.active{display:block}.panel h2{margin-top:0;color:var(--navy)}
+@media(max-width:900px){.hero{align-items:flex-start;flex-direction:column}.tabs{grid-template-columns:repeat(2,1fr)}.kpis{grid-template-columns:repeat(2,1fr)}}
+</style></head>
+<body>
+<header class="hero"><div><div class="eyebrow">GESTÃO DE REDE · CONSULTÓRIOS</div><h1>Painel de Demandas</h1><p>Carteira de Consultórios · Prioridades, responsabilidades e prazos em um só lugar</p></div><div class="actions"><button class="btn" onclick="exportCSV()">Exportar CSV</button><button class="btn" onclick="window.print()">Imprimir painel</button><button class="btn primary" onclick="showTab(1)">+ Nova demanda</button></div></header>
+<main>
+<nav class="tabs"><button class="tab active" onclick="showTab(0)">Demandas e acompanhamento</button><button class="tab" onclick="showTab(1)">Consultar / editar demandas</button><button class="tab" onclick="showTab(2)">Resumo executivo por responsável</button><button class="tab" onclick="showTab(3)">Dashboard de Gestão</button><button class="tab" onclick="showTab(4)">Cronograma anual de visitas</button></nav>
+<section id="home" class="panel active" style="display:block">
+<div class="toolbar"><button class="btn primary" onclick="showTab(1)">+ Registrar demanda</button><button class="btn" onclick="document.getElementById('csv').click()">Importar CSV</button><button class="btn" onclick="downloadModel()">Baixar modelo CSV</button><button class="btn" onclick="alert('A base de exemplos será configurada nesta etapa.')">Restaurar exemplos</button><small>As demandas registradas alimentam os indicadores e relatórios da Carteira de Consultórios.</small><input id="csv" type="file" accept=".csv" hidden></div>
+<div class="kpis">
+<div class="kpi green"><label>Demandas abertas</label><strong id="open">0</strong><small>Não concluídas ou suspensas</small></div>
+<div class="kpi red"><label>Prioridade crítica</label><strong id="critical">0</strong><small>Exigem avaliação imediata</small></div>
+<div class="kpi yellow"><label>Prazos vencidos</label><strong id="late">0</strong><small>Demandas abertas fora do prazo</small></div>
+<div class="kpi purple"><label>Aguardando terceiros</label><strong id="waiting">0</strong><small>Cobrar e registrar retorno</small></div>
+<div class="kpi blue"><label>Concluídas</label><strong id="done">0</strong><small>Demandas finalizadas</small></div>
+<div class="kpi purple"><label>Prestadores com reajuste aplicado</label><strong>—</strong><small>Aguardando integração da base</small></div>
+<div class="kpi red"><label>Prestadores sem reajuste registrado</label><strong>—</strong><small>Aguardando integração da base</small></div>
+</div><div class="progress">Etapas da equipe: <b id="steps">0/4 concluídas · 0%</b></div><div class="quick"><b>Visão rápida:</b> selecione qualquer indicador para abrir os registros correspondentes. Use o Dashboard para acompanhar tendências mensais.</div>
+</section>
+<section class="panel" id="register"><h2>Registrar demanda</h2><p>O formulário e as regras de cadastro serão implementados nesta etapa de construção do painel.</p><label>Descrição da demanda <input id="desc" placeholder="Descreva a demanda"></label> <button class="btn primary" onclick="saveDemo()">Salvar registro de teste</button></section>
+<section class="panel" id="summary"><h2>Resumo executivo por responsável</h2><p>Visão consolidada de Cecília (análise, contratos e negociações) e Cris (suporte, documentação e visitas).</p></section>
+<section class="panel" id="dashboard"><h2>Dashboard de Gestão</h2><p>Indicadores gerenciais e evolução mensal da carteira serão vinculados aos registros.</p></section>
+<section class="panel" id="calendar"><h2>Cronograma anual de visitas</h2><p>Planejamento e acompanhamento de visitas aos prestadores da Carteira de Consultórios.</p></section>
+</main>
+<script>
+let data=[];function showTab(i){document.querySelectorAll('.tab').forEach((b,n)=>b.classList.toggle('active',n===i));document.querySelectorAll('.panel').forEach((p,n)=>{p.classList.toggle('active',n===i);p.style.display=n===i?'block':'none'})}
+function saveDemo(){let d=document.getElementById('desc').value.trim();if(!d)return alert('Informe a descrição.');data.push({descricao:d,status:'Aberta',prioridade:'Normal'});document.getElementById('desc').value='';refresh();alert('Registro incluído nesta sessão. A persistência será conectada na próxima etapa.')}
+function refresh(){document.getElementById('open').textContent=data.filter(x=>x.status!=='Concluída').length;document.getElementById('done').textContent=data.filter(x=>x.status==='Concluída').length;document.getElementById('critical').textContent=data.filter(x=>x.prioridade==='Crítica').length}
+function exportCSV(){let rows=['descricao,status,prioridade',...data.map(x=>[x.descricao,x.status,x.prioridade].map(v=>'"'+String(v).replaceAll('"','""')+'"').join(','))];let a=document.createElement('a');a.href=URL.createObjectURL(new Blob(['\ufeff'+rows.join('\n')],{type:'text/csv;charset=utf-8'}));a.download='demandas_consultorios.csv';a.click()}
+function downloadModel(){let a=document.createElement('a');a.href=URL.createObjectURL(new Blob(['descricao,status,prioridade\n'],{type:'text/csv'}));a.download='modelo_demandas_consultorios.csv';a.click()}
+</script></body></html>
