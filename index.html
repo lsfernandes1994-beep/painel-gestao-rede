@@ -1513,25 +1513,25 @@ async function initializePanelForUser(user){
 window.signOutPanel = async function(){
   const button=document.querySelector('.user-strip button[onclick="window.signOutPanel()"]');
   if(button){button.disabled=true;button.textContent='Saindo…';}
+  // Encerramento local independente da disponibilidade do cliente Supabase.
   try{
-    let signedOut=false;
     const authClient=panelSupabase || window.panelCloudClient || null;
     if(authClient && authClient.auth && typeof authClient.auth.signOut==='function'){
-      const {error}=await authClient.auth.signOut({scope:'local'});
-      if(error) throw error;
-      signedOut=true;
+      try{await authClient.auth.signOut({scope:'local'});}catch(authError){console.warn('Logout remoto indisponível; limpando sessão local.',authError);}
     }
-    // Fallback seguro: remove somente a credencial local deste projeto Supabase.
-    if(!signedOut){
-      const authKey='sb-gwhgzfhtxqkmerlhagkb-auth-token';
-      try{localStorage.removeItem(authKey);}catch(storageError){}
-      try{
-        for(let i=localStorage.length-1;i>=0;i--){
-          const key=localStorage.key(i);
-          if(key && key.startsWith('sb-gwhgzfhtxqkmerlhagkb-')) localStorage.removeItem(key);
-        }
-      }catch(storageError){}
-    }
+    const projectPrefix='sb-gwhgzfhtxqkmerlhagkb-';
+    try{
+      for(let i=localStorage.length-1;i>=0;i--){
+        const key=localStorage.key(i);
+        if(key && key.startsWith(projectPrefix)) localStorage.removeItem(key);
+      }
+    }catch(storageError){console.warn('Não foi possível limpar localStorage:',storageError);}
+    try{
+      for(let i=sessionStorage.length-1;i>=0;i--){
+        const key=sessionStorage.key(i);
+        if(key && key.startsWith(projectPrefix)) sessionStorage.removeItem(key);
+      }
+    }catch(storageError){console.warn('Não foi possível limpar sessionStorage:',storageError);}
     window.panelCloudReady=false;
     if(panelPoll){clearInterval(panelPoll);panelPoll=null;}
     window.panelCloudClient=null;
@@ -1544,7 +1544,7 @@ window.signOutPanel = async function(){
     if(button){button.disabled=false;button.textContent='Sair';}
   }catch(error){
     console.error('Erro ao sair do painel:',error);
-    alert('Não foi possível encerrar a sessão: '+(error?.message||'verifique a conexão e tente novamente.'));
+    alert('Não foi possível concluir a saída local. '+(error?.message||'Feche esta aba e abra o painel novamente.'));
     if(button){button.disabled=false;button.textContent='Sair';}
   }
 };
