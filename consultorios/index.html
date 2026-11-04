@@ -52,7 +52,7 @@ document.getElementById('providerCode').addEventListener('input',()=>{document.g
 function updateDemandCategoryFields(){
  const cat=val('category'),isDescred=cat==='Descredenciamentos';
  const keep=new Set(['providerCode','provider','providerType','providerNetwork','category','priority','owner','status']);
- document.querySelectorAll('#demandForm .modal-grid > .field, #demandForm .modal-grid > .stages').forEach(w=>{
+ document.querySelectorAll('#demandForm > .modal-grid > .field, #demandForm > .modal-grid > .stages').forEach(w=>{
   const c=w.querySelector('input,select,textarea');if(!c)return;
   const visible=!isDescred||keep.has(c.id);
   w.hidden=!visible;w.style.display=visible?'':'none';c.disabled=!visible;
