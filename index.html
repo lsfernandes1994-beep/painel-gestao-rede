@@ -1514,25 +1514,37 @@ window.signOutPanel = async function(){
   const button=document.querySelector('.user-strip button[onclick="window.signOutPanel()"]');
   if(button){button.disabled=true;button.textContent='Saindo…';}
   try{
-    let authClient=panelSupabase || window.panelCloudClient || null;
-    if(!authClient && window.supabase && typeof window.supabase.createClient==='function'){
-      authClient=window.supabase.createClient(SUPABASE_URL,SUPABASE_ANON_KEY);
-      panelSupabase=authClient;
-      window.panelCloudClient=authClient;
+    let signedOut=false;
+    const authClient=panelSupabase || window.panelCloudClient || null;
+    if(authClient && authClient.auth && typeof authClient.auth.signOut==='function'){
+      const {error}=await authClient.auth.signOut({scope:'local'});
+      if(error) throw error;
+      signedOut=true;
     }
-    if(!authClient || !authClient.auth) throw new Error('Não foi possível inicializar a autenticação. Atualize a página e tente novamente.');
-    const {error}=await authClient.auth.signOut({scope:'local'});
-    if(error) throw error;
+    // Fallback seguro: remove somente a credencial local deste projeto Supabase.
+    if(!signedOut){
+      const authKey='sb-gwhgzfhtxqkmerlhagkb-auth-token';
+      try{localStorage.removeItem(authKey);}catch(storageError){}
+      try{
+        for(let i=localStorage.length-1;i>=0;i--){
+          const key=localStorage.key(i);
+          if(key && key.startsWith('sb-gwhgzfhtxqkmerlhagkb-')) localStorage.removeItem(key);
+        }
+      }catch(storageError){}
+    }
     window.panelCloudReady=false;
     if(panelPoll){clearInterval(panelPoll);panelPoll=null;}
+    window.panelCloudClient=null;
+    panelSupabase=null;
     document.getElementById('appRoot').style.display='none';
     document.getElementById('loginScreen').style.display='flex';
     document.getElementById('loginPassword').value='';
     showLoginError('');
     setLoginBusy(false);
+    if(button){button.disabled=false;button.textContent='Sair';}
   }catch(error){
     console.error('Erro ao sair do painel:',error);
-    alert('Não foi possível encerrar a sessão. '+(error?.message||'Verifique a conexão e tente novamente.'));
+    alert('Não foi possível encerrar a sessão: '+(error?.message||'verifique a conexão e tente novamente.'));
     if(button){button.disabled=false;button.textContent='Sair';}
   }
 };
