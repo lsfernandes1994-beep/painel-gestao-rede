@@ -58,7 +58,7 @@ function updateDemandCategoryFields(){
   w.hidden=!visible;w.style.display=visible?'':'none';c.disabled=!visible;
   if(!visible)c.value='';
  });
- const extra=document.getElementById('descredFields');extra.hidden=!isDescred;extra.style.display=isDescred?'block':'none';const extraGrid=extra.querySelector('.modal-grid');if(extraGrid)extraGrid.style.display='grid';extra.querySelectorAll('.field').forEach(w=>{w.hidden=false;w.style.display='block'});extra.querySelectorAll('input,select').forEach(c=>{c.disabled=!isDescred;c.required=isDescred&&(c.id==='descredDate'||c.id==='descredReason'||c.id==='descredDays');if(!isDescred)c.value=''});
+ const extra=document.getElementById('descredFields');extra.hidden=!isDescred;extra.querySelectorAll('input,select').forEach(c=>{c.disabled=!isDescred;c.required=isDescred&&(c.id==='descredDate'||c.id==='descredReason'||c.id==='descredDays');if(!isDescred)c.value=''});
  const subject=document.getElementById('subject');if(subject){subject.required=!isDescred;subject.disabled=isDescred;const w=subject.closest('.field');if(w){w.hidden=isDescred;w.style.display=isDescred?'none':''}if(isDescred)subject.value=''}
  const next=document.getElementById('nextAction');if(next){next.required=!isDescred;next.disabled=isDescred;const w=next.closest('.field');if(w){w.hidden=isDescred;w.style.display=isDescred?'none':''}}
  const save=document.querySelector('#demandForm button[type="submit"]');if(save)save.textContent=isDescred?'Salvar descredenciamento':'Salvar demanda';
