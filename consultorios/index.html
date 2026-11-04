@@ -485,10 +485,10 @@ th,td{padding:11px 12px}
 
 /* Ajuste visual: aproxima os painéis inferiores dos indicadores */
 .dash-kpis + .dash-bottom-grid{margin-top:-6px}
-</style><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.119.0" onerror="this.onerror=null;this.src='https://unpkg.com/@supabase/supabase-js@2.119.0'"></script>
+</style><script src="./Painel_Carteira_Hospitalar_files/supabase-js@2"></script>
 </head>
 <body>
-<div id="loginScreen" class="auth-screen" style="display: flex;">
+<div id="loginScreen" class="auth-screen" style="display: none;">
   <form id="loginForm" class="auth-card">
     <div class="auth-brand">Plano Santa Saúde · Gestão de Rede</div>
     <h2>Acessar painel</h2>
@@ -500,8 +500,8 @@ th,td{padding:11px 12px}
     <p class="auth-note">O acesso é liberado para contas criadas pela administração do serviço. Se ainda não tiver usuário, solicite a criação da conta.</p>
   </form>
 </div>
-<div id="appRoot" style="display: none;">
-<div class="user-strip"><span>Conectado como <strong id="signedInEmail">ls.fernandes1994@gmail.com</strong></span><span id="syncStatus">Sincronizado na nuvem</span><button class="light" type="button" onclick="window.signOutPanel()">Sair</button></div>
+<div id="appRoot" style="display: block;">
+<div class="user-strip"><span>Conectado como <strong id="signedInEmail">ls.fernandes1994@gmail.com</strong></span><span id="syncStatus">Sincronizado na nuvem</span><button class="light" type="button" data-action="signOutPanel">Sair</button></div>
 <header class="site-header"><div class="site-header-copy"><div class="site-heading"><div class="eyebrow">Gestão de Rede · Consultórios</div><h1>Painel de Demandas</h1><p>Carteira de Consultórios · Prioridades, responsabilidades e prazos em um só lugar</p></div><div class="site-header-actions"><button class="light" type="button" data-action="exportCSV">Exportar CSV</button><button class="light" type="button" data-action="exportExcelReport">Relatório Excel / Indicadores</button><button type="button" data-action="openForm">+ Nova demanda</button></div></div></header>
 <main>
 <nav class="tab-navigation" role="tablist" aria-label="Seções do painel">
@@ -530,7 +530,7 @@ th,td{padding:11px 12px}
 
 <div class="tab-panel" data-tab-panel="dashboard" hidden="">
  <div class="dash-shell">
-  <div class="sectionhead"><div><h2>Dashboard de Gestão de Rede Hospitalar</h2><span class="muted">Visão mensal de produção, negociações e atividade da equipe</span></div><span class="dash-pill" id="dashCloudBadge">Dados compartilhados · Supabase</span></div>
+  <div class="sectionhead"><div><h2>Dashboard de Gestão de Rede · Consultórios</h2><span class="muted">Visão mensal de produção, negociações e atividade da equipe</span></div><span class="dash-pill" id="dashCloudBadge">Dados compartilhados · Supabase</span></div>
   <div class="dash-toolbar">
    <div><label for="dashYear">Ano de referência</label><select id="dashYear"><option value="2024">2024</option><option value="2025">2025</option><option value="2026">2026</option><option value="2027">2027</option><option value="2028">2028</option></select></div>
    <div><label for="dashMonth">Mês para lançamento</label><select id="dashMonth"><option value="1">Janeiro</option><option value="2">Fevereiro</option><option value="3">Março</option><option value="4">Abril</option><option value="5">Maio</option><option value="6">Junho</option><option value="7">Julho</option><option value="8">Agosto</option><option value="9">Setembro</option><option value="10">Outubro</option><option value="11" selected="">Novembro</option><option value="12">Dezembro</option></select></div>
@@ -735,8 +735,6 @@ th,td{padding:11px 12px}
 <script>
 const PROVIDER_LOOKUP_URL='https://script.google.com/macros/s/AKfycbwuxsF70hLFQBYG6IyGLEmvS6_jRMSjn20jSJxs0mDt7FkdTSHNpZk6Izq2AOtpk4vk/exec';
 let providerLookupTimer=null;
-const ALLOWED_PROVIDER_TYPES=['CLINICA ABA','CLINICA/CONSULTA','CONSULTORIO','AMBULATORIO'];
-function normalizeProviderType(value){return String(value||'').normalize('NFD').replace(/[\\u0300-\\u036f]/g,'').trim().toUpperCase();}
 function lookupProviderDebounced(){clearTimeout(providerLookupTimer);providerLookupTimer=setTimeout(lookupProviderByCode,450);}
 function lookupProviderByCode(){
  const codeEl=document.getElementById('providerCode'),nameEl=document.getElementById('provider'),statusEl=document.getElementById('providerLookupStatus'),typeEl=document.getElementById('providerType'),networkEl=document.getElementById('providerNetwork'),networkBadge=document.getElementById('providerNetworkBadge');
@@ -758,12 +756,12 @@ function lookupProviderByCode(){
  const script=document.createElement('script');let finished=false;
  const cleanup=()=>{if(script.parentNode)script.parentNode.removeChild(script);try{delete window[callback]}catch(e){window[callback]=undefined}};
  const timeout=setTimeout(()=>{if(finished)return;finished=true;cleanup();statusEl.textContent='Tempo esgotado ao consultar a base. Confira a implantação do Apps Script.';if(networkBadge)networkBadge.textContent='Rede indisponível';},12000);
- window[callback]=function(data){if(finished)return;finished=true;clearTimeout(timeout);cleanup();if(String(codeEl.value).trim()!==code)return;if(data&&data.found&&data.name&&ALLOWED_PROVIDER_TYPES.includes(normalizeProviderType(data.type))){nameEl.value=data.name;if(typeEl){typeEl.readOnly=true;typeEl.value=data.type||'';}const hint=document.getElementById('providerTypeHint');if(hint)hint.textContent='Tipo preenchido automaticamente pela planilha Rede.';if(networkEl)networkEl.value=data.rede||data.network||'';if(networkBadge){const rede=String(data.rede||data.network||'').trim().toUpperCase();networkBadge.textContent=rede?'REDE: '+rede:'REDE: NÃO INFORMADA';networkBadge.dataset.network=rede;}statusEl.textContent='Prestador localizado na planilha Rede.';nameEl.dispatchEvent(new Event('change',{bubbles:true}));if(typeEl)typeEl.dispatchEvent(new Event('change',{bubbles:true}));}else{statusEl.textContent=(data&&data.error)||(data&&data.found&&data.type?'Tipo de prestador fora da carteira de Consultórios: '+data.type+'.':'Código não encontrado na planilha Rede. Você pode corrigir o código ou apagá-lo para cadastrar uma demanda avulsa.');if(typeEl){typeEl.value='';typeEl.readOnly=true;}if(networkEl)networkEl.value='';if(networkBadge){networkBadge.textContent='Rede não localizada';networkBadge.dataset.network='';}}};
+ window[callback]=function(data){if(finished)return;finished=true;clearTimeout(timeout);cleanup();if(String(codeEl.value).trim()!==code)return;if(data&&data.found&&data.name){const returnedType=String(data.type||data.providerType||data.tipoPrestador||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').trim().toUpperCase();const allowedTypes=['CLINICA','CLINICA/CONSULTA','CONSULTORIO','AMBULATORIO'];if(!allowedTypes.includes(returnedType)){statusEl.textContent='O código foi localizado, mas o tipo de prestador não pertence à carteira de Consultórios.';if(typeEl){typeEl.value='';typeEl.readOnly=true;}if(networkEl)networkEl.value='';if(networkBadge){networkBadge.textContent='Tipo fora da carteira de Consultórios';networkBadge.dataset.network='';}return;}nameEl.value=data.name;if(typeEl){typeEl.readOnly=true;typeEl.value=data.type||'';}const hint=document.getElementById('providerTypeHint');if(hint)hint.textContent='Tipo preenchido automaticamente pela planilha Rede.';if(networkEl)networkEl.value=data.rede||data.network||'';if(networkBadge){const rede=String(data.rede||data.network||'').trim().toUpperCase();networkBadge.textContent=rede?'REDE: '+rede:'REDE: NÃO INFORMADA';networkBadge.dataset.network=rede;}statusEl.textContent='Prestador localizado na planilha Rede.';nameEl.dispatchEvent(new Event('change',{bubbles:true}));if(typeEl)typeEl.dispatchEvent(new Event('change',{bubbles:true}));}else{statusEl.textContent=(data&&data.error)||'Código não encontrado na planilha Rede. Você pode corrigir o código ou apagá-lo para cadastrar uma demanda avulsa.';if(typeEl){typeEl.value='';typeEl.readOnly=true;}if(networkEl)networkEl.value='';if(networkBadge){networkBadge.textContent='Rede não localizada';networkBadge.dataset.network='';}}};
  script.onerror=function(){if(finished)return;finished=true;clearTimeout(timeout);cleanup();statusEl.textContent='Falha na consulta. Verifique se o Apps Script está implantado para acesso pelo painel.';if(networkBadge)networkBadge.textContent='Falha ao consultar rede';};
  script.src=PROVIDER_LOOKUP_URL+'?code='+encodeURIComponent(code)+'&callback='+encodeURIComponent(callback)+'&t='+Date.now();document.body.appendChild(script);
 }
-const KEY='gestaoConsultoriosDemandasV2';
-const LEGACY_KEYS=['gestaoConsultoriosDemandasV1','gestaoConsultoriosDemandasV2','gestaoConsultoriosDemandasV2'];
+const KEY='gestaoConsultoriosDemandasV1';
+const LEGACY_KEYS=['gestaoConsultoriosDemandasLegacy','gestaoConsultoriosDemandasLegacyV2','gestaoConsultoriosDemandasV1'];
 const sample=[];
 let tasks=load();
  let editingSubtasks=[];
@@ -802,7 +800,7 @@ function persist(){
     if(statusEl) statusEl.textContent = 'Salvando na nuvem…';
     // Serializa gravações para que ações rápidas não se sobrescrevam entre si.
     panelSaveQueue = panelSaveQueue.then(async()=>{
-      const {error}=await window.panelCloudClient.from('panel_state').upsert({id:'main', payload:snapshot, updated_at:new Date().toISOString()});
+      const {error}=await window.panelCloudClient.from('panel_state').upsert({id:'consultorios-main', payload:snapshot, updated_at:new Date().toISOString()});
       const el=document.getElementById('syncStatus');
       if(error){if(el)el.textContent='Falha na sincronização';console.error(error);alert('Não foi possível sincronizar a alteração com a nuvem: '+error.message);return;}
       if(revision===panelLocalRevision && el)el.textContent='Sincronizado na nuvem';
@@ -901,7 +899,6 @@ function removeSubtask(index){if(!Number.isInteger(index)||!editingSubtasks[inde
 document.addEventListener('click',event=>{const add=event.target.closest('[data-subtask-add]');if(add){addSubtask();return;}const remove=event.target.closest('[data-subtask-remove]');if(remove){removeSubtask(Number(remove.dataset.subtaskRemove));return;}});
 document.addEventListener('change',event=>{const toggle=event.target.closest('[data-subtask-toggle]');if(!toggle)return;const item=editingSubtasks[Number(toggle.dataset.subtaskToggle)];if(item){item.done=toggle.checked;renderSubtasksEditor();}});
 
-
 const portfolioTypes={
  'Cecília':['Hospitais','Honorários cirúrgicos','Banco de sangue','Home care','Hemodiálise'],
  'Cris':['Laboratórios','Clínicas de imagem','Clínicas com exames associados']
@@ -999,7 +996,8 @@ function render(){
   if(all.length>0){label='SOB CONTROLE';message=all.length+' demanda(s) registrada(s), sendo '+openOwner.length+' em aberto.';}
   if(late>0){state='red';label='PRAZO EM ATRASO';message=late+' demanda(s) aberta(s) com prazo vencido. Priorize a regularização.';}
   else if(soon>=3||(openOwner.length>0&&soon/openOwner.length>=0.3)){state='yellow';label='ATENÇÃO AOS PRAZOS';message=soon+' demanda(s) vencem nos próximos 3 dias. Revise a fila e antecipe as ações.';}
-  card.classList.add('state-'+state);  card.querySelector('.exec-label').textContent=label;
+  card.classList.add('state-'+state);
+  card.querySelector('.exec-label').textContent=label;
   card.querySelector('.exec-explain').textContent=message;
  });
 
@@ -1141,8 +1139,8 @@ function renderDashboard(){
  const monthlySection=tb?.closest('.dash-card');if(monthlySection)monthlySection.hidden=!monthlyHasData;
 }
 
-async function saveMonthlyMetrics(){const y=Number(document.getElementById('dashYear').value),m=Number(document.getElementById('dashMonth').value),key=metricKey(y,m);const vals={savings:Math.max(0,Number(document.getElementById('metricSavings').value)||0),demandsForwarded:Math.max(0,Math.floor(Number(document.getElementById('metricDemandsForwarded')?.value)||0)),visits:Math.max(0,Math.floor(Number(document.getElementById('metricVisits').value)||0)),adjustments:Math.max(0,Math.floor(Number(document.getElementById('metricAdjustments').value)||0)),providers:Math.max(0,Math.floor(Number(document.getElementById('metricProviders').value)||0)),extensions:Math.max(0,Math.floor(Number(document.getElementById('metricExtensions').value)||0)),notes:document.getElementById('metricNotes').value.trim()};const status=document.getElementById('metricSaveStatus');if(!window.panelCloudReady||!window.panelCloudClient){if(status)status.textContent='Sem conexão com a base compartilhada. Entre novamente e tente salvar.';return;}monthlyMetrics[key]=vals;if(status)status.textContent='Salvando na base compartilhada…';metricsSaveQueue=metricsSaveQueue.then(async()=>{const {error}=await window.panelCloudClient.from('panel_state').upsert({id:'metrics',payload:monthlyMetrics,updated_at:new Date().toISOString()});if(error){if(status)status.textContent='Falha ao salvar na nuvem: '+error.message;console.error('Erro ao salvar indicadores mensais',error);return;}window.panelLastCloudWrite=Date.now();if(status)status.textContent='Indicadores de '+metricMonthNames[m-1]+' salvos e compartilhados.';renderDashboard();}).catch(e=>{if(status)status.textContent='Falha ao salvar os indicadores.';console.error(e)});await metricsSaveQueue;}
-async function loadMonthlyMetrics(){if(!window.panelCloudReady||!window.panelCloudClient)return;const status=document.getElementById('metricSaveStatus');const result=await window.panelCloudClient.from('panel_state').select('payload,updated_at').eq('id','metrics').maybeSingle();if(result.error){console.warn('Não foi possível carregar indicadores mensais:',result.error.message);const badge=document.getElementById('dashCloudBadge');if(badge)badge.textContent='Verificar permissão de indicadores';return;}if(result.data&&result.data.payload&&typeof result.data.payload==='object'&&!Array.isArray(result.data.payload)){monthlyMetrics=result.data.payload;}else{monthlyMetrics={};}const badge=document.getElementById('dashCloudBadge');if(badge)badge.textContent='Dados compartilhados · Supabase';loadMetricForm();renderDashboard();if(status)status.textContent='Indicadores mensais carregados da nuvem.';}
+async function saveMonthlyMetrics(){const y=Number(document.getElementById('dashYear').value),m=Number(document.getElementById('dashMonth').value),key=metricKey(y,m);const vals={savings:Math.max(0,Number(document.getElementById('metricSavings').value)||0),demandsForwarded:Math.max(0,Math.floor(Number(document.getElementById('metricDemandsForwarded')?.value)||0)),visits:Math.max(0,Math.floor(Number(document.getElementById('metricVisits').value)||0)),adjustments:Math.max(0,Math.floor(Number(document.getElementById('metricAdjustments').value)||0)),providers:Math.max(0,Math.floor(Number(document.getElementById('metricProviders').value)||0)),extensions:Math.max(0,Math.floor(Number(document.getElementById('metricExtensions').value)||0)),notes:document.getElementById('metricNotes').value.trim()};const status=document.getElementById('metricSaveStatus');if(!window.panelCloudReady||!window.panelCloudClient){if(status)status.textContent='Sem conexão com a base compartilhada. Entre novamente e tente salvar.';return;}monthlyMetrics[key]=vals;if(status)status.textContent='Salvando na base compartilhada…';metricsSaveQueue=metricsSaveQueue.then(async()=>{const {error}=await window.panelCloudClient.from('panel_state').upsert({id:'consultorios-metrics',payload:monthlyMetrics,updated_at:new Date().toISOString()});if(error){if(status)status.textContent='Falha ao salvar na nuvem: '+error.message;console.error('Erro ao salvar indicadores mensais',error);return;}window.panelLastCloudWrite=Date.now();if(status)status.textContent='Indicadores de '+metricMonthNames[m-1]+' salvos e compartilhados.';renderDashboard();}).catch(e=>{if(status)status.textContent='Falha ao salvar os indicadores.';console.error(e)});await metricsSaveQueue;}
+async function loadMonthlyMetrics(){if(!window.panelCloudReady||!window.panelCloudClient)return;const status=document.getElementById('metricSaveStatus');const result=await window.panelCloudClient.from('panel_state').select('payload,updated_at').eq('id','consultorios-metrics').maybeSingle();if(result.error){console.warn('Não foi possível carregar indicadores mensais:',result.error.message);const badge=document.getElementById('dashCloudBadge');if(badge)badge.textContent='Verificar permissão de indicadores';return;}if(result.data&&result.data.payload&&typeof result.data.payload==='object'&&!Array.isArray(result.data.payload)){monthlyMetrics=result.data.payload;}else{monthlyMetrics={};}const badge=document.getElementById('dashCloudBadge');if(badge)badge.textContent='Dados compartilhados · Supabase';loadMetricForm();renderDashboard();if(status)status.textContent='Indicadores mensais carregados da nuvem.';}
 function refreshDashboard(){renderDashboard();if(window.panelCloudReady)loadMonthlyMetrics();}
 
 function rank(t){return ({'Crítica':0,'Alta':1,'Normal':2,'Baixa':3}[t.priority]??4)}
@@ -1330,7 +1328,27 @@ function exportExcelReport(){
  cats.forEach(c=>{const a=tasks.filter(t=>(t.category||'')===c);summary.push([c,a.length,a.filter(t=>!['Concluída','Suspensa'].includes(t.status)).length,a.filter(t=>t.status==='Concluída').length])});
  const detailLabels=['ID','Data de registro','Código do prestador','Número da O.S.','Prestador','Tipo de prestador','Rede','Assunto','Categoria','Descrição / contexto','Impacto','Prioridade','Responsável principal','Apoio','Status','Prazo da demanda','Aniversário contratual','Situação do prazo','Próxima ação','Data do último acompanhamento','Dependência / aguardando','Impacto financeiro estimado (R$)','Data de conclusão','Observações'];
  const detail=tasks.map(t=>{const isOpen=!['Concluída','Suspensa'].includes(t.status);let deadline='Sem prazo definido';if(t.due&&isOpen)deadline=t.due<now?'Vencido':t.due<=datePlus(3)?'Vence em até 3 dias':'Dentro do prazo';else if(t.due&&!isOpen)deadline='Encerrada / suspensa';return [t.id,t.created,t.providerCode,t.osNumber,t.provider,t.providerType,t.providerNetwork,t.subject,t.category,t.description,t.impact,t.priority,t.owner,t.support,t.status,t.due,t.contractAnniversary,deadline,t.next,t.last,t.dependency,t.money,t.completed,t.notes]});
- const workbook='<?xml version="1.0"?><?mso-application progid="Excel.Sheet"?><Workbook xmlns="urn:schemas-microsoft-com:office:spreadsheet" xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns:ss="urn:schemas-microsoft-com:office:spreadsheet"><Styles><Style ss:ID="Default" ss:Name="Normal"><Alignment ss:Vertical="Center"/><Font ss:FontName="Arial" ss:Size="10"/></Style><Style ss:ID="Header"><Font ss:Bold="1" ss:Color="#FFFFFF"/><Interior ss:Color="#12305A" ss:Pattern="Solid"/></Style></Styles><Worksheet ss:Name="Indicadores"><Table>'+summary.map((r,i)=>i===0||String(r[0]||'').startsWith('INDICADORES')?'<Row>'+r.map(v=>'<Cell ss:StyleID="Header"><Data ss:Type="String">'+xmlEscape(v)+'</Data></Cell>').join('')+'</Row>':xRow(r)).join('')+'</Table><WorksheetOptions xmlns="urn:schemas-microsoft-com:office:excel"><FreezePanes/><FrozenNoSplit/><SplitHorizontal>3</SplitHorizontal><TopRowBottomPane>3</TopRowBottomPane></WorksheetOptions></Worksheet><Worksheet ss:Name="Demandas"><Table>'+[detailLabels,...detail].map((r,i)=>i===0?'<Row>'+r.map(v=>'<Cell ss:StyleID="Header"><Data ss:Type="String">'+xmlEscape(v)+'</Data></Cell>').join('')+'</Row>':xRow(r)).join('')+'</Table><WorksheetOptions xmlns="urn:schemas-microsoft-com:office:excel"><FreezePanes/><FrozenNoSplit/><SplitHorizontal>1</SplitHorizontal><TopRowBottomPane>1</TopRowBottomPane></WorksheetOptions></Worksheet></Workbook>';
+ const workbook='<?xml version="1.0"?><?mso-application progid="Excel.Sheet"?><Workbook xmlns="urn:schemas-microsoft-com:office:spreadsheet" xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns:ss="urn:schemas-microsoft-com:office:spreadsheet"><Styles><Style ss:ID="Default" ss:Name="Normal"><Alignment ss:Vertical="Center"/><Font ss:FontName="Arial" ss:Size="10"/></Style><Style ss:ID="Header"><Font ss:Bold="1" ss:Color="#FFFFFF"/><Interior ss:Color="#12305A" ss:Pattern="Solid"/>
+/* Ajuste fino do enquadramento: rostos mais centralizados no banner */
+.annual-hero>img{
+  object-position: center 24% !important;
+}
+
+/* Correção de clique: elementos decorativos não podem bloquear a interface */
+.site-header:before,
+.site-header-building:after,
+.site-header-building img,
+.annual-hero>img,
+.annual-hero-art img{pointer-events:none!important}
+.tab-navigation{position:relative!important;z-index:50!important;pointer-events:auto!important}
+.tab-navigation .tab-button{position:relative!important;z-index:51!important;pointer-events:auto!important;cursor:pointer!important}
+.tab-panel, .toolbar, .toolbar button, main button, main input, main select, main textarea{pointer-events:auto}
+
+
+/* Banner final aprovado: largura total, proporção preservada e personagens menores com rostos visíveis */
+.annual-hero{display:block!important;width:100%!important;padding:0!important;overflow:hidden!important}
+.annual-hero>img{display:block!important;width:100%!important;height:auto!important;max-width:100%!important;max-height:none!important;object-fit:contain!important;object-position:center!important;margin:0!important;border-radius:0!important}
+</Style></Styles><Worksheet ss:Name="Indicadores"><Table>'+summary.map((r,i)=>i===0||String(r[0]||'').startsWith('INDICADORES')?'<Row>'+r.map(v=>'<Cell ss:StyleID="Header"><Data ss:Type="String">'+xmlEscape(v)+'</Data></Cell>').join('')+'</Row>':xRow(r)).join('')+'</Table><WorksheetOptions xmlns="urn:schemas-microsoft-com:office:excel"><FreezePanes/><FrozenNoSplit/><SplitHorizontal>3</SplitHorizontal><TopRowBottomPane>3</TopRowBottomPane></WorksheetOptions></Worksheet><Worksheet ss:Name="Demandas"><Table>'+[detailLabels,...detail].map((r,i)=>i===0?'<Row>'+r.map(v=>'<Cell ss:StyleID="Header"><Data ss:Type="String">'+xmlEscape(v)+'</Data></Cell>').join('')+'</Row>':xRow(r)).join('')+'</Table><WorksheetOptions xmlns="urn:schemas-microsoft-com:office:excel"><FreezePanes/><FrozenNoSplit/><SplitHorizontal>1</SplitHorizontal><TopRowBottomPane>1</TopRowBottomPane></WorksheetOptions></Worksheet></Workbook>';
  downloadBlob('\ufeff'+workbook,'Relatorio_Gestao_Rede_Indicadores.xls','application/vnd.ms-excel;charset=utf-8');
 }
 
@@ -1456,16 +1474,16 @@ async function initializePanelForUser(user){
   window.panelCloudClient=panelSupabase;
   const status=document.getElementById('syncStatus');
   status.textContent='Carregando demandas compartilhadas…';
-  const {data,error}=await panelSupabase.from('panel_state').select('payload,updated_at').eq('id','main').maybeSingle();
+  const {data,error}=await panelSupabase.from('panel_state').select('payload,updated_at').eq('id','consultorios-main').maybeSingle();
   if(error){status.textContent='Erro ao carregar a base';alert('Login efetuado, mas não foi possível ler a base compartilhada. Confira o SQL e as políticas de acesso. '+error.message);return;}
   if(data && Array.isArray(data.payload)){
     tasks=data.payload;
     try{localStorage.setItem(KEY,JSON.stringify(tasks));}catch(e){}
   } else {
-    const {error:insertError}=await panelSupabase.from('panel_state').insert({id:'main',payload:tasks,updated_at:new Date().toISOString()});
+    const {error:insertError}=await panelSupabase.from('panel_state').insert({id:'consultorios-main',payload:tasks,updated_at:new Date().toISOString()});
     if(insertError && insertError.code!=='23505'){status.textContent='Erro ao inicializar a base';alert('Não foi possível inicializar os registros compartilhados: '+insertError.message);return;}
     if(insertError && insertError.code==='23505'){
-      const again=await panelSupabase.from('panel_state').select('payload').eq('id','main').single();
+      const again=await panelSupabase.from('panel_state').select('payload').eq('id','consultorios-main').single();
       if(!again.error && Array.isArray(again.data.payload)) tasks=again.data.payload;
     }
   }
@@ -1477,12 +1495,12 @@ async function initializePanelForUser(user){
   if(panelPoll)clearInterval(panelPoll);
   panelPoll=setInterval(async()=>{
     if(!window.panelCloudReady || Date.now()-(window.panelLastLocalWrite||0)<2500 || Date.now()-(window.panelLastCloudWrite||0)<1500)return;
-    const result=await panelSupabase.from('panel_state').select('payload,updated_at').eq('id','main').maybeSingle();
+    const result=await panelSupabase.from('panel_state').select('payload,updated_at').eq('id','consultorios-main').maybeSingle();
     if(!result.error && result.data && Array.isArray(result.data.payload)){
       const incoming=JSON.stringify(result.data.payload);
       if(incoming!==JSON.stringify(tasks)){tasks=result.data.payload;try{localStorage.setItem(KEY,incoming)}catch(e){}render();renderRecords();renderDashboard();status.textContent='Atualizado com alterações da equipe';}
     }
-    const metricResult=await panelSupabase.from('panel_state').select('payload,updated_at').eq('id','metrics').maybeSingle();
+    const metricResult=await panelSupabase.from('panel_state').select('payload,updated_at').eq('id','consultorios-metrics').maybeSingle();
     if(!metricResult.error && metricResult.data && metricResult.data.payload && typeof metricResult.data.payload==='object' && !Array.isArray(metricResult.data.payload)){
       if(JSON.stringify(metricResult.data.payload)!==JSON.stringify(monthlyMetrics)){
         monthlyMetrics=metricResult.data.payload;
@@ -1492,44 +1510,15 @@ async function initializePanelForUser(user){
     }
   },5000);
 }
-window.signOutPanel = async function(){
-  const button=document.querySelector('.user-strip button[onclick="window.signOutPanel()"]');
-  if(button){button.disabled=true;button.textContent='Saindo…';}
-  // Encerramento local independente da disponibilidade do cliente Supabase.
-  try{
-    const authClient=panelSupabase || window.panelCloudClient || null;
-    if(authClient && authClient.auth && typeof authClient.auth.signOut==='function'){
-      try{await authClient.auth.signOut({scope:'local'});}catch(authError){console.warn('Logout remoto indisponível; limpando sessão local.',authError);}
-    }
-    const projectPrefix='sb-gwhgzfhtxqkmerlhagkb-';
-    try{
-      for(let i=localStorage.length-1;i>=0;i--){
-        const key=localStorage.key(i);
-        if(key && key.startsWith(projectPrefix)) localStorage.removeItem(key);
-      }
-    }catch(storageError){console.warn('Não foi possível limpar localStorage:',storageError);}
-    try{
-      for(let i=sessionStorage.length-1;i>=0;i--){
-        const key=sessionStorage.key(i);
-        if(key && key.startsWith(projectPrefix)) sessionStorage.removeItem(key);
-      }
-    }catch(storageError){console.warn('Não foi possível limpar sessionStorage:',storageError);}
-    window.panelCloudReady=false;
-    if(panelPoll){clearInterval(panelPoll);panelPoll=null;}
-    window.panelCloudClient=null;
-    panelSupabase=null;
-    document.getElementById('appRoot').style.display='none';
-    document.getElementById('loginScreen').style.display='flex';
-    document.getElementById('loginPassword').value='';
-    showLoginError('');
-    setLoginBusy(false);
-    if(button){button.disabled=false;button.textContent='Sair';}
-  }catch(error){
-    console.error('Erro ao sair do painel:',error);
-    alert('Não foi possível concluir a saída local. '+(error?.message||'Feche esta aba e abra o painel novamente.'));
-    if(button){button.disabled=false;button.textContent='Sair';}
-  }
-};
+async function signOutPanel(){
+  window.panelCloudReady=false;
+  if(panelPoll)clearInterval(panelPoll);
+  await panelSupabase.auth.signOut();
+  document.getElementById('appRoot').style.display='none';
+  document.getElementById('loginScreen').style.display='flex';
+  document.getElementById('loginPassword').value='';
+  showLoginError('');
+}
 document.addEventListener('DOMContentLoaded',async()=>{
   if(SUPABASE_URL.startsWith('COLE_AQUI') || SUPABASE_ANON_KEY.startsWith('COLE_AQUI')){
     showLoginError('Configuração pendente: conecte o painel ao projeto Supabase seguindo o arquivo LEIA-ME.');
@@ -1569,7 +1558,19 @@ document.addEventListener('DOMContentLoaded',async()=>{
       console.error('Erro de autenticação do painel:',err);
     }
   });
-  // Não recupera automaticamente a sessão anterior: cada acesso começa pela tela de login.
+  // A sessão salva é verificada depois que o botão já está funcional.
+  try {
+    const sessionResult = await Promise.race([
+      panelSupabase.auth.getSession(),
+      new Promise((_,reject)=>setTimeout(()=>reject(new Error('SESSION_TIMEOUT')),8000))
+    ]);
+    if(sessionResult.data && sessionResult.data.session) {
+      await initializePanelForUser(sessionResult.data.session.user);
+    }
+  } catch(err) {
+    console.error('Falha ao recuperar sesasão salva:',err);
+    showLoginError('Não foi possível verificar a sessão anterior. Você pode tentar entrar normalmente.');
+  }
   panelSupabase.auth.onAuthStateChange(async(event,session)=>{
     if(event==='SIGNED_OUT'){
       window.panelCloudReady=false;
