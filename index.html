@@ -675,7 +675,7 @@ th,td{padding:11px 12px}
 <div><label>Número da O.S.</label><input id="osNumber" placeholder="Ex.: 623401" inputmode="numeric"></div>
 <div class="wide"><label>Assunto *</label><input id="subject" placeholder="Resumo objetivo da demanda"></div>
 <div><label>Tipo de prestador *</label><input id="providerType" required="" readonly="" placeholder="Com código: preenchido automaticamente; sem código: preencha manualmente"><small id="providerTypeHint" class="hint">Sem código de prestador, este campo ficará disponível para preenchimento manual.</small></div>
-<div><label>Rede do prestador</label><button type="button" id="providerNetworkBadge" class="network-badge" disabled="">Informe o código do prestador</button><input type="hidden" id="providerNetwork" value=""></div>
+<div><label>Rede do prestador</label><button type="button" id="providerNetworkBadge" class="network-badge" disabled="">Informe o código do prestador</button><select id="providerNetworkManual" hidden><option value="">Selecione a rede</option><option value="VERTICALIZADA">Rede Verticalizada</option><option value="EXTERNA">Rede Externa</option></select><input type="hidden" id="providerNetwork" value=""></div>
 <div><label>Categoria</label><select id="category"><option>Credenciamentos</option><option>Descredenciamentos</option><option>Contratos</option><option>Extensões</option><option>Reajuste</option><option>Honorário cirúrgico</option><option>Parametrização</option><option>Revisão de travas</option><option>Visitas</option><option>Outros</option></select></div>
 <div style="display:none"><label>Transação (TR) *</label><input id="transaction" placeholder="Informe a transação"></div>
 <div style="display:none"><label>Data da demanda *</label><input id="requestDate" type="date"></div>
@@ -735,6 +735,25 @@ th,td{padding:11px 12px}
 <script>
 const PROVIDER_LOOKUP_URL='https://script.google.com/macros/s/AKfycbwuxsF70hLFQBYG6IyGLEmvS6_jRMSjn20jSJxs0mDt7FkdTSHNpZk6Izq2AOtpk4vk/exec';
 let providerLookupTimer=null;
+function setProviderNetworkMode(manual, selected=''){
+ const badge=document.getElementById('providerNetworkBadge');
+ const picker=document.getElementById('providerNetworkManual');
+ const hidden=document.getElementById('providerNetwork');
+ if(!badge||!picker||!hidden)return;
+ badge.hidden=!!manual;
+ picker.hidden=!manual;
+ if(manual){
+   const value=String(selected||hidden.value||'').toUpperCase();
+   picker.value=['VERTICALIZADA','EXTERNA'].includes(value)?value:'';
+   hidden.value=picker.value;
+ }
+}
+document.addEventListener('change',e=>{
+ if(e.target&&e.target.id==='providerNetworkManual'){
+   const hidden=document.getElementById('providerNetwork');
+   if(hidden)hidden.value=e.target.value;
+ }
+});
 function lookupProviderDebounced(){clearTimeout(providerLookupTimer);providerLookupTimer=setTimeout(lookupProviderByCode,450);}
 function lookupProviderByCode(){
  const codeEl=document.getElementById('providerCode'),nameEl=document.getElementById('provider'),statusEl=document.getElementById('providerLookupStatus'),typeEl=document.getElementById('providerType'),networkEl=document.getElementById('providerNetwork'),networkBadge=document.getElementById('providerNetworkBadge');
@@ -746,11 +765,13 @@ function lookupProviderByCode(){
    const hint=document.getElementById('providerTypeHint');if(hint)hint.textContent='Preencha manualmente o tipo de prestador para esta demanda avulsa.';
    if(networkEl)networkEl.value='';
    if(networkBadge){networkBadge.textContent='Rede não informada (demanda avulsa)';networkBadge.dataset.network='';}
+   setProviderNetworkMode(true);
    return;
  }
  if(typeEl){typeEl.readOnly=true;typeEl.value='';}
  const hint=document.getElementById('providerTypeHint');if(hint)hint.textContent='Tipo preenchido automaticamente pela planilha Rede.';
  statusEl.textContent='Consultando a planilha Rede…';
+ setProviderNetworkMode(false);
  if(networkBadge){networkBadge.textContent='Consultando rede…';networkBadge.dataset.network='';}
  const callback='providerLookupCallback_'+Date.now()+'_'+Math.floor(Math.random()*100000);
  const script=document.createElement('script');let finished=false;
@@ -1256,7 +1277,7 @@ function clearTaskForm(){
  if(descredSection){descredSection.hidden=true;descredSection.style.display='none';}
 }
 
-function openForm(t=null){document.getElementById('taskForm').reset();document.getElementById('providerType').readOnly=true;document.getElementById('providerType').value='';const typeHint=document.getElementById('providerTypeHint');if(typeHint)typeHint.textContent='Sem código de prestador, este campo ficará disponível para preenchimento manual.';document.getElementById('editId').value=t?.id||'';document.getElementById('formTitle').textContent=t?'Editar demanda':'Nova demanda';const map={providerCode:'providerCode',provider:'provider',providerNetwork:'providerNetwork',osNumber:'osNumber',transaction:'transaction',requestDate:'requestDate',visitDate:'visitDate',providerType:'providerType',subject:'subject',category:'category',impact:'impact',priority:'priority',owner:'owner',support:'support',status:'status',due:'due',contractAnniversary:'contractAnniversary',money:'money',description:'description',next:'next',dependency:'dependency',notes:'notes',initialProposal:'initialProposal',counterProposal:'counterProposal',finalAgreed:'finalAgreed',negotiationSavings:'negotiationSavings',negotiationSavingsPercent:'negotiationSavingsPercent',initialProposalDate:'initialProposalDate',finalAgreedDate:'finalAgreedDate',negotiationHistory:'negotiationHistory',visitDate:'visitDate',visitParticipants:'visitParticipants',visitObjective:'visitObjective',visitOutcome:'visitOutcome',credentialDate:'credentialDate',credentialService:'credentialService',credentialValue:'credentialValue',credentialStage:'credentialStage',descredDate:'descredDate',descredReason:'descredReason',descredDays:'descredDays',contractEndDate:'contractEndDate'};for(const [k,id] of Object.entries(map)){const el=document.getElementById(id);el.value=t?.[k]??(k==='support'?'Nenhum':k==='priority'?'Normal':k==='status'?'Nova':'');if(['money','initialProposal','counterProposal','finalAgreed','negotiationSavings','credentialValue'].includes(k)&&el.value!=='')el.value=formatBrazilianNumber(el.value);}const net=document.getElementById('providerNetwork')?.value||'';const netBadge=document.getElementById('providerNetworkBadge');if(netBadge){netBadge.textContent=net?'REDE: '+net.toUpperCase():'Informe o código do prestador';netBadge.dataset.network=net.toUpperCase();}updateNegotiationSavings();const codeInput=document.getElementById('providerCode');if(codeInput && !String(codeInput.value||'').trim()){document.getElementById('providerType').readOnly=false;const hint=document.getElementById('providerTypeHint');if(hint)hint.textContent='Preencha manualmente o tipo de prestador para esta demanda avulsa.';}document.getElementById('progressFields').style.display='none';document.getElementById('baseFormActions').style.display='flex';updateCategoryFields();const descredSection=document.getElementById('descredFields');if(descredSection){const isDescred=String(document.getElementById('category').value||'').trim()==='Descredenciamentos';descredSection.hidden=!isDescred;descredSection.style.display=isDescred?'block':'none';}editingSubtasks=Array.isArray(t?.subtasks)?t.subtasks.map(x=>({title:String(x.title||''),done:!!x.done})):[];renderSubtasksEditor();if(t&&['Reajuste','Credenciamentos','Extensões'].includes(String(t.category||''))&&(['initialProposal','counterProposal','finalAgreed','visitDate','credentialDate'].some(k=>t[k])||t.category==='Reajuste'))showProgressFields();document.getElementById('modal').classList.add('open')}
+function openForm(t=null){document.getElementById('taskForm').reset();document.getElementById('providerType').readOnly=true;document.getElementById('providerType').value='';const typeHint=document.getElementById('providerTypeHint');if(typeHint)typeHint.textContent='Sem código de prestador, este campo ficará disponível para preenchimento manual.';document.getElementById('editId').value=t?.id||'';document.getElementById('formTitle').textContent=t?'Editar demanda':'Nova demanda';const map={providerCode:'providerCode',provider:'provider',providerNetwork:'providerNetwork',osNumber:'osNumber',transaction:'transaction',requestDate:'requestDate',visitDate:'visitDate',providerType:'providerType',subject:'subject',category:'category',impact:'impact',priority:'priority',owner:'owner',support:'support',status:'status',due:'due',contractAnniversary:'contractAnniversary',money:'money',description:'description',next:'next',dependency:'dependency',notes:'notes',initialProposal:'initialProposal',counterProposal:'counterProposal',finalAgreed:'finalAgreed',negotiationSavings:'negotiationSavings',negotiationSavingsPercent:'negotiationSavingsPercent',initialProposalDate:'initialProposalDate',finalAgreedDate:'finalAgreedDate',negotiationHistory:'negotiationHistory',visitDate:'visitDate',visitParticipants:'visitParticipants',visitObjective:'visitObjective',visitOutcome:'visitOutcome',credentialDate:'credentialDate',credentialService:'credentialService',credentialValue:'credentialValue',credentialStage:'credentialStage',descredDate:'descredDate',descredReason:'descredReason',descredDays:'descredDays',contractEndDate:'contractEndDate'};for(const [k,id] of Object.entries(map)){const el=document.getElementById(id);el.value=t?.[k]??(k==='support'?'Nenhum':k==='priority'?'Normal':k==='status'?'Nova':'');if(['money','initialProposal','counterProposal','finalAgreed','negotiationSavings','credentialValue'].includes(k)&&el.value!=='')el.value=formatBrazilianNumber(el.value);}const net=document.getElementById('providerNetwork')?.value||'';const netBadge=document.getElementById('providerNetworkBadge');if(netBadge){netBadge.textContent=net?'REDE: '+net.toUpperCase():'Informe o código do prestador';netBadge.dataset.network=net.toUpperCase();}updateNegotiationSavings();const codeInput=document.getElementById('providerCode');if(codeInput && !String(codeInput.value||'').trim()){document.getElementById('providerType').readOnly=false;const hint=document.getElementById('providerTypeHint');if(hint)hint.textContent='Preencha manualmente o tipo de prestador para esta demanda avulsa.';}setProviderNetworkMode(!codeInput||!String(codeInput.value||'').trim(),net);document.getElementById('progressFields').style.display='none';document.getElementById('baseFormActions').style.display='flex';updateCategoryFields();const descredSection=document.getElementById('descredFields');if(descredSection){const isDescred=String(document.getElementById('category').value||'').trim()==='Descredenciamentos';descredSection.hidden=!isDescred;descredSection.style.display=isDescred?'block':'none';}editingSubtasks=Array.isArray(t?.subtasks)?t.subtasks.map(x=>({title:String(x.title||''),done:!!x.done})):[];renderSubtasksEditor();if(t&&['Reajuste','Credenciamentos','Extensões'].includes(String(t.category||''))&&(['initialProposal','counterProposal','finalAgreed','visitDate','credentialDate'].some(k=>t[k])||t.category==='Reajuste'))showProgressFields();document.getElementById('modal').classList.add('open')}
 function closeForm(){document.getElementById('modal').classList.remove('open')}
 function parseBrazilianMoney(value){
  const raw=String(value??'').trim().replace(/\s|R\$/g,'');
