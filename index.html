@@ -1403,11 +1403,22 @@ function clearAnnualVisitMonthFilter(){annualVisitMonthFilter=null;renderAnnualV
 function renderAnnualVisits(){
  initAnnualVisitYear();
  const year=Number(document.getElementById('visitScheduleYear')?.value||new Date().getFullYear());
- const visits=(Array.isArray(tasks)?tasks:[]).filter(t=>String(t.category||'').trim()==='Visitas' && /^\d{4}-\d{2}-\d{2}$/.test(String(t.visitDate||'')) && Number(String(t.visitDate).slice(0,4))===year).sort((a,b)=>String(a.visitDate).localeCompare(String(b.visitDate)));
- const scheduled=visits.filter(t=>t.status==='Agendado').length, completed=visits.filter(t=>t.status==='Concluída').length;
+ const visitDateISO=value=>{
+  const raw=String(value||'').trim();
+  if(/^\d{4}-\d{2}-\d{2}/.test(raw))return raw.slice(0,10);
+  const br=raw.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/);
+  if(br)return br[3]+'-'+String(br[2]).padStart(2,'0')+'-'+String(br[1]).padStart(2,'0');
+  return '';
+ };
+ const visitStatus=t=>String(t.status||'').trim().normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase();
+ const visits=(Array.isArray(tasks)?tasks:[]).filter(t=>{
+  const date=visitDateISO(t.visitDate);
+  return String(t.category||'').trim().toLowerCase()==='visitas' && date && Number(date.slice(0,4))===year;
+ }).sort((a,b)=>visitDateISO(a.visitDate).localeCompare(visitDateISO(b.visitDate)));
+ const scheduled=visits.filter(t=>visitStatus(t)==='agendado').length, completed=visits.filter(t=>visitStatus(t)==='concluida').length;
  const set=(id,v)=>{const e=document.getElementById(id);if(e)e.textContent=String(v)};
  set('annualVisitTotal',visits.length);set('annualVisitScheduled',scheduled);set('annualVisitCompleted',completed);
- const monthly=Array.from({length:12},(_,i)=>{const month=String(i+1).padStart(2,'0');const rows=visits.filter(t=>String(t.visitDate).slice(5,7)===month);return {month,label:new Date(year,i,1).toLocaleDateString('pt-BR',{month:'short'}).replace('.',''),total:rows.length,scheduled:rows.filter(t=>t.status==='Agendado').length,completed:rows.filter(t=>t.status==='Concluída').length,other:rows.filter(t=>!['Agendado','Concluída'].includes(t.status)).length};});
+ const monthly=Array.from({length:12},(_,i)=>{const month=String(i+1).padStart(2,'0');const rows=visits.filter(t=>visitDateISO(t.visitDate).slice(5,7)===month);return {month,label:new Date(year,i,1).toLocaleDateString('pt-BR',{month:'short'}).replace('.',''),total:rows.length,scheduled:rows.filter(t=>visitStatus(t)==='agendado').length,completed:rows.filter(t=>visitStatus(t)==='concluida').length,other:rows.filter(t=>!['agendado','concluida'].includes(visitStatus(t))).length};});
  const chart=document.getElementById('annualVisitsChart');
  if(chart){
   const max=Math.max(1,...monthly.map(m=>m.total)),W=900,H=205,left=28,right=16,top=18,bottom=34,plotH=135,barW=34,gap=(W-left-right-12*barW)/11;
@@ -1420,11 +1431,11 @@ function renderAnnualVisits(){
   });
   svg+='</svg>';chart.innerHTML=svg;
  }
- const filtered=annualVisitMonthFilter?visits.filter(t=>String(t.visitDate).slice(5,7)===annualVisitMonthFilter):visits;
+ const filtered=annualVisitMonthFilter?visits.filter(t=>visitDateISO(t.visitDate).slice(5,7)===annualVisitMonthFilter):visits;
  const label=annualVisitMonthFilter?monthly.find(m=>m.month===annualVisitMonthFilter)?.label||'Mês selecionado':'Todos os meses';
  set('annualVisitFilterLabel',label);set('annualVisitsTableTitle',annualVisitMonthFilter?'Visitas de '+label:'Programação de visitas');
  const body=document.getElementById('annualVisitsBody');if(!body)return;
- body.innerHTML=filtered.length?filtered.map(t=>'<tr><td><strong>'+escapeHtml(formatDateBR(t.visitDate))+'</strong></td><td>'+escapeHtml(new Date(String(t.visitDate)+'T12:00:00').toLocaleDateString('pt-BR',{month:'long'}))+'</td><td>'+escapeHtml(t.providerCode||'—')+' · '+escapeHtml(t.provider||'Prestador não informado')+'</td><td>'+escapeHtml(t.owner||'—')+'</td><td><span class="pill status" data-s="'+escapeHtml(t.status||'')+'">'+escapeHtml(t.status||'—')+'</span></td><td>'+escapeHtml(t.visitObjective||t.next||t.subject||'—')+'</td><td><button type="button" class="secondary icon-action" title="Editar visita" data-task-action="edit" data-task-id="'+escapeHtml(t.id)+'">✏️</button></td></tr>').join(''):'<tr><td colspan="7" class="empty">'+(annualVisitMonthFilter?'Nenhuma visita cadastrada para '+label+'.':'Nenhuma visita com data cadastrada para '+year+'. Cadastre uma demanda na categoria “Visitas” para preencher o cronograma.')+'</td></tr>';
+ body.innerHTML=filtered.length?filtered.map(t=>'<tr><td><strong>'+escapeHtml(formatDateBR(visitDateISO(t.visitDate)))+'</strong></td><td>'+escapeHtml(new Date(String(t.visitDate)+'T12:00:00').toLocaleDateString('pt-BR',{month:'long'}))+'</td><td>'+escapeHtml(t.providerCode||'—')+' · '+escapeHtml(t.provider||'Prestador não informado')+'</td><td>'+escapeHtml(t.owner||'—')+'</td><td><span class="pill status" data-s="'+escapeHtml(t.status||'')+'">'+escapeHtml(t.status||'—')+'</span></td><td>'+escapeHtml(t.visitObjective||t.next||t.subject||'—')+'</td><td><button type="button" class="secondary icon-action" title="Editar visita" data-task-action="edit" data-task-id="'+escapeHtml(t.id)+'">✏️</button></td></tr>').join(''):'<tr><td colspan="7" class="empty">'+(annualVisitMonthFilter?'Nenhuma visita cadastrada para '+label+'.':'Nenhuma visita com data cadastrada para '+year+'. Cadastre uma demanda na categoria “Visitas” para preencher o cronograma.')+'</td></tr>';
  bindTaskActionButtons(body);
 }
 function openFormForVisit(){openForm();const cat=document.getElementById('category');if(cat){cat.value='Visitas';updateCategoryFields();}switchPanelTab('demandas',document.querySelector('[data-tab-target="demandas"]'));openForm();const cat2=document.getElementById('category');if(cat2){cat2.value='Visitas';updateCategoryFields();}}
